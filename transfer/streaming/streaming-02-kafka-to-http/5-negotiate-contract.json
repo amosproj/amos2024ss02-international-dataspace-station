@@ -1,0 +1,18 @@
+{
+  "@context": {
+    "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
+    "odrl": "http://www.w3.org/ns/odrl/2/"
+  },
+  "@type": "ContractRequest",
+  "counterPartyAddress": "http://localhost:18182/protocol",
+  "protocol": "dataspace-protocol-http",
+  "policy": {
+    "@id": "{{offerId}}",
+    "@type": "Offer",
+    "odrl:permission": [],
+    "odrl:prohibition": [],
+    "odrl:obligation": [],
+    "odrl:assigner": "provider",
+    "odrl:target": "kafka-stream-asset"
+  }
+}
