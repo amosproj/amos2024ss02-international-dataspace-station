@@ -12,6 +12,8 @@ pids
 # Gradle
 src/.gradle
 
+build
+
 # Java
 .classpath
 
