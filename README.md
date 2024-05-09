@@ -1,4 +1,3 @@
-
 # Provider run
 
 java -Dedc.keystore=resources/certs/cert.pfx -Dedc.keystore.password=123456 -Dedc.vault=resources/configuration/provider-vault.properties -Dedc.fs.config=resources/configuration/provider-configuration.properties -jar connector/build/libs/connector.jar
@@ -52,3 +51,7 @@ replace {{contract-negotiation-id}}
 curl -X GET "http://localhost:29193/management/v2/contractnegotiations/{{contract-negotiation-id}}" \
     --header 'Content-Type: application/json' \
     -s | jq
+=======
+# International Dataspace Station (AMOS SS 2024)
+in collaboration with DATEV
+
