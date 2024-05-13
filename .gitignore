@@ -36,3 +36,6 @@ bin/
 
 # MacOS
 .DS_Store
+
+# Docker
+*.tar

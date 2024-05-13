@@ -10,6 +10,12 @@ sudo docker build -t <provider|consumer> . -f <provider|consumer>.Dockerfile
 sudo docker save -o ./docker-images/<provider|consumer>.tar <provider|consumer>
 ```
 
+# Docker Load and Run
+```
+sudo docker load -i ./docker-images/<provider|consumer>.tar
+sudo docker run -it <provider|consumer>
+```
+
 
 # Provider run
 
