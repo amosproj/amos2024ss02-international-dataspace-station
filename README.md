@@ -1,35 +1,76 @@
-=======
-# International Dataspace Station (AMOS SS 2024)
-in collaboration with DATEV
+<p align="center"> <img src="https://raw.githubusercontent.com/amosproj/amos2024ss02-international-dataspace-station/main/Deliverables/sprint-01/Team%20Logo.jpg" alt="IDS" style="width:250px;height:250px;"> </p>
+
+<h1 align="center"> International Dataspace Station </h1> 
+<h3 align="center"> in collaboration with DATEV </h3>
+
+## 📖 About
+
+With the increase of data exchange among different sectors like finance, legal, healthcare, government and others, ensuring easy interoperability while still following data usage rules, policies, and local regulations is becoming increasingly important. **Dataspace** is the envisioned solution to tackle these challenges.
+
+Dataspace operates with the help of **data connectors**, which enable secure and effective communication and exchange of data. They are a tool to connect many data endpoints to increase the pool of available data and to accelerate the data economy. By linking data connectors, dataspaces become protected environments where participants can freely share data. Data sovereignty, transparency and fairness are ensured by adherence to a set of rules.
+
+Our goal is to explore the feasibiltiy of dataspace usage with regards to data sovereignty. This includes testing the maturity of dataspace, importance of the components and ease of deployment.
+
+Learn in more detail about how our software works here: [IDS - Software Architecture][software_architecture]
+
+## ⚡️ Requirements
+
+If you want to run the connectors on your local machine, make sure that you have the following packages installed:
+
+| Package  | Version |
+| -------- | ------- |
+| JDK  | 17  |
+| Gradle  | 8.7 |
+| jq  | 1.7.1 |
+| Docker (optional) | 26 |
 
 
-# Docker Building
+## 🐳 Docker usage
 
+To run the code using docker containers, use the following commands in separate terminals for both provider and consumer connectors:
+
+### 1. Build a docker image
 ```
+mkdir docker-images
 sudo docker build -t <provider|consumer> . -f <provider|consumer>.Dockerfile
 sudo docker save -o ./docker-images/<provider|consumer>.tar <provider|consumer>
 ```
+### 2. Load and run
 
-# Docker Load and Run
 ```
 sudo docker load -i ./docker-images/<provider|consumer>.tar
-sudo docker run -it <provider|consumer>
+sudo docker run -it -p <19193:19193|29193:29193> <provider|consumer>
 ```
 
+<span style="color:red"><b> Note: </b></span> If you are using macOS, you might have to modify the `config.json` file:
+1. Go to `~/.docker/config.json`
+2. Change the `credsStore` value from `desktop` to `osxkeychain`.
 
-# Provider run
+## 🖥️ Running the connectors locally
+
+If you don't want to use docker, you can run the connectors locally. Use the following commands in separate terminals:
+
+### Provider connector
+
+In the first terminal, use the following command to run a provider:
 
 ```
 java -Dedc.keystore=resources/certs/cert.pfx -Dedc.keystore.password=123456 -Dedc.vault=resources/configuration/provider-vault.properties -Dedc.fs.config=resources/configuration/provider-configuration.properties -jar connector/build/libs/connector.jar
 ```
 
-# Consumer run
+### Consumer connector
+
+In the second terminal, use the following command to run a consumer:
 
 ```
 java -Dedc.keystore=resources/certs/cert.pfx -Dedc.keystore.password=123456 -Dedc.vault=resources/configuration/consumer-vault.properties -Dedc.fs.config=resources/configuration/consumer-configuration.properties -jar connector/build/libs/connector.jar
 ```
 
-# Register data plane
+## 🔗 Establishing connection for data exchange
+
+In the third (main) terminal, use the following HTTP requests to establish a connection between the provider and the consumer to be able to exchange data:
+
+#### 1. Register data plane
 
 ```
 curl -H 'Content-Type: application/json' \
@@ -37,7 +78,7 @@ curl -H 'Content-Type: application/json' \
      -X POST "http://localhost:19193/management/v2/dataplanes" -s | jq
 ```
 
-# Create asset
+#### 2. Create an asset
 
 ```
 curl -d @resources/create-asset.json \
@@ -45,7 +86,7 @@ curl -d @resources/create-asset.json \
   -s | jq
 ```
 
-# Create policy
+#### 3. Create a policy
 
 ```
 curl -d @resources/create-policy.json \
@@ -53,7 +94,7 @@ curl -d @resources/create-policy.json \
   -s | jq
 ```
 
-# Create contract definition
+#### 4. Create a contract definition
 
 ```
 curl -d @resources/create-contract-definition.json \
@@ -61,7 +102,7 @@ curl -d @resources/create-contract-definition.json \
   -s | jq
 ```
 
-# Fetch catalog
+#### 5. Fetch catalog
 
 ```
 curl -X POST "http://localhost:29193/management/v2/catalog/request" \
@@ -69,9 +110,9 @@ curl -X POST "http://localhost:29193/management/v2/catalog/request" \
     -d @resources/fetch-catalog.json -s | jq
 ```
 
-# Negotiate contract
+#### 6. Negotiate contract
 
-replace {{contract-offer-id}} in negotiate-contract.json
+Replace the `{{contract-offer-id}}` placeholder in `negotiate-contract.json` with the contract offer id you found in the catalog at the path `dcat:dataset.odrl:hasPolicy.@id`:
 
 ```
 curl -d @resources/negotiate-contract.json \
@@ -79,12 +120,17 @@ curl -d @resources/negotiate-contract.json \
   -s | jq
 ```
 
-# Getting contract agreement id
+#### 7. Get contract agreement id
 
-replace {{contract-negotiation-id}}
+Replace `{{contract-negotiation-id}}` with the id from the consumer terminal:
 
 ```
 curl -X GET "http://localhost:29193/management/v2/contractnegotiations/{{contract-negotiation-id}}" \
     --header 'Content-Type: application/json' \
     -s | jq
 ```
+
+<br>
+The connectors have now been configured successfully and are ready to be used.
+
+[software_architecture]: https://github.com/amosproj/amos2024ss02-international-dataspace-station/blob/main/Deliverables/sprint-02/software-architecture.pdf
