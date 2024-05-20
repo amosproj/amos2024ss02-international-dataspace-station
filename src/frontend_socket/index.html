@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Connector Status</title>
+    <script>
+    async function checkPorts() {
+      const response = await fetch('/check-ports');
+      const portsStatus = await response.json();
+
+      portsStatus.forEach(status => {
+        const portStatus = `Port ${status.port}: ${status.isOpen ? 'Running' : 'Not running'}`;
+        document.body.innerHTML += `<p>${portStatus}</p>`;
+      });
+    }
+
+    window.onload = () => {
+      checkPorts();
+    };
+  </script>
+</head>
+<body>
+<h1>Connector Status</h1>
+</body>
+</html>
