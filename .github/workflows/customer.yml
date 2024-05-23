@@ -39,6 +39,9 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
       # 
       - name: Change directory and copy Dockerfile
+        run: ls -la
+      #
+      - name: Change directory and copy Dockerfile
         working-directory: ./src
         run: cp consumer.Dockerfile Dockerfile
       # This step uses the `docker/build-push-action` action to build the image, based on your repository's `Dockerfile`. If the build succeeds, it pushes the image to GitHub Packages.
