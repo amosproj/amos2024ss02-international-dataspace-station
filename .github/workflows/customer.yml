@@ -39,10 +39,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-consumer
           tags: |
-          type=schedule
-          type=ref,event=branch
-          type=semver,pattern={{version}}
-          type=sha
+            type=schedule
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=sha
       # Change directory and copy Dockerfile
       - name: Change directory and copy Dockerfile
         working-directory: ./src
