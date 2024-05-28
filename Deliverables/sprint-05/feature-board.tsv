@@ -1,0 +1,31 @@
+Title	URL	Assignees	Status
+Design a Team Logo and T-Shirt	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/1	timoKroecker	Feature Archive
+Run EDC Connector Samples	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/5	daku-de, EkaterinaIvanishcheva, esracosgun, xenia1w	Feature Archive
+Establish a localhost connection between 2 connectors	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/9	daku-de	Feature Archive
+Create two connector instances for the main branch	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/12	daku-de, esracosgun, xenia1w	Feature Archive
+Transfer data between two connectors on localhost	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/11	daku-de, esracosgun, xenia1w	Feature Archive
+Create documentation for the localhost connection process	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/10	EkaterinaIvanishcheva	Feature Archive
+Create docker image output of the connector	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/8	daku-de, esracosgun, xenia1w	Feature Archive
+Establish a frontend framework	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/25	EkaterinaIvanishcheva, xenia1w	Awaiting Review
+Create build process video	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/24	EkaterinaIvanishcheva	Sprint Backlog
+Create a button in the frontend which runs the CLI automatically	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/30	esracosgun	Sprint Backlog
+Create identity hub	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/15	daku-de	Sprint Backlog
+Establish a cloud connection between 2 connectors	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/7	daku-de	Sprint Backlog
+Establish UI access to the cloud	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/14	skanatova	Sprint Backlog
+Create UI design for a login page	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/23	esracosgun	Sprint Backlog
+Create a UI design for connector	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/13		Sprint Backlog
+Provide authentication	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/16		Product Backlog
+Provide authorization	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/17		Product Backlog
+Create metadata broker	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/20		Product Backlog
+Add catalog to metadata broker	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/21		Product Backlog
+Add CRUD operations for the catalog	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/22		Product Backlog
+Create user database with three accounts	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/18		Product Backlog
+Add CRUD operations for user database	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/19		Product Backlog
+Gain understanding of Gaia-X Framework	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/3	esracosgun, skanatova, xenia1w	Product Backlog
+Create UI frontend of the connector page	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/26		Product Backlog
+Create UI frontend to accept policy	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/27		Product Backlog
+Create UI frontend for exchanging contract	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/28		Product Backlog
+Create UI frontend for data transfer	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/29		Product Backlog
+Establish the frontend for connector basic operation			
+Establish a public key infrastucture			
+Connect the connector to Gaia-X			
