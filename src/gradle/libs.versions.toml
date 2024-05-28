@@ -4,7 +4,8 @@ format.version = "1.1"
 [versions]
 assertj = "3.25.3"
 awaitility = "4.2.1"
-edc = "0.6.0"
+edc = "0.3.1"
+ext-edc = "0.3.1"
 jakarta-json = "2.0.1"
 junit-pioneer = "2.2.0"
 jupiter = "5.10.2"
@@ -44,6 +45,7 @@ edc-dsp = { module = "org.eclipse.edc:dsp", version.ref = "edc" }
 edc-http = { module = "org.eclipse.edc:http", version.ref = "edc" }
 edc-iam-mock = { module = "org.eclipse.edc:iam-mock", version.ref = "edc" }
 edc-jersey-micrometer = { module = "org.eclipse.edc:jersey-micrometer", version.ref = "edc" }
+edc-jersey-core = { module = "org.eclipse.edc:jersey-core", version.ref = "edc" }
 edc-jetty-micrometer = { module = "org.eclipse.edc:jetty-micrometer", version.ref = "edc" }
 edc-json-ld-lib = { module = "org.eclipse.edc:json-ld-lib", version.ref = "edc" }
 edc-json-ld-spi = { module = "org.eclipse.edc:json-ld-spi", version.ref = "edc" }
@@ -60,6 +62,37 @@ edc-transfer-pull-http-dynamic-receiver = { module = "org.eclipse.edc:transfer-p
 edc-util = { module = "org.eclipse.edc:util", version.ref = "edc" }
 edc-vault-azure = { module = "org.eclipse.edc:vault-azure", version.ref = "edc" }
 edc-vault-filesystem = { module = "org.eclipse.edc:vault-filesystem", version.ref = "edc" }
+edc-ext-identity-did-core = { module = "org.eclipse.edc:identity-did-core", version.ref = "ext-edc" }
+edc-ext-identity-did-service = { module = "org.eclipse.edc:identity-did-service", version.ref = "ext-edc" }
+edc-ext-identity-did-web = { module = "org.eclipse.edc:identity-did-web", version.ref = "ext-edc" }
+edc-ext-http = { module = "org.eclipse.edc:http", version.ref = "edc" }
+edc-ext-api-management = { module = "org.eclipse.edc:management-api", version.ref = "edc" }
+edc-ext-api-management-config = { module = "org.eclipse.edc:management-api-configuration", version.ref = "edc" }
+edc-ext-configuration-filesystem = { module = "org.eclipse.edc:configuration-filesystem", version.ref = "edc" }
+edc-ext-vault-filesystem = { module = "org.eclipse.edc:vault-filesystem", version.ref = "edc" }
+edc-ext-dpf-api = { module = "org.eclipse.edc:data-plane-api", version.ref = "edc" }
+edc-ext-dpf-client = { module = "org.eclipse.edc:data-plane-client", version.ref = "edc" }
+edc-ext-dpf-http = { module = "org.eclipse.edc:data-plane-http", version.ref = "edc" }
+edc-ext-dpf-core = { module = "org.eclipse.edc:data-plane-core", version.ref = "edc" }
+edc-ext-dpf-selector-client = { module = "org.eclipse.edc:data-plane-selector-client", version.ref = "edc" }
+edc-ext-dpf-selector-api = { module = "org.eclipse.edc:data-plane-selector-api", version.ref = "edc" }
+edc-ext-transfer-dpf = { module = "org.eclipse.edc:transfer-data-plane", version.ref = "edc" }
+#
+ih-spi-core = { module = "org.eclipse.edc:identity-hub-spi", version.ref = "ext-edc" }
+ih-core = { module = "org.eclipse.edc:identity-hub", version.ref = "ext-edc" }
+ih-core-client = { module = "org.eclipse.edc:identity-hub-client", version.ref = "ext-edc" }
+ih-core-verifier = { module = "org.eclipse.edc:identity-hub-credentials-verifier", version.ref = "ext-edc" }
+ih-ext-api = { module = "org.eclipse.edc:identity-hub-api", version.ref = "ext-edc" }
+ih-ext-verifier-jwt = { module = "org.eclipse.edc:identity-hub-verifier-jwt", version.ref = "ext-edc" }
+ih-ext-credentials-jwt = { module = "org.eclipse.edc:identity-hub-credentials-jwt", version.ref = "ext-edc" }
+ih-ext-api-selfdescription = { module = "org.eclipse.edc:self-description-api", version.ref = "ext-edc" }
+#
+rs-spi-core = { module = "org.eclipse.edc:registration-service-spi", version.ref = "ext-edc" }
+rs-core = { module = "org.eclipse.edc:registration-service", version.ref = "ext-edc" }
+rs-core-credential-service = { module = "org.eclipse.edc:registration-service-credential-service", version.ref = "ext-edc" }
+rs-core-client = { module = "org.eclipse.edc:registration-service-client", version.ref = "ext-edc" }
+rs-ext-api = { module = "org.eclipse.edc:registration-service-api", version.ref = "ext-edc" }
+#
 jakarta-rsApi = { module = "jakarta.ws.rs:jakarta.ws.rs-api", version.ref = "rsApi" }
 jakartaJson = { module = "org.glassfish:jakarta.json", version.ref = "jakarta-json" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jupiter" }
@@ -76,6 +109,12 @@ testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", ve
 kafka-clients = { module = "org.apache.kafka:kafka-clients", version.ref = "kafkaClients" }
 testcontainers-kafka = { module = "org.testcontainers:kafka", version.ref = "testcontainers" }
 testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
+
+[bundles]
+connector = ["edc-boot", "edc-connector-core", "edc-jersey-core", "edc-api-observability"]
+identity = ["edc-ext-identity-did-core", "edc-ext-identity-did-service", "edc-ext-identity-did-web"]
+transfer-dpf = ["edc-ext-transfer-dpf", "edc-ext-dpf-client", "edc-ext-dpf-selector-client"]
+dpf = ["edc-ext-dpf-api", "edc-ext-dpf-http", "edc-ext-dpf-core"]
 
 [plugins]
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }

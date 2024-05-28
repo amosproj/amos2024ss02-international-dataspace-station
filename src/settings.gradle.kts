@@ -12,7 +12,7 @@
  *
  */
 
-rootProject.name = "samples"
+rootProject.name = "amos-dataspace"
 
 pluginManagement {
     repositories {
@@ -29,6 +29,7 @@ dependencyResolutionManagement {
 }
 
 include(":connector")
+include(":registrationservice")
 
 
 //policy

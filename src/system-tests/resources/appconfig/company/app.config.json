@@ -1,0 +1,8 @@
+{
+  "apiKey": "ApiKeyDefaultValue",
+  "managementApiUrl": "http://localhost:9192/api/management",
+  "catalogUrl": "http://localhost:9192/api/management",
+  "storageAccount": "companyassets",
+  "storageExplorerLinkTemplate": "storageexplorer://v=1",
+  "theme": "theme-2"
+}

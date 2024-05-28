@@ -37,6 +37,9 @@ dependencies {
     implementation(libs.edc.data.plane.public.api)
     implementation(libs.edc.data.plane.core)
     implementation(libs.edc.data.plane.http)
+
+    implementation(libs.edc.ext.identity.did.core)
+    implementation(libs.edc.ext.identity.did.web)
 }
 
 application {
