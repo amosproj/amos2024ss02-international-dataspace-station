@@ -33,6 +33,6 @@ async function checkConnectorStatus(): Promise<string> {
 export default function ConnectorStatus(){
     const response = checkConnectorStatus();
     return(
-    <p>response</p>
+    response
     )
 }
