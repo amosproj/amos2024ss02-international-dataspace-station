@@ -22,7 +22,7 @@ export const authenticate = (formData: { password: string; username: string }) =
     const user = userArray.find(u => u.username === username && u.password === password);
 
     if (user){
-        cookies().set('role' as any, user.role as any);
+        cookies().set('user' as any, JSON.stringify(user) as any);
         redirect('/dashboard');
     }
 };
