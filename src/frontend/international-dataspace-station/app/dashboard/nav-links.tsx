@@ -17,12 +17,12 @@ import clsx from 'clsx'
 const links = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
   {
-    name: 'Consumer',
-    href: '/dashboard/consumer',
+    name: 'Tax Advisor',
+    href: '/dashboard/tax_advisor',
     icon: BriefcaseIcon,
   },
-  { name: 'Provider',
-    href: '/dashboard/provider',
+  { name: 'Company',
+    href: '/dashboard/company',
     icon: UserGroupIcon,
   },
   {
