@@ -1,5 +1,4 @@
 "use client"
-
 import { useState } from 'react';
 
 export default function Page() {
@@ -11,6 +10,7 @@ export default function Page() {
     setOutput(data.output);
     console.log(data.output);  // Ausgabe in der Konsole anzeigen
   };
+
 
   return (
     <main className="flex min-h-screen flex-col p-6">
