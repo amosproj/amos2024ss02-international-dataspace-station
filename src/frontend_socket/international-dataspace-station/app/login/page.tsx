@@ -1,26 +1,11 @@
 'use client';
 import React, { useState } from "react";
 import Image from "next/image";
-import { useRouter } from 'next/navigation'
+import { authenticate } from '../../actions/authenticate';
 
 const SignIn = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const router = useRouter();
-
-
-    const handleLogin = (e) => {
-        e.preventDefault();
-        if (username === 'bank' && password === '123') {
-            router.push("/bank");
-        } else if (username === 'company' && password === '123') {
-            router.push("/company");
-        } else if (username === 'tax' && password === '123') {
-            router.push("/taxadvisor");
-        } else {
-            router.push("/login");
-        }
-    };
 
     return (
         <div className="flex min-h-screen justify-center items-center p-6 bg-black">
@@ -32,7 +17,11 @@ const SignIn = () => {
                     {/*    Enter your account to sign-in to the system*/}
                     {/*</p>*/}
                 </div>
-                <form className="mt-5" onSubmit={handleLogin}>
+                <form className="mt-5" onSubmit={(e) => {
+                    e.preventDefault();
+                    authenticate({ username, password });
+                }}
+                >
                     <div className="mb-4">
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
