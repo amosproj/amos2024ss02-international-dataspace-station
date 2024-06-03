@@ -1,0 +1,17 @@
+[
+  {
+    "username": "bank",
+    "password": "123",
+    "role": "bank"
+  },
+  {
+    "username": "company",
+    "password": "123",
+    "role": "company"
+  },
+  {
+    "username": "tax",
+    "password": "123",
+    "role": "tax-advisor"
+  }
+]

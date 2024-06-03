@@ -39,3 +39,7 @@ bin/
 
 # Docker
 *.tar
+
+# Frontend
+package-lock.json
+
