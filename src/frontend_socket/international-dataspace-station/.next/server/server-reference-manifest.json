@@ -1,5 +1,22 @@
 {
-  "node": {},
+  "node": {
+    "796c16ed896d30592f2c27ec885e809f6e6e329f": {
+      "workers": {
+        "app/login/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fsezimkanatova%2FFAU%2Famos2024ss02-international-dataspace-station%2Fsrc%2Ffrontend_socket%2Finternational-dataspace-station%2Factions%2Fauthenticate.ts%22%2C%5B%22authenticate%22%2C%22%24%24ACTION_0%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/login/page": "action-browser"
+      }
+    },
+    "da4e548452cca11359be24bc18b3a1479e0994a5": {
+      "workers": {
+        "app/login/page": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2FUsers%2Fsezimkanatova%2FFAU%2Famos2024ss02-international-dataspace-station%2Fsrc%2Ffrontend_socket%2Finternational-dataspace-station%2Factions%2Fauthenticate.ts%22%2C%5B%22authenticate%22%2C%22%24%24ACTION_0%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/login/page": "action-browser"
+      }
+    }
+  },
   "edge": {},
-  "encryptionKey": "fWedMBiLyHkHBqzTuS/MF8KnoTVPIgpqc7RnEy4zCAM="
+  "encryptionKey": "o1pM9GUD41iy7AqI9wXu6PwQikSuHAqVx83gIZNZOck="
 }
