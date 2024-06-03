@@ -28,15 +28,5 @@ dependencyResolutionManagement {
     }
 }
 
-include(":connector")
-include(":registrationservice")
-
-
-//policy
-include(":policy:policy-01-policy-enforcement:policy-enforcement-provider")
-include(":policy:policy-01-policy-enforcement:policy-enforcement-consumer")
-include(":policy:policy-01-policy-enforcement:policy-functions")
-
-include(":util:http-request-logger")
-
-include(":system-tests")
+include(":launcher:connector")
+include(":launcher:registrationservice")
