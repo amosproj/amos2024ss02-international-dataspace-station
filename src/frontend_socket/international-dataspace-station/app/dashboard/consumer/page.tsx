@@ -6,7 +6,7 @@ import {cookies} from "next/headers";
 export default function Page() {
     const userArray: User[] = users;
     const userCookie = cookies().get('user' as any)?.value;
-    const loggedIn = JSON.parse(userCookie) as User;
+    const loggedIn = userCookie? JSON.parse(userCookie) as User : null;
     return (
         <main className="flex min-h-screen flex-col p-6">
             <form>
@@ -23,7 +23,7 @@ export default function Page() {
                                     autoComplete="country-name"
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                                 >
-                                    {userArray && userArray.filter((u => u.role != loggedIn.role)).map( (u, index) => <option>{u.role}</option>)}
+                                    {(userArray && loggedIn) && userArray.filter((u => u.role != loggedIn.role)).map( (u, index) => <option>{u.role}</option>)}
                                 </select>
                             </div>
                         </div>

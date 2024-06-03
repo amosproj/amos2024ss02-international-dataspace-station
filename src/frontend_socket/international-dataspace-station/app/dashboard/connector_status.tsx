@@ -7,12 +7,12 @@ function checkPortStatus(port: number): Promise<boolean> {
             resolve(true);
         });
 
-        client.on('error', () => {
+        client.on('error', (error) => {
+            console.error('Error occurred while checking port status:', error);
             resolve(false);
         });
     });
 }
-
 
 export default async function checkConnectorStatus(port: number) {
     let response: boolean = false;

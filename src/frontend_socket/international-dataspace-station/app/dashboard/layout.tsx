@@ -1,6 +1,10 @@
 import SideNav from '@/app/dashboard/sidenav';
 import {cookies} from "next/headers";
 import {User} from "@/data/interface/user";
+import Cookies from 'js-cookie';
+import {redirect} from "next/navigation";
+import Link from "next/link";
+import {ArrowRightEndOnRectangleIcon} from "@heroicons/react/24/solid";
 
 export default function Layout({children}: { children: React.ReactNode }) {
     const userCookie = cookies().get('user' as any)?.value;
@@ -27,15 +31,15 @@ export default function Layout({children}: { children: React.ReactNode }) {
                         <div className="flex flex-row gap-4">
                             <div
                                 // className="hover:bg-neonBlue rounded-xl bg-gray-50"
-                                className="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                                className="flex h-[48px] grow items-center text-black justify-center gap-2 rounded-md bg-white p-3 text-sm font-medium hover:bg-neonBlue focus:bg-neonBlue shadow-xl md:flex-none md:justify-start md:p-2 md:px-3"
                                 >
                                 Hi, <strong>{user?.username}</strong>!
                             </div>
-                            {/*<button onClick={() => {*/}
-                            {/*    // cookies().delete('user');*/}
-                            {/*}} className="hover:bg-neonBlue rounded-xl bg-gray-50">*/}
-                            {/*    Logout*/}
-                            {/*</button>*/}
+                            <Link href={'/'}
+                                  className="flex h-[48px] grow items-center text-black justify-center gap-2 rounded-md bg-white p-3 text-sm font-medium hover:bg-neonBlue focus:bg-neonBlue shadow-xl md:flex-none md:justify-start md:p-2 md:px-3"
+                            >
+                                <ArrowRightEndOnRectangleIcon className="w-6"/>
+                            </Link>
                         </div>
                     </>
                     }

@@ -1,8 +1,8 @@
 'use client';
 
 import {
-  ArrowRightEndOnRectangleIcon,
-  ArrowRightStartOnRectangleIcon,
+  ArrowUpTrayIcon,
+  ArrowDownTrayIcon,
   HomeIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -16,11 +16,11 @@ const links = [
   {
     name: 'Send',
     href: '/dashboard/consumer',
-    icon: ArrowRightStartOnRectangleIcon,
+    icon: ArrowUpTrayIcon,
   },
   { name: 'Receive',
     href: '/dashboard/provider',
-    icon: ArrowRightEndOnRectangleIcon },
+    icon: ArrowDownTrayIcon },
 ];
 
 export default function NavLinks() {
