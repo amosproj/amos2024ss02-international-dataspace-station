@@ -32,14 +32,14 @@ To run the code using docker containers, use the following commands in separate 
 ### 1. Build a docker image
 ```
 mkdir docker-images
-sudo docker build -t <tax_advisor|company|bank> . -f <tax_advisor|company|bank>.Dockerfile
-sudo docker save -o ./docker-images/<tax_advisor|company|bank>.tar <tax_advisor|company|bank>
+sudo docker build -t <company|tax_advisor|bank> . -f <company|tax_advisor|bank>.Dockerfile
+sudo docker save -o ./docker-images/<company|tax_advisor|bank>.tar <company|tax_advisor|bank>
 ```
 ### 2. Load and run
 
 ```
-sudo docker load -i ./docker-images/<tax_advisor|company|bank>.tar
-sudo docker run -it -p <19193:19193|29193:29193|39193:39193> <tax_advisor|company|bank>
+sudo docker load -i ./docker-images/<company|tax_advisor|bank>.tar
+sudo docker run -it -p <19193:19193|29193:29193|39193:39193> <company|tax_advisor|bank>
 ```
 
 <span style="color:red"><b> Note: </b></span> If you are using macOS, you might have to modify the `config.json` file:
