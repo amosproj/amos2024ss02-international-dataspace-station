@@ -27,43 +27,55 @@ If you want to run the connectors on your local machine, make sure that you have
 
 ## 🐳 Docker usage
 
-To run the code using docker containers, use the following commands in separate terminals for both provider and consumer connectors:
+To run the code using docker containers, use the following commands in separate terminals for all three roles: tax advisor, company and bank connectors:
 
 ### 1. Build a docker image
 ```
 mkdir docker-images
-sudo docker build -t <provider|consumer> . -f <provider|consumer>.Dockerfile
-sudo docker save -o ./docker-images/<provider|consumer>.tar <provider|consumer>
+sudo docker build -t <tax_advisor|company|bank> . -f <tax_advisor|company|bank>.Dockerfile
+sudo docker save -o ./docker-images/<tax_advisor|company|bank>.tar <tax_advisor|company|bank>
 ```
 ### 2. Load and run
 
 ```
-sudo docker load -i ./docker-images/<provider|consumer>.tar
-sudo docker run -it -p <19193:19193|29193:29193> <provider|consumer>
+sudo docker load -i ./docker-images/<tax_advisor|company|bank>.tar
+sudo docker run -it -p <19193:19193|29193:29193|39193:39193> <tax_advisor|company|bank>
 ```
 
 <span style="color:red"><b> Note: </b></span> If you are using macOS, you might have to modify the `config.json` file:
-1. Go to `~/.docker/config.json`
+1. Go to `~/.docker/config.json`.
 2. Change the `credsStore` value from `desktop` to `osxkeychain`.
+
+Alternatively you may:
+1. Go to `sudo vi  ~/.docker/config.json`.
+2. Change `credsStore` to `credStore`.
 
 ## 🖥️ Running the connectors locally
 
 If you don't want to use docker, you can run the connectors locally. Use the following commands in separate terminals:
 
-### Provider connector
+### Company connector
 
-In the first terminal, use the following command to run a provider:
-
-```
-java -Dedc.keystore=resources/certs/cert.pfx -Dedc.keystore.password=123456 -Dedc.vault=resources/configuration/provider-vault.properties -Dedc.fs.config=resources/configuration/provider-configuration.properties -jar connector/build/libs/connector.jar
-```
-
-### Consumer connector
-
-In the second terminal, use the following command to run a consumer:
+In the first terminal, use the following command to run a company:
 
 ```
-java -Dedc.keystore=resources/certs/cert.pfx -Dedc.keystore.password=123456 -Dedc.vault=resources/configuration/consumer-vault.properties -Dedc.fs.config=resources/configuration/consumer-configuration.properties -jar connector/build/libs/connector.jar
+java -Dedc.keystore=resources/certs/cert.pfx -Dedc.keystore.password=123456 -Dedc.vault=resources/configuration/company-vault.properties -Dedc.fs.config=resources/configuration/company-configuration.properties -jar connector/build/libs/connector.jar
+```
+
+### Tax advisor connector
+
+In the second terminal, use the following command to run a tax advisor:
+
+```
+java -Dedc.keystore=resources/certs/cert.pfx -Dedc.keystore.password=123456 -Dedc.vault=resources/configuration/tax_advisor-vault.properties -Dedc.fs.config=resources/configuration/tax_advisor-configuration.properties -jar connector/build/libs/connector.jar
+```
+
+### Bank connector
+
+In the third terminal, use the following command to run a bank:
+
+```
+java -Dedc.keystore=resources/certs/cert.pfx -Dedc.keystore.password=123456 -Dedc.vault=resources/configuration/bank-vault.properties -Dedc.fs.config=resources/configuration/bank-configuration.properties -jar connector/build/libs/connector.jar
 ```
 
 ## 🔗 Establishing connection for data exchange

@@ -10,5 +10,5 @@ EXPOSE 19291
 
 RUN gradle connector:build
 
-CMD ["java", "-Dedc.keystore=resources/certs/cert.pfx", "-Dedc.keystore.password=123456", "-Dedc.vault=resources/configuration/provider-vault.properties", "-Dedc.fs.config=resources/configuration/provider-configuration.properties", "-jar", "connector/build/libs/connector.jar"]
+CMD ["java", "-Dedc.keystore=resources/certs/cert.pfx", "-Dedc.keystore.password=123456", "-Dedc.vault=resources/configuration/company-vault.properties", "-Dedc.fs.config=resources/configuration/company-configuration.properties", "-jar", "connector/build/libs/connector.jar"]
 
