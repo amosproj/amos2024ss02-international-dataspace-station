@@ -1,9 +1,9 @@
-import ConnectorStatus from '@/app/dashboard/provider/provider_status';
+import ConnectorStatus from '@/app/dashboard/tax_advisor/tax_advisor_status';
 
 export default function Page() {
   return(
   <main className="flex min-h-screen flex-col p-6">
-  <p>Provider Page</p>
+  <p>Tax Advisor Page</p>
   <br></br>
   <ConnectorStatus/>
   </main>

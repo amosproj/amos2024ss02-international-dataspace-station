@@ -32,8 +32,9 @@ include(":connector")
 
 
 //policy
-include(":policy:policy-01-policy-enforcement:policy-enforcement-provider")
-include(":policy:policy-01-policy-enforcement:policy-enforcement-consumer")
+include(":policy:policy-01-policy-enforcement:policy-enforcement-company")
+include(":policy:policy-01-policy-enforcement:policy-enforcement-tax_provider")
+include(":policy:policy-01-policy-enforcement:policy-enforcement-bank")
 include(":policy:policy-01-policy-enforcement:policy-functions")
 
 include(":util:http-request-logger")
