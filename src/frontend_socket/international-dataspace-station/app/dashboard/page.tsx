@@ -67,7 +67,6 @@
 // }
 'use client';
 import React, { useState, useEffect } from 'react';
-import checkConnectorStatus from "./connector_status";
 import ConnectorStatus from "./connector_status";
 // import { cookies } from "next/headers";
 import portRoles from '../../data/ports.json';
@@ -77,17 +76,6 @@ export default function Page() {
     const [output, setOutput] = useState('');
     const [connectionMessage, setConnectionMessage] = useState('');
 
-    // const [prov, setProv] = useState(false);
-    // const [currPort, setCurrPort] = useState(null);
-    // const loggedIn = cookies().get('user')?.value ? JSON.parse(cookies().get('user').value) : null;
-    // const ports = portRoles;
-    //
-    // useEffect(() => {
-    //     if (loggedIn) {
-    //         const userPort = ports.find(port => port.role === loggedIn.role)?.port;
-    //         setCurrPort(userPort);
-    //     }
-    // }, [loggedIn]);
     const handleClick = async () => {
         const response = await fetch('/api/execute_command');
         const data = await response.json();
