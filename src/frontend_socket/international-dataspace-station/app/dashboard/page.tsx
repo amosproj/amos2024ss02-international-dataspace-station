@@ -71,8 +71,12 @@ import checkConnectorStatus from "./connector_status";
 import ConnectorStatus from "./connector_status";
 // import { cookies } from "next/headers";
 import portRoles from '../../data/ports.json';
+import './styles/style.css';
 
 export default function Page() {
+    const [output, setOutput] = useState('');
+    const [connectionMessage, setConnectionMessage] = useState('');
+
     // const [prov, setProv] = useState(false);
     // const [currPort, setCurrPort] = useState(null);
     // const loggedIn = cookies().get('user')?.value ? JSON.parse(cookies().get('user').value) : null;
@@ -84,6 +88,21 @@ export default function Page() {
     //         setCurrPort(userPort);
     //     }
     // }, [loggedIn]);
+    const handleClick = async () => {
+        const response = await fetch('/api/execute_command');
+        const data = await response.json();
+        setOutput(data.output);
+        console.log(data.output);  // Ausgabe in der Konsole anzeigen
+        // Check if the last command was successful
+        if (data.results && data.results.length > 0) {
+          const lastCommandResult = data.results[data.results.length - 1];
+          if (lastCommandResult.output) {
+            setConnectionMessage('The connection has been established.');
+          } else {
+            setConnectionMessage('Failed to establish the connection.');
+          }
+        }
+      };
 
     return (
         <main className="flex flex-col p-6">
@@ -92,6 +111,9 @@ export default function Page() {
                     <ConnectorStatus port={39191} />
                 </div>
             </div>
+            <button onClick={handleClick} className="custom-button">Execute Command</button>
+            {output && <pre>{output}</pre>}  {/* Ausgabe auf der Seite anzeigen */}
+            {connectionMessage && <p>{connectionMessage}</p>}  {/* Verbindungsstatus anzeigen */}
         </main>
     );
 }

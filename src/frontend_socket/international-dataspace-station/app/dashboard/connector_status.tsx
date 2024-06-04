@@ -51,6 +51,7 @@ export async function checkConnectorStatus(PORT: number): Promise<string> {
         }
     } catch (error) {
         console.error('Error occurred while checking connector status:', error);
+        return("")
     }
 }
 interface PortsProps{
