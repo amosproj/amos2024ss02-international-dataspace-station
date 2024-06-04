@@ -1,5 +1,9 @@
 {
   "dependencies": {
     "net": "^1.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.1",
+    "@types/react": "^18.3.3"
   }
 }
