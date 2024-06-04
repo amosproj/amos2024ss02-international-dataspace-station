@@ -1,0 +1,14 @@
+[
+  {
+    "role": "company",
+    "port": 19191
+  },
+  {
+    "role": "tax",
+    "port": 29191
+  },
+  {
+    "role": "bank",
+    "port": 39191
+  }
+]
