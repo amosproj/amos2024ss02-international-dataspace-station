@@ -71,6 +71,7 @@ import checkConnectorStatus from "./connector_status";
 import ConnectorStatus from "./connector_status";
 // import { cookies } from "next/headers";
 import portRoles from '../../data/ports.json';
+import './styles/style.css';
 
 export default function Page() {
     // const [prov, setProv] = useState(false);
@@ -85,13 +86,37 @@ export default function Page() {
     //     }
     // }, [loggedIn]);
 
+    const [output, setOutput] = useState('');
+    const [connectionMessage, setConnectionMessage] = useState('');
+
+    const handleClick = async () => {
+        const response = await fetch('/api/execute_command');
+        const data = await response.json();
+        console.log(data)
+        setOutput(data.output);
+    //console.error(data.output);
+
+        // Check if the last command was successful
+        if (data.results && data.results.length > 0) {
+            const lastCommandResult = data.results[data.results.length - 1];
+            if (lastCommandResult.output) {
+                console.log("hi there");
+                setConnectionMessage('The connection has been established.');
+            } else {
+                setConnectionMessage('Failed to establish the connection.');
+            }
+        }
+};
+
     return (
         <main className="flex flex-col p-6">
             <div className="grid grid-cols-2 gap-5">
-                <div className="flex justify-evenly items-center bg-gray-100 border-gray-200 border-2 rounded-lg p-5">
-                    <ConnectorStatus port={39191} />
+                <div className="flex justify-evenly items-center bg-gray-100 border-gray-200 border-2 rounded-lg p-5 text-black">
+                     <button onClick={handleClick} className="bg-gray-100">Execute Command</button>
+                     {connectionMessage}
                 </div>
             </div>
         </main>
     );
 }
+
