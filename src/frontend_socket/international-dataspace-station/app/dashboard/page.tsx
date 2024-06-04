@@ -69,27 +69,27 @@
 import React, { useState, useEffect } from 'react';
 import checkConnectorStatus from "./connector_status";
 import ConnectorStatus from "./connector_status";
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
 import portRoles from '../../data/ports.json';
 
 export default function Page() {
-    const [prov, setProv] = useState(false);
-    const [currPort, setCurrPort] = useState(null);
-    const loggedIn = cookies().get('user')?.value ? JSON.parse(cookies().get('user').value) : null;
-    const ports = portRoles;
-
-    useEffect(() => {
-        if (loggedIn) {
-            const userPort = ports.find(port => port.role === loggedIn.role)?.port;
-            setCurrPort(userPort);
-        }
-    }, [loggedIn]);
+    // const [prov, setProv] = useState(false);
+    // const [currPort, setCurrPort] = useState(null);
+    // const loggedIn = cookies().get('user')?.value ? JSON.parse(cookies().get('user').value) : null;
+    // const ports = portRoles;
+    //
+    // useEffect(() => {
+    //     if (loggedIn) {
+    //         const userPort = ports.find(port => port.role === loggedIn.role)?.port;
+    //         setCurrPort(userPort);
+    //     }
+    // }, [loggedIn]);
 
     return (
         <main className="flex flex-col p-6">
             <div className="grid grid-cols-2 gap-5">
                 <div className="flex justify-evenly items-center bg-gray-100 border-gray-200 border-2 rounded-lg p-5">
-                    <ConnectorStatus port={currPort} />
+                    <ConnectorStatus port={39191} />
                 </div>
             </div>
         </main>
