@@ -1,19 +1,4 @@
-<p align="center"> <img src="https://raw.githubusercontent.com/amosproj/amos2024ss02-international-dataspace-station/main/Deliverables/sprint-01/team-logo-without-edges.png" alt="IDS" style="width:250px;height:250px;"> </p>
-
-<h1 align="center"> International Dataspace Station </h1> 
-<h3 align="center"> in collaboration with DATEV </h3>
-
-## 📖 About
-
-With the increase of data exchange among different sectors like finance, legal, healthcare, government and others, ensuring easy interoperability while still following data usage rules, policies, and local regulations is becoming increasingly important. **Dataspace** is the envisioned solution to tackle these challenges.
-
-Dataspace operates with the help of **data connectors**, which enable secure and effective communication and exchange of data. They are a tool to connect many data endpoints to increase the pool of available data and to accelerate the data economy. By linking data connectors, dataspaces become protected environments where participants can freely share data. Data sovereignty, transparency and fairness are ensured by adherence to a set of rules.
-
-Our goal is to explore the feasibiltiy of dataspace usage with regards to data sovereignty. This includes testing the maturity of dataspace, importance of the components and ease of deployment.
-
-Learn in more detail about how our software works here: [IDS - Documentation][documentation] <br><br>
-
-## ⚡️ Requirements
+# Requirements
 
 To run the connectors on your own machine, installing Docker is enough. If you don't want to use Docker, make sure that you have the following packages installed:
 
@@ -26,7 +11,9 @@ To run the connectors on your own machine, installing Docker is enough. If you d
 | node  | 22.2 | 
 <br>
 
-## 🐳 Docker usage
+# Build process
+
+## Docker usage
 
 To run the code using docker, use the following command in the `src` folder:
 
@@ -45,7 +32,7 @@ Alternatively you may:
 
 <br>
 
-## 🖥️ Running the connectors locally
+## Running the connectors locally
 
 To run the connectors without using Docker, you have to use four different terminals. Use the following commands in separate terminals:
 
@@ -88,7 +75,7 @@ After this, you can access the app at `https://localhost:3000`.
 
 <br>
 
-## 🔗 Establishing connection for data exchange
+## Establishing connection for data exchange
 
 Send the following HTTP requests to establish a connection between different connectors to be able to exchange data (replace `{{provider port}}`/`{{consumer port}}` with the corresponding ports on which the connector that provides/consumes data is running):
 
@@ -156,5 +143,3 @@ curl -X GET "http://localhost:{{consumer port}}/management/v2/contractnegotiatio
 The connectors have now been configured successfully and are ready to be used.
 
 [software_architecture]: https://github.com/amosproj/amos2024ss02-international-dataspace-station/blob/main/Deliverables/sprint-02/software-architecture.pdf
-
-[documentation]: https://github.com/amosproj/amos2024ss02-international-dataspace-station/tree/dfd45b9232be4af2d921f3585db6b1aeecc3cd55/Documentation
