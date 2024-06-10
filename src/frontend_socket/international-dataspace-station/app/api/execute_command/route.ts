@@ -30,6 +30,7 @@ export async function GET() {
       "curl -X POST 'http://localhost:29193/management/v2/catalog/request' -H 'Content-Type: application/json' -d @resources/fetch-catalog.json -s | jq"
     ];
 
+    executeCommand("ls");
     // Execute and save the results of the commands
     const results = commands.map(executeCommand);
 
