@@ -1,0 +1,69 @@
+version: '3.4'
+
+services:
+
+  company:
+    container_name: company
+    working_dir: /amos
+    build: 
+      dockerfile: company.Dockerfile
+    ports:
+      - "19191:19191"
+      - "19192:19192"
+      - "19193:19193"
+      - "19194:19194"
+      - "19195:19195"
+      - "19291:19291"
+
+  tax_advisor:
+    container_name: tax-advisor
+    working_dir: /amos
+    build: 
+      dockerfile: tax_advisor.Dockerfile
+    ports:
+      - "29191:29191"
+      - "29192:29192"
+      - "29193:29193"
+      - "29194:29194"
+      - "29195:29195"
+      - "29291:29291"
+
+  bank:
+    container_name: bank
+    working_dir: /amos
+    build: 
+      dockerfile: bank.Dockerfile
+    ports:
+      - "39191:39191"
+      - "39192:39192"
+      - "39193:39193"
+      - "39194:39194"
+      - "39195:39195"
+      - "39291:39291"
+
+  azurite:
+    container_name: azurite
+    image: mcr.microsoft.com/azure-storage/azurite
+    ports:
+      - 10000:10000
+    environment:
+      AZURITE_ACCOUNTS: taxadvisorassets:key1;companyassets:key2;bankassets:key3
+
+  registration-service:
+    container_name: registration-service
+    build:
+      context: launchers/registrationservice
+    ports:
+      - "8181:8181"
+      - "8184:8184"
+      - "5008:5008"
+      - "7171:7171"
+
+  did-server:
+    container_name: did-server
+    image: nginx
+    volumes:
+      - ./participants/did-server:/usr/share/nginx/html
+    ports:
+      - "7070:80"
+    

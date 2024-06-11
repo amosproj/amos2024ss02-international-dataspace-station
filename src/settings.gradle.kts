@@ -28,5 +28,5 @@ dependencyResolutionManagement {
     }
 }
 
-include(":launcher:connector")
-include(":launcher:registrationservice")
+include(":launchers:connector")
+include(":launchers:registrationservice")
