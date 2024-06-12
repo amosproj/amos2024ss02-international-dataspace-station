@@ -9,11 +9,11 @@ This project investigates the feasibility of utilizing dataspaces with a focus o
 ![Component Diagram](./design_documentation_images/component-diagram.png)
 
 ## Components
-###1. Login Interface
+### 1. Login Interface
 
 The Login Interface serves as the initial access point to the system, facilitating authentication for users. The primary purpose of the Login Interface is to authenticate users and grant access to the system based on their roles: bank, tax advisor, or company.
 
-##### Components:
+##### Components
 
 a. **Username Field**: This input field prompts users to enter their username or registered email address.
 
@@ -22,17 +22,16 @@ b. **Password Field**: Users are required to input their password securely in th
 c. **Login Button**: This button initiates the authentication process upon user input of credentials and role selection.
 
 
-###2. Data Connectors
+### 2. Data Connectors
 Data connectors are the core components that enable secure and effective communication and data exchange between different entities. They facilitate the connection of multiple data endpoints, increasing the pool of available data and accelerating the data economy.
 
-#### Design
 Each data connector performs the following functions:
 1. **Connectivity Validation**: Ensures secure connection establishment with data sources or destinations.
 2. **Data Exchange**: Manages secure data transfer, including encryption and decryption processes.
 3. **Compliance Monitoring**: Ensures adherence to data usage policies and local regulations during data exchange.
 4. **Audit Logging**: Maintains transaction logs for transparency and accountability.
 
-###3. Dashboard Interface
+### 3. Dashboard Interface
 The Dashboard Interface serves as the central hub for users post-authentication, offering a comprehensive overview of available functionalities and navigation options within the system.
 #### Components
 
@@ -42,7 +41,7 @@ b. **Receive Interface**: A dedicated page or section enabling users to see any 
 
 c. **Send Interface**: A designated area allowing users to initiate an outgoing data flow.
 
-###4. Backend Services
+### 4. Backend Services
 The backend services handle the core logic of the dataspace application, managing connections, data exchanges, and compliance monitoring.
 
 #### Components (to be implemented)
