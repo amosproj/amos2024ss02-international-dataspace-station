@@ -9,7 +9,6 @@ interface FileDetails {
     sender: string;
     receiver: string;
     date: string;
-    dateTime: string;
     fileTitle: string;
     fileSize: string;
     link: string;
@@ -30,13 +29,17 @@ export default function Page() {
             const user = JSON.parse(userCookie) as User;
             setLoggedInUser(user);
         }
-        if (users.length > 0 && loggedInUser) {
+    }, []);
+
+    useEffect(() => {
+        if (loggedInUser && users.length > 0) {
             const initialReceiver = users.find(u => u.role !== loggedInUser.role);
             if (initialReceiver) {
                 setReceiver(initialReceiver.role);
             }
         }
-    }, [loggedInUser]);
+    }, [loggedInUser, users]);
+
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
@@ -61,13 +64,13 @@ export default function Page() {
                     sender: loggedInUser ? loggedInUser.username : 'Unknown',
                     receiver: receiver,
                     date: new Date().toLocaleDateString(),
-                    dateTime: new Date().toISOString(),
                     fileTitle: selectedFile.name,
                     fileSize: `${(selectedFile.size / 1024 / 1024).toFixed(2)} MB`,
                     link: '#'
                 };
                 setFiles([...files, newFile]);
                 setShowModal(false);
+                setSubject('');
             } else {
                 alert('File upload failed.');
             }
@@ -82,32 +85,38 @@ export default function Page() {
                     Send Data
                 </button>
             </div>
-            <table className="divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                 <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sender</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Receiver</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attachment</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
                 </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                {files.map((file) => (
-                    <tr key={file.title}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-                            title={file.title}>{file.title}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{file.sender}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{file.receiver}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{file.date}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{file.fileTitle}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{file.fileSize}</td>
+                {files.length > 0 ? (
+                    files.map((file, index) => (
+                        <tr key={index}>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{file.title}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{file.sender}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{file.receiver}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{file.date}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{file.fileTitle}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{file.fileSize}</td>
+                        </tr>
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan={6} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                            No data available
+                        </td>
                     </tr>
-                ))}
+                )}
                 </tbody>
             </table>
-
             {showModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
                     <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -133,7 +142,6 @@ export default function Page() {
                                     id="connector"
                                     name="connector"
                                     value={receiver}
-                                    defaultValue={receiver}
                                     onChange={(e) => setReceiver(e.target.value)}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     required
@@ -151,13 +159,13 @@ export default function Page() {
                                     name="file-upload"
                                     id="file-upload"
                                     onChange={handleFileChange}
-                                    className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-neonBlue file:text-white hover:file:bg-neonBlue"
+                                    className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-500 file:text-white hover:file:bg-neonGreen"
                                     required
                                 />
                             </div>
-                            <div className="flex justify-end">
+                            <div className="flex justify-center mt-10">
                                 <button type="button" onClick={() => setShowModal(false)}
-                                        className="px-4 py-2 mr-2 rounded-md bg-gray-300 hover:bg-gray-400">Cancel
+                                        className="px-4 mr-5 py-2 rounded-md bg-red-400 hover:bg-neonBlue text-white">Cancel
                                 </button>
                                 <button type="submit"
                                         className="px-4 py-2 rounded-md bg-neonGreen hover:bg-neonBlue text-white">Submit
