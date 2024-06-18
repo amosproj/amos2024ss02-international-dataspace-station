@@ -11,7 +11,7 @@ EXPOSE 19195
 EXPOSE 19291
 
 ENV EDC_FS_CONFIG=/resources/company-configuration.properties
-ENV EDC_DSP_CALLBACK_ADDRESS=http://company:39194/api/dsp
+ENV EDC_DSP_CALLBACK_ADDRESS=http://company:19194/api/dsp
 ENV EDC_CONNECTOR_NAME=company
 ENV EDC_PARTICIPANT_ID=did:web:did-server:company
 ENV EDC_BLOBSTORE_ENDPOINT_TEMPLATE="http://azurite:10000/%s"

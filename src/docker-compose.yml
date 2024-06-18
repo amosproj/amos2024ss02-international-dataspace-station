@@ -4,7 +4,6 @@ services:
 
   company:
     container_name: company
-    working_dir: /amos
     build: 
       dockerfile: company.Dockerfile
     ports:
@@ -17,7 +16,6 @@ services:
 
   tax_advisor:
     container_name: tax-advisor
-    working_dir: /amos
     build: 
       dockerfile: tax_advisor.Dockerfile
     ports:
@@ -30,7 +28,6 @@ services:
 
   bank:
     container_name: bank
-    working_dir: /amos
     build: 
       dockerfile: bank.Dockerfile
     ports:
@@ -52,7 +49,7 @@ services:
   registration-service:
     container_name: registration-service
     build:
-      context: launchers/registrationservice
+      dockerfile: registration_service.Dockerfile
     ports:
       - "8181:8181"
       - "8184:8184"

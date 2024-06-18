@@ -26,6 +26,6 @@ ENV EDC_KEYSTORE_PASSWORD=test123
 ENV EDC_ERROR_RESPONSE_VERBOSE="true"
 
 
-RUN gradle launchers:registrationservice:build
+RUN gradle -DuseFsVault="true" launchers:registrationservice:build
 
 CMD ["java", "-jar", "launchers/registrationservice/build/libs/registrationservice.jar"]

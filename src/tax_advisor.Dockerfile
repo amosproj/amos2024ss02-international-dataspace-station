@@ -11,7 +11,7 @@ EXPOSE 29195
 EXPOSE 29291
 
 ENV EDC_FS_CONFIG=/resources/taxadvisor-configuration.properties
-ENV EDC_DSP_CALLBACK_ADDRESS=http://taxadvisor:39194/api/dsp
+ENV EDC_DSP_CALLBACK_ADDRESS=http://taxadvisor:29194/api/dsp
 ENV EDC_CONNECTOR_NAME=taxadvisor
 ENV EDC_PARTICIPANT_ID=did:web:did-server:taxadvisor
 ENV EDC_BLOBSTORE_ENDPOINT_TEMPLATE="http://azurite:10000/%s"
