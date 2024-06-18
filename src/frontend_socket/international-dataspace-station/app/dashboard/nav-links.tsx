@@ -15,11 +15,11 @@ const links = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
   {
     name: 'Send',
-    href: '/dashboard/consumer',
+    href: '/dashboard/send',
     icon: ArrowUpTrayIcon,
   },
   { name: 'Receive',
-    href: '/dashboard/provider',
+    href: '/dashboard/receive',
     icon: ArrowDownTrayIcon },
 ];
 
