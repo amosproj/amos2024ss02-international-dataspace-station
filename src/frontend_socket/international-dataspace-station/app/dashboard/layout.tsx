@@ -1,8 +1,6 @@
-import SideNav from '@/app/dashboard/sidenav';
+import SideNav from '../dashboard/sidenav';
 import {cookies} from "next/headers";
-import {User} from "@/data/interface/user";
-import Cookies from 'js-cookie';
-import {redirect} from "next/navigation";
+import {User} from "../../data/interface/user";
 import Link from "next/link";
 import {ArrowRightEndOnRectangleIcon} from "@heroicons/react/24/solid";
 

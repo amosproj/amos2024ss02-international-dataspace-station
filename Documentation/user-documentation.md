@@ -9,7 +9,7 @@ To execute the final program, ensure that all the requirements are installed (re
 
 This will create three containers, each representing one connector (for the roles of *bank, company* and *tax advisor*) as well as an additional container representing the app.
 
-## Login Page
+## Login Index
 In order to access the login page, enter ``localhost:3000``. This opens the login page, where the user can choose what role they want to log in as:
 
 ![](/Users/xmena/Documents/TU/AMOS/amos_project_2/amos2024ss02-international-dataspace-station/Documentation/user_documenation_images/login_page.png)
@@ -18,7 +18,7 @@ After choosing the desired role the user is forwarded to the login screen, where
 
 ![](/Users/xmena/Documents/TU/AMOS/amos_project_2/amos2024ss02-international-dataspace-station/Documentation/user_documenation_images/login_page2.png)
 
-## User Page
+## User Index
 After a successful login the user will see their main page, where they can navigate, using the sidebar on the left side of the page, to different functionalities. 
 
 In the top right corner the user has the possibility to log out and go back to the login page.

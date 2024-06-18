@@ -1,4 +1,4 @@
-import NavLinks from '@/app/dashboard/nav-links';
+import NavLinks from '../dashboard/nav-links';
 import Image from "next/image";
 
 export default function SideNav() {

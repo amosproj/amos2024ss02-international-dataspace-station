@@ -5,7 +5,7 @@
 // import {cookies} from "next/headers";
 // import portRoles from '../../data/ports.json';
 //
-// export default function Page() {
+// export default function Index() {
 //     const [prov, setProv] = useState(false);
 //     const loggedIn = cookies().get('user')?.value ? JSON.parse(cookies().get('user').value) : null;
 //     const ports = portRoles;
@@ -39,7 +39,7 @@
 // import React, { useState, useEffect } from 'react';
 // import checkConnectorStatus from "./connector_status";
 //
-// export default function Page() {
+// export default function Index() {
 //     const [isConnectorRunning, setIsConnectorRunning] = useState(false);
 //
 //     useEffect(() => {

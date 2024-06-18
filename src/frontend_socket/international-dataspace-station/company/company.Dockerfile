@@ -11,7 +11,7 @@ RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 WORKDIR /home/node/app
 
 # Copy package.json and package-lock.json files to the container
-COPY package.json package-lock.json ./
+COPY company/package.json company/package-lock.json ./
 
 # Install dependencies
 RUN npm install
@@ -19,10 +19,11 @@ RUN npm install
 # Copy the rest of the application code to the container
 COPY . .
 
-# Build the application
+# Build the application (if applicable for Next.js or frontend build)
 RUN npm run build
 
-# Expose port 3000 (default Next.js port)
-EXPOSE 3000
+# Expose port 3001 (custom port for company connector)
+EXPOSE 3001
 
-CMD [ "npm", "run", "dev" ]
+# Command to start the company connector frontend
+CMD [ "npm", "run", "start:company" ]
