@@ -8,7 +8,7 @@ EXPOSE 39193
 EXPOSE 39194
 EXPOSE 39291
 
-RUN gradle connector:build
+RUN ./gradlew connector:build
 
 CMD ["java", "-Dedc.keystore=resources/certs/cert.pfx", "-Dedc.keystore.password=123456", "-Dedc.vault=resources/configuration/bank-vault.properties", "-Dedc.fs.config=resources/configuration/bank-configuration.properties", "-jar", "connector/build/libs/connector.jar"]
 

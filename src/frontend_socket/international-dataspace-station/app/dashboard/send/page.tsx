@@ -22,6 +22,25 @@ export default function Page() {
     const [files, setFiles] = useState<FileDetails[]>([]);
     const [showModal, setShowModal] = useState(false);
     const [receiver, setReceiver] = useState<string>('');
+    const [output, setOutput] = useState('');
+    const [connectionMessage, setConnectionMessage] = useState('');
+
+    const handleClick = async () => {
+      const response = await fetch('/api/execute_command');
+      const data = await response.json();
+      setOutput(data.output);
+      //console.log(data.output);  // Ausgabe in der Konsole anzeigen
+      
+      // Check if the last command was successful
+      if (data.results && data.results.length > 0) {
+        const lastCommandResult = data.results[data.results.length - 1];
+        if (lastCommandResult.output) {
+          setConnectionMessage('The connection has been established.');
+        } else {
+          setConnectionMessage('Failed to establish the connection.');
+        }
+      }
+    };
 
     useEffect(() => {
         const userCookie = Cookies.get('user');
@@ -78,7 +97,18 @@ export default function Page() {
     };
 
     return (
+
         <div className="flex min-h-screen flex-col p-6">
+            <div className="flex justify-start pb-5">
+                <button onClick={handleClick} className="mb-4 px-4 py-2 rounded-md bg-neonGreen hover:bg-neonBlue text-white">
+                    Execute Command
+                </button>
+            </div>
+            <div className="grid grid-cols-2 gap-5">
+                    {output && <pre>{output}</pre>}
+                    {connectionMessage && <p className="text-black">{connectionMessage}</p>}
+            </div>
+            <div className="grid grid-cols-2 gap-5"><br></br></div>
             <div className="flex justify-start pb-5">
                 <button onClick={() => setShowModal(true)}
                         className="mb-4 px-4 py-2 rounded-md bg-neonGreen hover:bg-neonBlue text-white">

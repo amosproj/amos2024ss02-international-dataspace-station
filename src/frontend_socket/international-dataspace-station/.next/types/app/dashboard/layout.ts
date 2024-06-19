@@ -1,4 +1,4 @@
-// File: /Users/escos/Documents/uni/SS24/amos/amos2024ss02-international-dataspace-station/src/frontend_socket/international-dataspace-station/app/dashboard/layout.tsx
+// File: /Users/ekaterina.ivanishcheva/amos2024ss02-international-dataspace-station/src/frontend_socket/international-dataspace-station/app/dashboard/layout.tsx
 import * as entry from '../../../../app/dashboard/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

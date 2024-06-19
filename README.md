@@ -28,9 +28,10 @@ To run the connectors on your own machine, installing Docker is enough. If you d
 
 ## 🐳 Docker usage
 
-To run the code using docker, use the following command in the `src` folder:
+To run the code using docker, use the following commands in the `src` folder:
 
 ```
+sudo docker compose build
 sudo docker compose up
 ```
 <br>

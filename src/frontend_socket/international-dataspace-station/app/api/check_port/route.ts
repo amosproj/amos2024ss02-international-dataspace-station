@@ -3,7 +3,9 @@ import * as net from 'net';
 
 function checkPortStatus(port: number): Promise<boolean> {
     return new Promise((resolve) => {
-        const client = net.createConnection({ port }, () => {
+        /***** For local run, use the first version of the function *****/
+        // const client = net.createConnection({ port }, () => {
+        const client = net.createConnection( port , "company", () => {
             client.end();
             resolve(true);
         });

@@ -23,7 +23,7 @@ services:
       - "39193:39193"
 
   app:
-    working_dir: /home/node/app
+    working_dir: /amos
     build: 
       dockerfile: frontend_socket/international-dataspace-station/app.Dockerfile
     ports:
