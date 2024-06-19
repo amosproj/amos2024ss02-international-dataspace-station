@@ -1,10 +1,15 @@
 FROM node:22-alpine
 
-USER node
+USER root
 
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+RUN mkdir -p /amos/node_modules && chown -R node:node /amos
 
-WORKDIR /home/node/app
+WORKDIR /amos
+
+COPY --chown=node:node . .
+
+RUN apk update
+RUN apk add --no-cache curl jq
 
 COPY frontend_socket/international-dataspace-station/package.json frontend_socket/international-dataspace-station/package-lock.json ./
 RUN --mount=type=cache,target=/root/.npm npm ci
