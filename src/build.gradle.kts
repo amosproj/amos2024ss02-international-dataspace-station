@@ -29,6 +29,38 @@ buildscript {
 
 val edcVersion = libs.versions.edc
 
+val version: String by project
+
+
+val downloadArtifact: Configuration by configurations.creating {
+    isTransitive = false
+}
+
+dependencies {
+    downloadArtifact("org.eclipse.edc:identity-hub-cli:${version}:all")
+    downloadArtifact("org.eclipse.edc:registration-service-cli:${version}:all")
+}
+
+
+val getJarsForLocalTest by tasks.registering(Copy::class) {
+    outputs.upToDateWhen { false } //always download
+
+    from(downloadArtifact)
+        // strip away the version string
+        .rename { s ->
+            s.replace("-${version}", "")
+                .replace("-${version}", "")
+                .replace("-all", "")
+        }
+    into(layout.projectDirectory.dir("cli-tools"))
+}
+
+tasks {
+    jar {
+        finalizedBy(getJarsForLocalTest)
+    }
+}
+
 allprojects {
     apply(plugin = "$group.edc-build")
 
