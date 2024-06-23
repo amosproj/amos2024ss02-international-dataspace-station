@@ -20,6 +20,6 @@ COPY --chown=node:node frontend_socket/international-dataspace-station/. .
 
 RUN npm install --loglevel verbose
 
-EXPOSE 3003
+EXPOSE 3002
 
-CMD [ "sh", "-c", "PORT=3003 npm run dev" ]
+CMD [ "sh", "-c", "PORT=3002 npm run dev" ]
