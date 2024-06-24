@@ -22,9 +22,23 @@ services:
     ports:
       - "39193:39193"
 
-  app:
+  company_frontend:
     working_dir: /amos
-    build: 
-      dockerfile: frontend_socket/international-dataspace-station/app.Dockerfile
+    build:
+      dockerfile: frontend_socket/international-dataspace-station/company_frontend.Dockerfile
     ports:
-      - "3000:3000"
+      - "3001:3001"
+
+  tax_advisor_frontend:
+    working_dir: /amos
+    build:
+      dockerfile: frontend_socket/international-dataspace-station/tax_advisor_frontend.Dockerfile
+    ports:
+      - "3002:3002"
+
+  bank_frontend:
+    working_dir: /amos
+    build:
+      dockerfile: frontend_socket/international-dataspace-station/bank_frontend.Dockerfile
+    ports:
+      - "3003:3003"
