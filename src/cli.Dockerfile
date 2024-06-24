@@ -9,6 +9,11 @@ WORKDIR /app
 COPY cli-tools/registration-service-cli.jar .
 COPY cli-tools/identity-hub-cli.jar .
 
+COPY cli-tools/register-participants.sh .
+COPY cli-tools/validate-onboarding.sh .
+
+COPY cli-tools/participants.json .
+
 COPY participants ./participants
 
-CMD ["java", "-jar", "registration-service-cli.jar", "-d=\"did:web:did-server:registration-service\"", "--http-scheme", "-k=./participants/bank/resources/vault/private-key.pem", "-c=\"did:web:did-server:bank\"", "participants", "add"]
+ENTRYPOINT "/app/register-participants.sh"

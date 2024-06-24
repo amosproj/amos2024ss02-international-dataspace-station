@@ -10,6 +10,8 @@ EXPOSE 29194
 EXPOSE 29195
 EXPOSE 29291
 
+HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl --fail http://localhost:29191/api/health
+
 ENV EDC_FS_CONFIG=/resources/taxadvisor-configuration.properties
 ENV EDC_DSP_CALLBACK_ADDRESS=http://taxadvisor:29194/api/dsp
 ENV EDC_CONNECTOR_NAME=taxadvisor

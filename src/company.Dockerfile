@@ -10,6 +10,8 @@ EXPOSE 19194
 EXPOSE 19195
 EXPOSE 19291
 
+HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl --fail http://localhost:19191/api/health
+
 ENV EDC_FS_CONFIG=/resources/company-configuration.properties
 ENV EDC_DSP_CALLBACK_ADDRESS=http://company:19194/api/dsp
 ENV EDC_CONNECTOR_NAME=company

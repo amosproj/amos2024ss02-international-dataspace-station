@@ -10,6 +10,8 @@ EXPOSE 39194
 EXPOSE 39195
 EXPOSE 39291
 
+HEALTHCHECK --interval=5s --timeout=5s --retries=10 CMD curl --fail http://localhost:39191/api/health
+
 ENV EDC_FS_CONFIG=/resources/bank-configuration.properties
 ENV EDC_DSP_CALLBACK_ADDRESS=http://bank:39194/api/dsp
 ENV EDC_CONNECTOR_NAME=bank

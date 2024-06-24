@@ -1,0 +1,19 @@
+{
+    "include": [
+      {
+        "participant": "bank",
+        "region": "eu",
+        "country": "DE"
+      },
+      {
+        "participant": "company",
+        "region": "eu",
+        "country": "DE"
+      },
+      {
+        "participant": "taxadvisor",
+        "region": "eu",
+        "country": "DE"
+      }
+    ]
+  }

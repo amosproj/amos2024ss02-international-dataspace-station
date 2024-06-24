@@ -11,11 +11,11 @@ services:
       - "19192:19192"
       - "19193:19193"
       - "19194:19194"
-      - "19195:19195"
+      - "19195:7171"
       - "19291:19291"
 
   tax_advisor:
-    container_name: tax-advisor
+    container_name: tax_advisor
     build: 
       dockerfile: tax_advisor.Dockerfile
     ports:
@@ -23,7 +23,7 @@ services:
       - "29192:29192"
       - "29193:29193"
       - "29194:29194"
-      - "29195:29195"
+      - "29195:7171"
       - "29291:29291"
 
   bank:
@@ -35,7 +35,7 @@ services:
       - "39192:39192"
       - "39193:39193"
       - "39194:39194"
-      - "39195:39195"
+      - "39195:7171"
       - "39291:39291"
 
   azurite:
@@ -63,4 +63,16 @@ services:
       - ./participants/did-server:/usr/share/nginx/html
     ports:
       - "7070:80"
+
+  cli-registration:
+    container_name: cli-registration
+    build:
+      dockerfile: cli.Dockerfile
+    depends_on:
+      bank:
+        condition: service_healthy
+      company:
+        condition: service_healthy
+      tax_advisor:
+        condition: service_healthy
     
