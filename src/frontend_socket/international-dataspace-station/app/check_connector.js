@@ -40,8 +40,9 @@ const checkPortOpen = (port, host = '127.0.0.1', timeout = 2000) => {
 };
 
 const ports = {
-  consumer: 19191,
-  provider: 29191
+  company: 19191,
+  tax_advisor: 29191,
+  bank: 39191
 };
 
 // Serve a simple HTML file
@@ -60,6 +61,6 @@ app.get('/check-ports', async (req, res) => {
   res.json(statuses);
 });
 
-server.listen(3000, () => {
-  console.log('Server running at http://localhost:3000');
+server.listen(3001, () => {
+  console.log('Server running at http://localhost:3001');
 });

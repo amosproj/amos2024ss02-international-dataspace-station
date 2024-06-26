@@ -1,24 +1,24 @@
 version: '3.4'
 
 services:
-  company:
+  company_connector:
     working_dir: /amos
     build: 
-      dockerfile: company.Dockerfile
+      dockerfile: company_connector.Dockerfile
     ports:
       - "19193:19193"
 
-  tax_advisor:
+  tax_advisor_connector:
     working_dir: /amos
     build: 
-      dockerfile: tax_advisor.Dockerfile
+      dockerfile: tax_advisor_connector.Dockerfile
     ports:
       - "29193:29193"
 
-  bank:
+  bank_connector:
     working_dir: /amos
     build: 
-      dockerfile: bank.Dockerfile
+      dockerfile: bank_connector.Dockerfile
     ports:
       - "39193:39193"
 

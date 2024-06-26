@@ -36,11 +36,11 @@ export async function GET() {
     // ];
 
     const commands = [
-      "curl -H 'Content-Type: application/json' -d @resources/dataplane/register-data-plane-provider.json -X POST 'http://company:19193/management/v2/dataplanes' -s | jq",
-      "curl -d @resources/create-asset.json -H 'content-type: application/json' http://company:19193/management/v3/assets -s | jq",
-      "curl -d @resources/create-policy.json -H 'content-type: application/json' http://company:19193/management/v2/policydefinitions -s | jq",
-      "curl -d @resources/create-contract-definition.json -H 'content-type: application/json' http://company:19193/management/v2/contractdefinitions -s | jq",
-      "curl -X POST 'http://company:19193/management/v2/catalog/request' -H 'Content-Type: application/json' -d @resources/fetch-catalog.json -s | jq"
+      "curl -H 'Content-Type: application/json' -d @resources/dataplane/register-data-plane-provider.json -X POST 'http://company_connector:19193/management/v2/dataplanes' -s | jq",
+      "curl -d @resources/create-asset.json -H 'content-type: application/json' http://company_connector:19193/management/v3/assets -s | jq",
+      "curl -d @resources/create-policy.json -H 'content-type: application/json' http://company_connector:19193/management/v2/policydefinitions -s | jq",
+      "curl -d @resources/create-contract-definition.json -H 'content-type: application/json' http://company_connector:19193/management/v2/contractdefinitions -s | jq",
+      "curl -X POST 'http://company_connector:19193/management/v2/catalog/request' -H 'Content-Type: application/json' -d @resources/fetch-catalog.json -s | jq"
     ];
 
     
@@ -57,7 +57,7 @@ export async function GET() {
     replacePlaceholderInFile(negotiateContractPath, contractId, contractOfferId); // Replace old id with the new one
 
     // const finalCommand = "curl -d @../../resources/negotiate-contract.json -X POST -H 'content-type: application/json' http://localhost:19193/management/v2/contractnegotiations -s | jq";
-    const finalCommand = "curl -d @resources/negotiate-contract.json -X POST -H 'content-type: application/json' http://company:19193/management/v2/contractnegotiations -s | jq";
+    const finalCommand = "curl -d @resources/negotiate-contract.json -X POST -H 'content-type: application/json' http://company_connector:19193/management/v2/contractnegotiations -s | jq";
     const finalResult = executeCommand(finalCommand);
    
     results.push(finalResult);
@@ -65,7 +65,7 @@ export async function GET() {
 
     const contractNegotiationId = results[5].output["@id"]; // Get contract negotiation id from the response
     // const lastCommand = `curl -X GET "http://localhost:19193/management/v2/contractnegotiations/${contractNegotiationId}" --header 'Content-Type: application/json' -s | jq`;
-    const lastCommand = `curl -X GET "http://company:19193/management/v2/contractnegotiations/${contractNegotiationId}" --header 'Content-Type: application/json' -s | jq`;
+    const lastCommand = `curl -X GET "http://company_connector:19193/management/v2/contractnegotiations/${contractNegotiationId}" --header 'Content-Type: application/json' -s | jq`;
     const lastResult = executeCommand(lastCommand);
 
     results.push(lastResult);

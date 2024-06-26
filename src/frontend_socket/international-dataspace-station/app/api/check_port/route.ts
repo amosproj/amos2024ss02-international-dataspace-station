@@ -5,7 +5,7 @@ function checkPortStatus(port: number): Promise<boolean> {
     return new Promise((resolve) => {
         /***** For local run, use the first version of the function *****/
         // const client = net.createConnection({ port }, () => {
-        const client = net.createConnection( port , "company", () => {
+        const client = net.createConnection( port , "company_connector", () => {
             client.end();
             resolve(true);
         });
