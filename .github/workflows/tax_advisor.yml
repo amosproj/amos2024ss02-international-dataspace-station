@@ -1,5 +1,5 @@
 #
-name: Create and publish a tax advisor image
+name: Create and publish a tax advisor connector and frontend
 
 # Configures this workflow to run every time a change is pushed to the branch called release.
 on:
@@ -14,7 +14,7 @@ env:
 
 # There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
-  build-and-push-image-consumer:
+  build-and-push-image-connector:
     runs-on: ubuntu-latest
     # Sets the permissions granted to the GITHUB_TOKEN for the actions in this job.
     permissions:
@@ -64,5 +64,56 @@ jobs:
         uses: actions/attest-build-provenance@v1
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}-tax_advisor_connector
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+
+build-and-push-image-frontend:
+    runs-on: ubuntu-latest
+    needs: build-and-push-image-connector
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-tax_advisor_frontend
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=sha
+
+      - name: Change directory and copy Dockerfile
+        working-directory: ./src/frontend_socket/international-dataspace-station
+        run: cp tax_advisor_frontend.Dockerfile Dockerfile
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./src/frontend_socket/international-dataspace-station
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-tax_advisor_frontend
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
