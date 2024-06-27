@@ -8,6 +8,10 @@ WORKDIR /amos
 
 COPY --chown=node:node . .
 
+ENV CONNECTOR_NAME=taxadvisor
+ENV CLOUD_DOMAIN=amos.cloudness.dev
+ENV RUNNING_ENV=local
+
 RUN apk update
 RUN apk add --no-cache curl jq
 
