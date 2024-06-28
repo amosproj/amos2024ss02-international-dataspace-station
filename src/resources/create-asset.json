@@ -2,15 +2,18 @@
   "@context": {
     "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
   },
-  "@id": "assetId",
+  "@id": "0001",
   "properties": {
-    "name": "product description",
+    "name": "A text file for transfer",
     "contenttype": "application/json"
   },
   "dataAddress": {
     "type": "HttpData",
-    "name": "Test asset",
-    "baseUrl": "https://jsonplaceholder.typicode.com/users",
-    "proxyPath": "true"
+    "name": "example-text-file",
+    "proxyPath": "true",
+    "properties": {
+      "endpoint": "http://localhost:8000/test.txt",
+      "method": "GET"
+    }
   }
 }
