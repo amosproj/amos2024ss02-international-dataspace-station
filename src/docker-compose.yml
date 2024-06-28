@@ -2,19 +2,22 @@ version: '3.4'
 
 services:
   company_connector:
-    build: 
+    build:
+      context: edc-connector
       dockerfile: company_connector.Dockerfile
     ports:
       - "19193:19193"
 
   tax_advisor_connector:
     build: 
+      context: edc-connector
       dockerfile: tax_advisor_connector.Dockerfile
     ports:
       - "29193:29193"
 
   bank_connector:
-    build: 
+    build:
+      context: edc-connector
       dockerfile: bank_connector.Dockerfile
     ports:
       - "39193:39193"
