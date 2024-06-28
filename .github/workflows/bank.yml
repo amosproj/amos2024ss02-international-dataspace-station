@@ -98,14 +98,14 @@ jobs:
             type=sha
 
       - name: Change directory and copy Dockerfile
-        working-directory: ./src/frontend_socket/international-dataspace-station
+        working-directory: ./src/frontend
         run: cp bank_frontend.Dockerfile Dockerfile
 
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@v4
         with:
-          context: ./src/frontend_socket/international-dataspace-station
+          context: ./src/frontend
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

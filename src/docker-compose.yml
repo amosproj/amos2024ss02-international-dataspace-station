@@ -21,21 +21,21 @@ services:
 
   company_frontend:
     build:
-      context: frontend_socket/international-dataspace-station
+      context: frontend
       dockerfile: company_frontend.Dockerfile
     ports:
       - "3001:3000"
 
   tax_advisor_frontend:
     build:
-      context: frontend_socket/international-dataspace-station
+      context: frontend
       dockerfile: tax_advisor_frontend.Dockerfile
     ports:
       - "3002:3000"
 
   bank_frontend:
     build:
-      context: frontend_socket/international-dataspace-station
+      context: frontend
       dockerfile: bank_frontend.Dockerfile
     ports:
       - "3003:3000"
