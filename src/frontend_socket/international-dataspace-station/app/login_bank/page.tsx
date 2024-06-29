@@ -1,11 +1,8 @@
-import { redirect} from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
 const conList: ContainerProps[] = [
   { href: '/login', title: 'Bank', description: 'Description for Bank' },
-  { href: '/login', title: 'Company', description: 'Description for Company' },
-  { href: '/login', title: 'Tax Advisor', description: 'Description for Tax Advisor' },
 ];
 
 interface ContainerProps{
@@ -32,13 +29,6 @@ const  Container = (props: ContainerProps) => {
 }
 
 export default function Page() {
-    // Read the environment variable
-    const initialPage = process.env.NEXT_PUBLIC_INITIAL_PAGE;
-
-    // Redirect based on the environment variable
-    if (initialPage === 'bank') {
-      redirect('/login_bank');
-    }
   return (
       <main className="flex min-h-screen flex-col p-6 bg-black">
         <div className="m-8 flex grow flex-col gap-4 md:flex-row ">
