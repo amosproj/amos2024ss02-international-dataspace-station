@@ -2,17 +2,17 @@
   "@context": {
     "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
   },
-  "@id": "0001",
+  "@id": "0007",
   "properties": {
     "name": "A text file for transfer",
-    "contenttype": "application/json"
+    "contenttype": "text/plain"
   },
   "dataAddress": {
     "type": "HttpData",
     "name": "example-text-file",
     "proxyPath": "true",
     "properties": {
-      "endpoint": "http://localhost:8000/test.txt",
+      "baseUrl": "http://localhost:8000/test.txt",
       "method": "GET"
     }
   }

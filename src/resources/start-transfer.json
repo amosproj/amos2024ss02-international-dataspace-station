@@ -5,13 +5,14 @@
   "@type": "TransferRequestDto",
   "connectorId": "company",
   "counterPartyAddress": "http://localhost:19194/protocol",
-  "contractId": "bb0792fb-85d9-49ab-9f6f-7696bd04b7c8",
-  "assetId": "0001",
+  "contractId": "a0e927f4-7922-4bc0-b805-adb787741cc0",
+  "assetId": "0007",
   "protocol": "dataspace-protocol-http",
   "dataDestination": {
-    "type": "HttpProxy",
+    "type": "HttpData",
     "properties": {
-      "endpoint": "http://localhost:4000/receiver/urn:connector:provider/callback"
+      "baseUrl": "http://localhost:4000/receiver/urn:connector:provider/callback",
+      "method": "POST"
     }
   }
 }
