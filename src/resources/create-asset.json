@@ -2,7 +2,7 @@
   "@context": {
     "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
   },
-  "@id": "0007",
+  "@id": "0008",
   "properties": {
     "name": "A text file for transfer",
     "contenttype": "text/plain"

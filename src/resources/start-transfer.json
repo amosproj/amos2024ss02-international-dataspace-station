@@ -5,8 +5,8 @@
   "@type": "TransferRequestDto",
   "connectorId": "company",
   "counterPartyAddress": "http://localhost:19194/protocol",
-  "contractId": "a0e927f4-7922-4bc0-b805-adb787741cc0",
-  "assetId": "0007",
+  "contractId": "1034bfef-dcad-4032-996e-0ee81f7fd45d",
+  "assetId": "0008",
   "protocol": "dataspace-protocol-http",
   "dataDestination": {
     "type": "HttpData",
