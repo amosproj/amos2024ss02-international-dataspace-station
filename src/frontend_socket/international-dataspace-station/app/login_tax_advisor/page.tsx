@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from "react";
 import Image from "next/image";
-import { authenticate } from '../../actions/authenticate_bank';
+import { authenticate } from '../../actions/authenticate_tax_advisor';
 
 const SignIn = () => {
     const [username, setUsername] = useState('');

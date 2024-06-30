@@ -22,4 +22,6 @@ RUN npm install --loglevel verbose
 
 EXPOSE 3002
 
+ENV NEXT_PUBLIC_INITIAL_PAGE=tax_advisor
+
 CMD [ "sh", "-c", "PORT=3002 npm run dev" ]

@@ -22,4 +22,6 @@ RUN npm install --loglevel verbose
 
 EXPOSE 3001
 
+ENV NEXT_PUBLIC_INITIAL_PAGE=company
+
 CMD [ "sh", "-c", "PORT=3001 npm run dev" ]
