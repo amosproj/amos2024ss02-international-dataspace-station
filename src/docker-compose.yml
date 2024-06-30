@@ -2,7 +2,6 @@ version: '3.4'
 
 services:
   company:
-    working_dir: /amos
     build: 
       dockerfile: company_connector.Dockerfile
     ports:
@@ -13,7 +12,6 @@ services:
       - "19291:19291"
 
   taxadvisor:
-    working_dir: /amos
     build: 
       dockerfile: tax_advisor_connector.Dockerfile
     ports:
@@ -24,7 +22,6 @@ services:
       - "29291:19291"
 
   bank:
-    working_dir: /amos
     build: 
       dockerfile: bank_connector.Dockerfile
     ports:
@@ -35,22 +32,22 @@ services:
       - "39291:19291"
 
   company_frontend:
-    working_dir: /amos
     build:
-      dockerfile: frontend_socket/international-dataspace-station/company_frontend.Dockerfile
+      context: frontend_socket/international-dataspace-station
+      dockerfile: company_frontend.Dockerfile
     ports:
-      - "3001:3001"
+      - "3001:3000"
 
   tax_advisor_frontend:
-    working_dir: /amos
     build:
-      dockerfile: frontend_socket/international-dataspace-station/tax_advisor_frontend.Dockerfile
+      context: frontend_socket/international-dataspace-station
+      dockerfile: tax_advisor_frontend.Dockerfile
     ports:
-      - "3002:3002"
+      - "3002:3000"
 
   bank_frontend:
-    working_dir: /amos
     build:
-      dockerfile: frontend_socket/international-dataspace-station/bank_frontend.Dockerfile
+      context: frontend_socket/international-dataspace-station
+      dockerfile: bank_frontend.Dockerfile
     ports:
-      - "3003:3003"
+      - "3003:3000"
