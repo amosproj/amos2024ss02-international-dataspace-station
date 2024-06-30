@@ -12,4 +12,7 @@ COPY . .
 
 EXPOSE 3000
 
+
+ENV NEXT_PUBLIC_INITIAL_PAGE=bank
+
 CMD npm run dev

@@ -12,4 +12,7 @@ COPY . .
 
 EXPOSE 3000
 
+
+ENV NEXT_PUBLIC_INITIAL_PAGE=tax_advisor
+
 CMD npm run dev
