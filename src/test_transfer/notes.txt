@@ -1,0 +1,2 @@
+run "python3 -m http.server 8000" 
+- on "http://localhost:8000/test.txt" you should see the text file.
