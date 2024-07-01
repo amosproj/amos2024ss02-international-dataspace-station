@@ -154,6 +154,9 @@ curl -X POST "http://localhost:29193/management/v2/transferprocesses" \
     -s | jq
 ```
 
+<br>
+The connectors have now been configured successfully and are ready to be used.
+
 #### 8.  Start the transfer
 
 Before executing the request, modify the `start-transfer.json` by inserting the contract agreement ID from the previous step. You can re-use the same asset, policies and contract negotiation from before.
@@ -164,8 +167,6 @@ curl -d @resources/negotiate-contract.json \
   -s | jq
 ```
 
-<br>
-The connectors have now been configured successfully and are ready to be used.
 
 [software_architecture]: https://github.com/amosproj/amos2024ss02-international-dataspace-station/blob/main/Deliverables/sprint-02/software-architecture.pdf
 
