@@ -148,9 +148,20 @@ curl -d @resources/negotiate-contract.json \
 Replace `{{id}}` with the contract negotiation id from the consumer terminal:
 
 ```
-curl -X GET "http://localhost:{{consumer port}}/management/v2/contractnegotiations/{{id}}" \
-    --header 'Content-Type: application/json' \
+curl -X POST "http://localhost:29193/management/v2/transferprocesses" \
+    -H "Content-Type: application/json" \
+    -d @resources/start-transfer.json \
     -s | jq
+```
+
+#### 8.  Start the transfer
+
+Before executing the request, modify the `start-transfer.json` by inserting the contract agreement ID from the previous step. You can re-use the same asset, policies and contract negotiation from before.
+
+```
+curl -d @resources/negotiate-contract.json \
+  -X POST -H 'content-type: application/json' http://localhost:{{consumer port}}/management/v2/contractnegotiations \
+  -s | jq
 ```
 
 <br>
@@ -159,3 +170,5 @@ The connectors have now been configured successfully and are ready to be used.
 [software_architecture]: https://github.com/amosproj/amos2024ss02-international-dataspace-station/blob/main/Deliverables/sprint-02/software-architecture.pdf
 
 [documentation]: https://github.com/amosproj/amos2024ss02-international-dataspace-station/tree/dfd45b9232be4af2d921f3585db6b1aeecc3cd55/Documentation
+
+
