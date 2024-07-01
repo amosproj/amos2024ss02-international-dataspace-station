@@ -1,11 +1,11 @@
 #
-name: Create and publish a bank image
+name: Create and publish a bank connector and frontend
 
 # Configures this workflow to run every time a change is pushed to the branch called release.
 on:
-    push:
-      branches:
-        - 'main'
+  push:
+    branches:
+      - 'main'
 
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
@@ -14,7 +14,7 @@ env:
 
 # There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
-  build-and-push-image-consumer:
+  build-and-push-image-connector:
     runs-on: ubuntu-latest
     # Sets the permissions granted to the GITHUB_TOKEN for the actions in this job.
     permissions:
@@ -37,7 +37,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-bank
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-bank_connector
           tags: |
             type=schedule
             type=ref,event=branch
@@ -46,7 +46,7 @@ jobs:
       # Change directory and copy Dockerfile
       - name: Change directory and copy Dockerfile
         working-directory: ./src
-        run: cp bank.Dockerfile Dockerfile
+        run: cp bank_connector.Dockerfile Dockerfile
       # This step uses the docker/build-push-action action to build the image, based on your repository's Dockerfile. If the build succeeds, it pushes the image to GitHub Packages.
       # It uses the context parameter to define the build's context as the set of files located in the specified path. For more information, see "[Usage](https://github.com/docker/build-push-action#usage)" in the README of the docker/build-push-action repository.
       # It uses the tags and labels parameters to tag and label the image with the output from the "meta" step.
@@ -63,6 +63,57 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}-bank
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}-bank_connector
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+
+  build-and-push-image-frontend:
+    runs-on: ubuntu-latest
+    needs: build-and-push-image-connector
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-bank_frontend
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=sha
+
+      - name: Change directory and copy Dockerfile
+        working-directory: ./src/frontend_socket/international-dataspace-station
+        run: cp bank_frontend.Dockerfile Dockerfile
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./src/frontend_socket/international-dataspace-station
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-bank_frontend
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true

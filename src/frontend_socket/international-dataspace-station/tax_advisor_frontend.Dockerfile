@@ -1,25 +1,24 @@
 FROM node:22-alpine
 
-USER root
-
-RUN mkdir -p /amos/node_modules && chown -R node:node /amos
-
 WORKDIR /amos
 
 COPY --chown=node:node . .
 
+ENV CONNECTOR_NAME=taxadvisor
+ENV CLOUD_DOMAIN=amos.cloudness.dev
+ENV RUNNING_ENV=local
+
 RUN apk update
 RUN apk add --no-cache curl jq
 
-COPY frontend_socket/international-dataspace-station/package.json ./package.json
-COPY frontend_socket/international-dataspace-station/package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci
+COPY package.json package-lock.json ./
+RUN npm install
+
 COPY . .
 
-COPY --chown=node:node frontend_socket/international-dataspace-station/. .
+EXPOSE 3000
 
-RUN npm install --loglevel verbose
 
-EXPOSE 3002
+ENV NEXT_PUBLIC_INITIAL_PAGE=tax_advisor
 
-CMD [ "sh", "-c", "PORT=3002 npm run dev" ]
+CMD npm run dev
