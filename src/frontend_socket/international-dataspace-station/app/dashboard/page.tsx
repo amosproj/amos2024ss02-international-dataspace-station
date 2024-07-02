@@ -8,15 +8,15 @@ import './styles/style.css';
 
 export default function Page() {
 
-  return (
-      <main className="flex flex-col p-6">
-          <div className="grid grid-cols-2 gap-5">
-              <div className="flex justify-evenly items-center bg-gray-100 border-gray-200 border-2 rounded-lg p-5 text-black">
-                  <ConnectorStatus/>
-              </div>
-          </div>
-      </main>
-  );
+    return (
+        <main className="flex flex-col p-6">
+            <div className="grid grid-cols-2 gap-5">
+                <div className="flex justify-evenly items-center bg-gray-100 border-gray-200 border-2 rounded-lg p-5 text-black">
+                    <ConnectorStatus/>
+                </div>
+            </div>
+        </main>
+    );
 }
 
 // export default function Page() {

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import * as net from 'net';
 
 var connectorStatusUrl: string;
 
@@ -31,9 +30,9 @@ export async function GET(request: NextRequest) {
     try {
         const isPortInUse = await checkPortStatus();
         if (isPortInUse) {
-            return NextResponse.json({ status: 'running' });
+            return NextResponse.json({ status: 'running' , connector: process.env.CONNECTOR_NAME});
         } else {
-            return NextResponse.json({ status: 'not running' });
+            return NextResponse.json({ status: 'not running' , connector: process.env.CONNECTOR_NAME});
         }
     } catch (error) {
         console.error('Error occurred while checking connector status:', error);
