@@ -4,9 +4,11 @@ WORKDIR /amos
 
 COPY --chown=node:node . .
 
+ARG RUNNING_ENV=local
+ENV RUNNING_ENV=${RUNNING_ENV}
+
 ENV CONNECTOR_NAME=bank
 ENV CLOUD_DOMAIN=amos.cloudness.dev
-ENV RUNNING_ENV=local
 
 RUN apk update
 RUN apk add --no-cache curl jq
