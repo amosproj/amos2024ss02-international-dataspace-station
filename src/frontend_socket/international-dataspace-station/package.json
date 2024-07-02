@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "next lint"
   },
-  "proxy": "http://localhost:39193",
   "dependencies": {
     "@heroicons/react": "^2.1.3",
     "axios": "^1.7.2",

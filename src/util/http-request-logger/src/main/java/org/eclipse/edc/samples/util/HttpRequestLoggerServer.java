@@ -1,5 +1,3 @@
-package org.eclipse.edc.samples.util;
-
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -32,13 +30,8 @@ public class HttpRequestLoggerServer {
         public void handle(HttpExchange exchange) throws IOException {
             Headers responseHeaders = exchange.getResponseHeaders();
             responseHeaders.add("Access-Control-Allow-Origin", "*");
-            responseHeaders.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-            responseHeaders.add("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-            if ("OPTIONS".equalsIgnoreCase(exchange.getRequestMethod())) {
-                exchange.sendResponseHeaders(204, -1); // No content for OPTIONS request
-                return;
-            }
+            responseHeaders.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            responseHeaders.add("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
 
             System.out.println("Incoming request");
             System.out.println("Method: " + exchange.getRequestMethod());

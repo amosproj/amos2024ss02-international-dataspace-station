@@ -42,25 +42,25 @@ export function generateCreateAsset(description: string, contenttype: string, na
     return createAsset;
 };
 
-export async function createAsset(description: string, contenttype: string, name: string, baseUrl: string, assetId: string) {
+export async function createAsset(description, contenttype, name, baseUrl, assetId) {
     try {
-        console.error('createAsset')
-        const result = await fetch("http://localhost:29193/management/v3/assets", {
+        const result = await fetch(connectorManagementUrl + "v3/assets", {
             method: 'POST',
-            mode: "cors",
             headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify(generateCreateAsset(description, contenttype, name, baseUrl, assetId)),
+            body: JSON.stringify(generateCreateAsset(description, contenttype, name, baseUrl, assetId))
         });
+        if (!result.ok) {
+            throw new Error(`HTTP error! status: ${result.status}`);
+        }
         return await result.json();
     } catch (err) {
         console.error('Error creating asset:', err);
         throw new Error('Failed to create asset.');
     }
 };
+
 
 
 function generateFetchCatalog(counterPartyName: string) {

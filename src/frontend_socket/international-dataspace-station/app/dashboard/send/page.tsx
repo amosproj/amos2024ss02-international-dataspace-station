@@ -102,7 +102,7 @@ export default function Page() {
 
                 const response = await createAsset(subject, 'application/octet-stream', selectedFile.name, data.baseUrl, data.assetId);
 
-                if (response.success) {
+                if (response) {
                     setFiles([...files, newFile]);
                     setShowModal(false);
                     setSubject('');
