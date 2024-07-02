@@ -24,22 +24,24 @@ export default function Page() {
     const [receiver, setReceiver] = useState<string>('');
     const [output, setOutput] = useState('');
     const [connectionMessage, setConnectionMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     const handleClick = async () => {
-      const response = await fetch('/api/execute_command');
-      const data = await response.json();
-      setOutput(data.output);
-      //console.log(data.output);  // Ausgabe in der Konsole anzeigen
-      
-      // Check if the last command was successful
-      if (data.results && data.results.length > 0) {
-        const lastCommandResult = data.results[data.results.length - 1];
-        if (lastCommandResult.output) {
-          setConnectionMessage('The connection has been established.');
-        } else {
-          setConnectionMessage('Failed to establish the connection.');
+        const response = await fetch('/api/execute_command');
+        const data = await response.json();
+        setOutput(data.output);
+        //console.log(data.output);  // Ausgabe in der Konsole anzeigen
+
+        // Check if the last command was successful
+        if (data.results && data.results.length > 0) {
+            const lastCommandResult = data.results[data.results.length - 1];
+            if (lastCommandResult.output) {
+                setConnectionMessage('The connection has been established.');
+            } else {
+                setConnectionMessage('Failed to establish the connection.');
+            }
         }
-      }
     };
 
     useEffect(() => {
@@ -68,16 +70,25 @@ export default function Page() {
         }
     };
 
+    const generateAssetId = (fileName: string) => {
+        return `asset_${fileName}_${Date.now()}`;
+    };
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         if (selectedFile) {
-            // Mock backend response
-            const mockResponse = {
-                success: true,
-                fileName: selectedFile.name,
-            };
+            try {
+                const assetId = generateAssetId(selectedFile.name);
 
-            if (mockResponse.success) {
+                // Simulate storing file in data/asset folder (frontend)
+                const fileLink = `/data/asset/${selectedFile.name}`;
+
+                const data = {
+                    assetId,
+                    fileLink,
+                    baseUrl: window.location.origin,
+                };
+
                 const newFile = {
                     title: subject,
                     sender: loggedInUser ? loggedInUser.username : 'Unknown',
@@ -85,13 +96,46 @@ export default function Page() {
                     date: new Date().toLocaleDateString(),
                     fileTitle: selectedFile.name,
                     fileSize: `${(selectedFile.size / 1024 / 1024).toFixed(2)} MB`,
-                    link: '#'
+                    link: fileLink,
                 };
-                setFiles([...files, newFile]);
-                setShowModal(false);
-                setSubject('');
-            } else {
-                alert('File upload failed.');
+
+                const postData = {
+                    description: subject,
+                    contenttype: 'application/octet-stream',
+                    name: selectedFile.name,
+                    baseUrl: data.baseUrl,
+                    assetId: data.assetId
+                };
+
+                const response = await fetch('/api/createAsset', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postData)
+                });
+
+                if (!response.ok) {
+                    console.error("Http error creating asset. Status: " + response.status);
+                    const result = await response.json();
+                    console.log(result);
+                    setErrorMessage('Failed to create asset.');
+                    setSuccessMessage('');
+                } else {
+                    const result = await response.json();
+                    console.log(result);
+                    setFiles([...files, newFile]);
+                    setShowModal(false);
+                    setSubject('');
+                    setFileName(null);
+                    setSelectedFile(null);
+                    setSuccessMessage('Asset created successfully.');
+                    setErrorMessage('');
+                }
+            } catch (error) {
+                console.error('Error handling file:', error);
+                setErrorMessage('Failed to create asset.');
+                setSuccessMessage('');
             }
         }
     };
@@ -100,13 +144,14 @@ export default function Page() {
 
         <div className="flex min-h-screen flex-col p-6">
             <div className="flex justify-start pb-5">
-                <button onClick={handleClick} className="mb-4 px-4 py-2 rounded-md bg-neonGreen hover:bg-neonBlue text-white">
+                <button onClick={handleClick}
+                        className="mb-4 px-4 py-2 rounded-md bg-neonGreen hover:bg-neonBlue text-white">
                     Execute Command
                 </button>
             </div>
             <div className="grid grid-cols-2 gap-5">
-                    {output && <pre>{output}</pre>}
-                    {connectionMessage && <p className="text-black">{connectionMessage}</p>}
+                {output && <pre>{output}</pre>}
+                {connectionMessage && <p className="text-black">{connectionMessage}</p>}
             </div>
             <div className="grid grid-cols-2 gap-5"><br></br></div>
             <div className="flex justify-start pb-5">
@@ -182,7 +227,8 @@ export default function Page() {
                                 </select>
                             </div>
                             <div className="mt-5">
-                                <label htmlFor="file-upload" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attach
+                                <label htmlFor="file-upload"
+                                       className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attach
                                     file</label>
                                 <input
                                     type="file"

@@ -1,19 +1,4 @@
-/*
- *  Copyright (c) 2023 Bayerische Motoren Werke Aktiengesellschaft (BMW AG)
- *
- *  This program and the accompanying materials are made available under the
- *  terms of the Apache License, Version 2.0 which is available at
- *  https://www.apache.org/licenses/LICENSE-2.0
- *
- *  SPDX-License-Identifier: Apache-2.0
- *
- *  Contributors:
- *       Bayerische Motoren Werke Aktiengesellschaft (BMW AG) - initial API and implementation
- *
- */
-
-package org.eclipse.edc.samples.util;
-
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -43,6 +28,11 @@ public class HttpRequestLoggerServer {
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
+            Headers responseHeaders = exchange.getResponseHeaders();
+            responseHeaders.add("Access-Control-Allow-Origin", "*");
+            responseHeaders.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            responseHeaders.add("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+
             System.out.println("Incoming request");
             System.out.println("Method: " + exchange.getRequestMethod());
             System.out.println("Path: " + exchange.getRequestURI());
@@ -52,5 +42,4 @@ public class HttpRequestLoggerServer {
             exchange.sendResponseHeaders(200, -1);
         }
     }
-
 }
