@@ -12,7 +12,7 @@ export default function Page() {
       <main className="flex flex-col p-6">
           <div className="grid grid-cols-2 gap-5">
               <div className="flex justify-evenly items-center bg-gray-100 border-gray-200 border-2 rounded-lg p-5 text-black">
-                  <ConnectorStatus port={19193} />
+                  <ConnectorStatus/>
               </div>
           </div>
       </main>
