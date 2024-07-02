@@ -22,7 +22,7 @@ if (process.env.RUNNING_ENV == "local") {
     connectorApiUrl = connectorBaseUrl + ":443/api/";
 }
 
-export function generateCreateAsset(description: string, contenttype: string, name: string, baseUrl: string, assetId: string) {
+function generateCreateAsset(description: string, contenttype: string, name: string, baseUrl: string, assetId: string) {
     const createAsset = {
         "@context": {
             "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
@@ -42,7 +42,7 @@ export function generateCreateAsset(description: string, contenttype: string, na
     return createAsset;
 };
 
-export async function createAsset(description, contenttype, name, baseUrl, assetId) {
+export async function createAsset(description: string, contenttype: string, name: string, baseUrl: string, assetId: string) {
     try {
         const result = await fetch(connectorManagementUrl + "v3/assets", {
             method: 'POST',
@@ -89,10 +89,14 @@ export async function fetchCatalog(counterPartyName: string) {
             },
             body: JSON.stringify(generateFetchCatalog(counterPartyName)),
         });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
         const data = await result.json();
-        // TODO: display / use data
+        return data;
     } catch (err) {
-        // TODO: error handling
+        console.error("Error fetching catalog: ", err);
+        throw new Error("Failed to fetch catalog");
     }
 };
 
@@ -125,10 +129,14 @@ export async function registerDataplaneProvider(dataplaneId: string) {
             },
             body: JSON.stringify(generateRegisterDataPlaneProvider(dataplaneId)),
         });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
         const data = await result.json();
-        // TODO: display / use data
+        return data;
     } catch (err) {
-        // TODO: error handling
+        console.error("Error registering dataplane: ", err);
+        throw new Error("Failed to register dataplane");
     }
 };
 
@@ -160,10 +168,14 @@ export async function createPolicy(policyId: string) {
             },
             body: JSON.stringify(generateCreatePolicy(policyId)),
         });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
         const data = await result.json();
-        // TODO: display / use data
+        return data;
     } catch (err) {
-        // TODO: error handling
+        console.error("Error creating policy: ", err);
+        throw new Error("Failed to create policy");
     }
 };
 
@@ -188,10 +200,14 @@ export async function createContractDefinition(contractId: string, policyId: str
             },
             body: JSON.stringify(generateCreateContractDefinition(contractId, policyId)),
         });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
         const data = await result.json();
-        // TODO: display / use data
+        return data;
     } catch (err) {
-        // TODO: error handling
+        console.error("Error creating contract definition: ", err);
+        throw new Error("Failed to create contract definition");
     }
 };
 
@@ -222,10 +238,14 @@ export async function getDataset(assetId: string, counterPartyName: string) {
             },
             body: JSON.stringify(generateGetDataset(assetId, counterPartyName)),
         });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
         const data = await result.json();
-        // TODO: display / use data
+        return data;
     } catch (err) {
-        // TODO: error handling
+        console.error("Error getting dataset: ", err);
+        throw new Error("Failed to get dataset");
     }
 }
 
@@ -254,7 +274,7 @@ function generateNegotiateContract(contractOfferId: string, assetId: string, cou
     };
 };
 
-export async function neogiateContract(contractOfferId: string, assetId: string, counterPartyName: string) {
+export async function negotiateContract(contractOfferId: string, assetId: string, counterPartyName: string) {
     try {
         const result = await fetch(connectorManagementUrl + "v2/contractnegotiations", {
             method: 'POST',
@@ -263,10 +283,14 @@ export async function neogiateContract(contractOfferId: string, assetId: string,
             },
             body: JSON.stringify(generateNegotiateContract(contractOfferId, assetId, counterPartyName)),
         });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
         const data = await result.json();
-        // TODO: display / use data
+        return data;
     } catch (err) {
-        // TODO: error handling
+        console.error("Error negotiating contract: ", err);
+        throw new Error("Failed to negotiate contract");
     }
 };
 
@@ -303,10 +327,14 @@ export async function startTransfer(contractId: string, assetId: string, counter
             },
             body: JSON.stringify(generateStartTransfer(contractId, assetId, counterPartyName)),
         });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
         const data = await result.json();
-        // TODO: display / use data
+        return data;
     } catch (err) {
-        // TODO: error handling
+        console.error("Error starting transfer: ", err);
+        throw new Error("Failed to start transfer");
     }
 }
 
@@ -315,10 +343,14 @@ export async function checkTransferStatus(transferId: string) {
         const result = await fetch(connectorManagementUrl + "v2/transferprocesses/" + transferId, {
             method: 'GET',
         });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
         const data = await result.json();
-        // TODO: display / use data
+        return data;
     } catch (err) {
-        // TODO: error handling
+        console.error("Error checking transfer status: ", err);
+        throw new Error("Failed to check transfer status");
     }
 }
 
@@ -327,10 +359,14 @@ export async function getEndpointDataReference(transferId: string) {
         const result = await fetch(connectorManagementUrl + "v1/edrs/" + transferId + "/dataaddress", {
             method: 'GET',
         });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
         const data = await result.json();
-        // TODO: display / use data
+        return data;
     } catch (err) {
-        // TODO: error handling
+        console.error("Error getting endpoint data reference: ", err);
+        throw new Error("Failed to get endpoint data reference");
     }
 }
 
@@ -349,9 +385,13 @@ export async function getData(authorizationKey: string, counterPartyName: string
                 'Authorization': authorizationKey,
             },
         });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
         const data = await result.json();
-        // TODO: display / use data
+        return data;
     } catch (err) {
-        // TODO: error handling
+        console.error("Error getting data: ", err);
+        throw new Error("Failed to get data");
     }
 };

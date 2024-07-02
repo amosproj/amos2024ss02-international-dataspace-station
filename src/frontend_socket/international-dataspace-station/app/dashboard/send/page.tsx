@@ -3,7 +3,6 @@ import {useState, useEffect} from 'react';
 import users from '../../../data/users.json';
 import {User} from "../../../data/interface/user";
 import Cookies from 'js-cookie';
-import {createAsset} from "../connector_api_control";
 
 interface FileDetails {
     title: string;
@@ -100,9 +99,31 @@ export default function Page() {
                     link: fileLink,
                 };
 
-                const response = await createAsset(subject, 'application/octet-stream', selectedFile.name, data.baseUrl, data.assetId);
+                const postData = {
+                    description: subject,
+                    contenttype: 'application/octet-stream',
+                    name: selectedFile.name,
+                    baseUrl: data.baseUrl,
+                    assetId: data.assetId
+                };
 
-                if (response) {
+                const response = await fetch('/api/createAsset', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(postData)
+                });
+
+                if (!response.ok) {
+                    console.error("Http error creating asset. Status: " + response.status);
+                    const result = await response.json();
+                    console.log(result);
+                    setErrorMessage('Failed to create asset.');
+                    setSuccessMessage('');
+                } else {
+                    const result = await response.json();
+                    console.log(result);
                     setFiles([...files, newFile]);
                     setShowModal(false);
                     setSubject('');
@@ -110,9 +131,6 @@ export default function Page() {
                     setSelectedFile(null);
                     setSuccessMessage('Asset created successfully.');
                     setErrorMessage('');
-                } else {
-                    setErrorMessage('Failed to create asset.');
-                    setSuccessMessage('');
                 }
             } catch (error) {
                 console.error('Error handling file:', error);
