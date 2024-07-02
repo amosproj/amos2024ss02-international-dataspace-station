@@ -1,4 +1,0 @@
-{
-  "/api/execute_command/route": "app/api/execute_command/route.js",
-  "/dashboard/send/page": "app/dashboard/send/page.js"
-}
