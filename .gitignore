@@ -41,7 +41,6 @@ bin/
 *.tar
 
 # Frontend
-package-lock.json
 src/frontend_socket/international-dataspace-station/.next
 src/frontend_socket/international-dataspace-station/node_modules
 src/build
