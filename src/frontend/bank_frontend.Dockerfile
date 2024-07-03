@@ -4,6 +4,9 @@ WORKDIR /amos
 
 COPY --chown=node:node . .
 
+COPY app/bank ./app/
+COPY data/bank ./data/
+
 ARG RUNNING_ENV=local
 ENV RUNNING_ENV=${RUNNING_ENV}
 
@@ -19,8 +22,5 @@ RUN npm install
 COPY . .
 
 EXPOSE 3000
-
-
-ENV NEXT_PUBLIC_INITIAL_PAGE=bank
 
 CMD npm run dev

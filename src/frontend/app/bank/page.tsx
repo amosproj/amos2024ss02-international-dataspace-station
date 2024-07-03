@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const conList: ContainerProps[] = [
-  { href: '/login_tax_advisor', title: 'Tax Advisor', description: 'This is a tax advisor login page' },
+  { href: '/login', title: 'Bank', description: 'This is a bank login page' },
 ];
 
 interface ContainerProps{

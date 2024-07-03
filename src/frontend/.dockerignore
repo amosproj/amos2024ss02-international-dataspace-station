@@ -1,0 +1,12 @@
+app/bank
+!app/bank/*
+data/bank
+!data/bank/*
+app/company
+!app/company/*
+data/company
+!data/company/*
+app/taxadvisor
+!app/taxadvisor/*
+data/taxadvisor
+!data/taxadvisor/*
