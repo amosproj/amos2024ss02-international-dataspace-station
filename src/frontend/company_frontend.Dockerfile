@@ -4,8 +4,8 @@ WORKDIR /amos
 
 COPY --chown=node:node . .
 
-COPY app/company ./app/
-COPY data/company ./data/
+COPY app/participants/company ./app/
+COPY data/participants/company ./data/
 
 ARG RUNNING_ENV=local
 ENV RUNNING_ENV=${RUNNING_ENV}
