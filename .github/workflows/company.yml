@@ -45,7 +45,7 @@ jobs:
             type=sha
       # Change directory and copy Dockerfile
       - name: Change directory and copy Dockerfile
-        working-directory: ./src
+        working-directory: ./src/edc-connector
         run: cp company_connector.Dockerfile Dockerfile
       # This step uses the docker/build-push-action action to build the image, based on your repository's Dockerfile. If the build succeeds, it pushes the image to GitHub Packages.
       # It uses the context parameter to define the build's context as the set of files located in the specified path. For more information, see "[Usage](https://github.com/docker/build-push-action#usage)" in the README of the docker/build-push-action repository.
@@ -54,7 +54,7 @@ jobs:
         id: push
         uses: docker/build-push-action@v4
         with:
-          context: ./src
+          context: ./src/edc-connector
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -98,14 +98,14 @@ jobs:
             type=sha
 
       - name: Change directory and copy Dockerfile
-        working-directory: ./src/frontend_socket/international-dataspace-station
+        working-directory: ./src/frontend
         run: cp company_frontend.Dockerfile Dockerfile
 
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@v4
         with:
-          context: ./src/frontend_socket/international-dataspace-station
+          context: ./src/frontend
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
