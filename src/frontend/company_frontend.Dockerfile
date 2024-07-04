@@ -10,7 +10,7 @@ COPY data/participants/company ./data/
 ARG RUNNING_ENV=local
 ENV RUNNING_ENV=${RUNNING_ENV}
 
-ENV CONNECTOR_NAME=company
+ENV NEXT_PUBLIC_CONNECTOR_NAME=company
 ENV CLOUD_DOMAIN=amos.cloudness.dev
 
 RUN apk update

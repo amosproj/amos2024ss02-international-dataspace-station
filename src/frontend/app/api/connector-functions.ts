@@ -7,14 +7,14 @@ var connectorApiUrl: string;
 
 
 if (process.env.RUNNING_ENV == "local") {
-    connectorBaseUrl = "http://" + process.env.CONNECTOR_NAME;
+    connectorBaseUrl = "http://" + process.env.NEXT_PUBLIC_CONNECTOR_NAME;
     connectorManagementUrl = connectorBaseUrl + ":19193/management/";
     connectorControlUrl = connectorBaseUrl + ":19192/control/";
     connectorPublicUrl = connectorBaseUrl + ":19291/public/";
     connectorProtocolUrl = connectorBaseUrl + ":19194/protocol/";
     connectorApiUrl = connectorBaseUrl + ":19191/api/";
 } else {
-    connectorBaseUrl = "https://" + process.env.CONNECTOR_NAME + "." + process.env.CLOUD_DOMAIN;
+    connectorBaseUrl = "https://" + process.env.NEXT_PUBLIC_CONNECTOR_NAME + "." + process.env.CLOUD_DOMAIN;
     connectorManagementUrl = connectorBaseUrl + ":443/management/";
     connectorControlUrl = connectorBaseUrl + ":443/control/";
     connectorPublicUrl = connectorBaseUrl + ":443/public/";

@@ -10,7 +10,7 @@ COPY data/participants/taxadvisor ./data/
 ARG RUNNING_ENV=local
 ENV RUNNING_ENV=${RUNNING_ENV}
 
-ENV CONNECTOR_NAME=taxadvisor
+ENV NEXT_PUBLIC_CONNECTOR_NAME=taxadvisor
 ENV CLOUD_DOMAIN=amos.cloudness.dev
 
 RUN apk update
