@@ -6,14 +6,13 @@ import ConnectorStatus from "./connector_status";
 //import portRoles from '../../data/ports.json';
 import './styles/style.css';
 
+
 export default function Page() {
 
     return (
         <main className="flex flex-col p-6">
             <div className="grid grid-cols-2 gap-5">
-                <div className="flex justify-evenly items-center bg-gray-100 border-gray-200 border-2 rounded-lg p-5 text-black">
-                    <ConnectorStatus/>
-                </div>
+                <ConnectorStatus connectorName={process.env.NEXT_PUBLIC_CONNECTOR_NAME || "bank"}/>
             </div>
         </main>
     );
