@@ -78,7 +78,7 @@ export default function ConnectorStatus({ connectorName }: ConnectorStatusProps)
             ? 'border-green-500' 
             : 'border-red-500'
         }`}>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-baseline space-x-4">
                 <button 
                     onClick={fetchStatus}
                     className="px-4 py-2 text-black bg-white rounded hover:bg-neonBlue shadow-xl flex"
@@ -86,8 +86,14 @@ export default function ConnectorStatus({ connectorName }: ConnectorStatusProps)
                     <ArrowPathIcon className="w-6 mr-1"/>
                     Refresh
                 </button>
-                <div className="flex flex-col gap-1">
-                    <div className="flex items-center border-b-2 pb-1">
+                <div className="flex flex-col gap-4">
+                    <div className={`status-field ${
+                                running === null 
+                                ? 'bg-gray-100' 
+                                : running 
+                                ? 'bg-green-100 border-green-500' 
+                                : 'bg-red-100 border-red-500'
+                            }`}>
                         <span 
                             className={`h-4 w-4 rounded-full ${
                                 running === null 
@@ -100,7 +106,13 @@ export default function ConnectorStatus({ connectorName }: ConnectorStatusProps)
                         <span className="ml-2">{status}</span>
                     </div>
 
-                    <div className="flex items-center">
+                    <div className={`status-field ${
+                                dbRunning === null 
+                                ? 'bg-gray-100' 
+                                : dbRunning 
+                                ? 'bg-green-100 border-green-500' 
+                                : 'bg-red-100 border-red-500'
+                            }`}>
                         <span 
                             className={`h-4 w-4 rounded-full ${
                                 dbRunning === null 

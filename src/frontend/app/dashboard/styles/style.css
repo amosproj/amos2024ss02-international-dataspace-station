@@ -16,4 +16,13 @@
     background-color: darkgray;
     transform: scale(0.98);
   }
+
+.status-field {
+  display: flex;
+  padding: 1em;
+  align-items: center;
+  border-width: 2px;
+  border-radius: 1em;
+  min-width: 20em;
+}
   
