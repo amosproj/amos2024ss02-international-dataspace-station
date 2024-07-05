@@ -1,22 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-var connectorStatusUrl: string;
+var dataBaseStatusUrl: string;
 
-
-
-function getConnectorStatusUrl(connectorName: string | null) {
+function getDataBaseStatusUrl(connectorName: string | null) {
     if (process.env.RUNNING_ENV == "local") {
-        connectorStatusUrl = "http://" + connectorName + ":19191/api/status";
+        dataBaseStatusUrl = "http://" + "database" + ":8080/status";
     } else {
-        connectorStatusUrl = "https://" + connectorName + "." + process.env.CLOUD_DOMAIN + ":443/api/status";
+        dataBaseStatusUrl = "https://" + "database" + "." + process.env.CLOUD_DOMAIN + ":443/status";
     }
-    return connectorStatusUrl;
+    return dataBaseStatusUrl;
 }
 
-async function checkPortStatus(connectorName: string | null): Promise<boolean> {
+async function checkDatabaseStatus(connectorName: string | null): Promise<boolean> {
     try {
-        console.log("Trying to fetch connector status from URL " + getConnectorStatusUrl(connectorName));
-        var result = await fetch(connectorStatusUrl, {cache: "no-store"});
+        console.log("Trying to fetch connector status from URL " + getDataBaseStatusUrl(connectorName));
+        var result = await fetch(dataBaseStatusUrl, {cache: "no-store"});
         var data = await result.json();
         console.log("Got a new result.");
         console.log(data);
@@ -38,7 +36,7 @@ export async function GET(request: NextRequest) {
         if (connectorName == null && process.env.NEXT_PUBLIC_CONNECTOR_NAME) {
             connectorName = process.env.NEXT_PUBLIC_CONNECTOR_NAME;
         }
-        const isPortInUse = await checkPortStatus(connectorName);
+        const isPortInUse = await checkDatabaseStatus(connectorName);
         if (isPortInUse) {
             return NextResponse.json({ status: 'running' , connector: connectorName});
         } else {
