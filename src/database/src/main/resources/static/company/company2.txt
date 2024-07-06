@@ -1,0 +1,4 @@
+Company: AMOS Corporation
+Products: Software Solutions, Cloud Services
+Services: Consulting, IT Support
+Key Clients: Fortune 500 Companies

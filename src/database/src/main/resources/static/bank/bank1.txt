@@ -1,0 +1,6 @@
+Bank Name: Example Bank
+Address: 123 Main Street, Cityville, USA
+Phone: +1-123-456-7890
+Website: https://examplebank.com
+Established: 1990
+Services: Personal Banking, Business Loans

@@ -1,0 +1,4 @@
+Bank Name: Example Bank
+CEO: John Smith
+Branch Locations: Cityville, Townsville, Metropolis
+Hours of Operation: Mon-Fri 9AM-5PM
