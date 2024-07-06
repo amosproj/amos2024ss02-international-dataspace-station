@@ -54,3 +54,9 @@ services:
       dockerfile: bank_frontend.Dockerfile
     ports:
       - "3003:3000"
+
+  database:
+    build:
+      context: database
+    ports:
+      - "8080:8080"

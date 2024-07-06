@@ -10,7 +10,7 @@ pids
 *.pid.lock
 
 # Gradle
-src/.gradle
+.gradle
 
 build
 
