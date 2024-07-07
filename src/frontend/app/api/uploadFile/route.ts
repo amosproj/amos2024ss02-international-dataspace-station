@@ -1,13 +1,16 @@
-import {NextApiRequest, NextApiResponse} from 'next';
+import { NextRequest, NextResponse } from 'next/server';
+import { uploadFile } from '../database-functions';
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest) {
     try {
-        const response = await fetch('http://database:8081/files/upload');
-        if (!response.ok) {
-            throw new Error('Failed to fetch data');
+        const formData = await req.formData();
+        const file = formData.get("file");
+        if (file == null) {
+            return NextResponse.json({ error: "No file provided" }, { status: 406 });
         }
-        return await response.json();
+        const id = await uploadFile(file);
+        return NextResponse.json({"id": id});
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

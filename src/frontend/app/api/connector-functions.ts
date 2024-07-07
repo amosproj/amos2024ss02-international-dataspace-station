@@ -6,7 +6,7 @@ var connectorProtocolUrl: string;
 var connectorApiUrl: string;
 
 
-if (process.env.RUNNING_ENV == "local") {
+if (process.env.RUNNING_ENV == "local" || process.env.RUNNING_ENV == undefined) {
     connectorBaseUrl = "http://" + process.env.NEXT_PUBLIC_CONNECTOR_NAME;
     connectorManagementUrl = connectorBaseUrl + ":19193/management/";
     connectorControlUrl = connectorBaseUrl + ":19192/control/";
