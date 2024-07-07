@@ -1,0 +1,3 @@
+Bank Name: Example Bank
+Savings Accounts: Regular Savings, High-Yield Savings
+Investment Services: Stocks, Bonds, Mutual Funds
