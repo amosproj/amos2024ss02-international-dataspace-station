@@ -5,6 +5,15 @@ var connectorPublicUrl: string;
 var connectorProtocolUrl: string;
 var connectorApiUrl: string;
 
+const queryRequestJson = {
+    "@context": {
+        "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
+        "odrl": "http://www.w3.org/ns/odrl/2/"
+    },
+    "@type": "QuerySpec",
+    "filterExpression": []
+};
+
 
 if (process.env.RUNNING_ENV == "local") {
     connectorBaseUrl = "http://" + process.env.NEXT_PUBLIC_CONNECTOR_NAME;
@@ -99,6 +108,47 @@ export async function fetchCatalog(counterPartyName: string) {
         throw new Error("Failed to fetch catalog");
     }
 };
+
+
+export async function getPolicies() {
+    try {
+        const result = await fetch(connectorManagementUrl + "v2/policydefinitions/request", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(queryRequestJson),
+        });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
+        const data = await result.json();
+        return data;
+    } catch (err) {
+        console.error("Error getting policies: ", err);
+        throw new Error("Failed to get policies");
+    }
+};
+
+export async function getAssets() {
+    try {
+        const result = await fetch(connectorManagementUrl + "v3/assets/request", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(queryRequestJson),
+        });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
+        const data = await result.json();
+        return data;
+    } catch (err) {
+        console.error("Error getting policies: ", err);
+        throw new Error("Failed to get policies");
+    }
+}
 
 function generateRegisterDataPlaneProvider(dataplaneId: string) {
     const registerDataPlaneProvider = {
