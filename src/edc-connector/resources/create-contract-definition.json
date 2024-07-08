@@ -2,8 +2,15 @@
   "@context": {
     "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
   },
-  "@id": "0010",
+  "@id": "contract01",
   "accessPolicyId": "aPolicy",
   "contractPolicyId": "aPolicy",
-  "assetsSelector": []
+  "assetsSelector": [
+    {
+      "@type": "CriterionDto",
+      "operandLeft": "https://w3id.org/edc/v0.0.1/ns/id",
+      "operator": "=",
+      "operandRight": "asset01"
+    }
+  ]
 }
