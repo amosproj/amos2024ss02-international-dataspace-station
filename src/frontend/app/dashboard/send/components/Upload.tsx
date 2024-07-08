@@ -1,21 +1,23 @@
+'use client'
+import React from 'react';
 import { useState } from 'react';
 import Modal from './Modal';
 import FileTable from './FileTable';
+import {File} from "../../../../data/interface/file";
 
-interface FileDetails {
-    id: string;
-    title: string;
-    sender: string;
-    receiver: string;
-    date: string;
-    fileTitle: string;
-    fileSize: string;
-    link: string;
-}
+
+const config = [
+    { label: 'Title', field: 'title' },
+    { label: 'File Size', field: 'size' },
+    { label: 'Link', field: 'link' },
+    { label: 'Upload Date', field: 'uploadDate' },
+    { label: 'File Type', field: 'type' },
+    { label: 'Actions', field: 'actions' }
+];
 
 interface UploadProps {
     fetchFiles: () => void;
-    uploadedFiles: FileDetails[];
+    uploadedFiles: File[];
 }
 
 const Upload: React.FC<UploadProps> = ({ fetchFiles, uploadedFiles }) => {
@@ -40,28 +42,25 @@ const Upload: React.FC<UploadProps> = ({ fetchFiles, uploadedFiles }) => {
         }
     };
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files.length > 0) {
-            const file = event.target.files[0];
-            setSelectedFile(file);
-            setFileName(file.name);
-        }
+    const handleFileChange = (file: File | null) => {
+        setSelectedFile(file);
+        setFileName(file ? file.name : null);
     };
 
     const handleFileUpload = async () => {
         if (selectedFile) {
             const formData = new FormData();
-            formData.append('file', selectedFile[0]);
+            formData.append('file', selectedFile);
 
             try {
-                const response = await fetch('http://database:8080/files/upload', {
+                const response = await fetch('/api/uploadFile', {
                     method: 'POST',
-                    body: formData,
+                    body: formData
                 });
 
                 if (response.ok) {
-                    const fileId = await response.text();
-                    console.log(`File uploaded successfully with ID: ${fileId}`);
+                    const result = await response.json();
+                    console.log(`File uploaded successfully with ID: ${result.id}`);
                     fetchFiles();
                     setShowModal(false);
                 } else {
@@ -85,7 +84,7 @@ const Upload: React.FC<UploadProps> = ({ fetchFiles, uploadedFiles }) => {
             </div>
             {output && <pre>{output}</pre>}
             {connectionMessage && <p className="text-black">{connectionMessage}</p>}
-            <FileTable files={uploadedFiles} />
+            <FileTable files={uploadedFiles} config={config}/>
             {showModal && <Modal setShowModal={setShowModal} handleFileChange={handleFileChange} fileName={fileName} handleFileUpload={handleFileUpload} />}
         </div>
     );

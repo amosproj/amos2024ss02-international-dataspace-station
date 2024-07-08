@@ -1,27 +1,26 @@
 'use client'
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User } from "../../../data/interface/user";
 import Cookies from 'js-cookie';
 import Tabs from './components/Tabs';
 import Upload from './components/Upload';
 import FileTable from './components/FileTable';
+import { File } from "../../../data/interface/file";
 
-interface FileDetails {
-    id: string;
-    title: string;
-    sender: string;
-    receiver: string;
-    date: string;
-    fileTitle: string;
-    fileSize: string;
-    link: string;
-}
+const config = [
+    { label: 'Title', field: 'title' },
+    { label: 'File Size', field: 'size' },
+    { label: 'Link', field: 'link' },
+    { label: 'Sent Date', field: 'sentDate' },
+    { label: 'File Type', field: 'type' },
+    { label: 'Receiver', field: 'receiver' },
+];
 
 const Page = () => {
     const [activeTab, setActiveTab] = useState('upload');
     const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
-    const [uploadedFiles, setUploadedFiles] = useState<FileDetails[]>([]);
-    const [sentFiles, setSentFiles] = useState<FileDetails[]>([]);
+    const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+    const [sentFiles, setSentFiles] = useState<File[]>([]);
 
     useEffect(() => {
         const userCookie = Cookies.get('user');
@@ -36,13 +35,12 @@ const Page = () => {
             const response = await fetch('/api/getUploadedData');
             if (response.ok) {
                 const data = await response.json();
-                const files = data.map((file: any) => ({
-                    id: file.id,
-                    title: 'No Subject',
-                    date: new Date().toLocaleDateString(),
-                    fileTitle: file.fileName,
-                    fileSize: '',
-                    link: ``
+                const files = data.map((f: File) => ({
+                    id: f.id,
+                    uploadDate: f.uploadDate,
+                    fileTitle: f.fileTitle,
+                    size: f.size,
+                    link: f.link
                 }));
                 setUploadedFiles(files);
             } else {
@@ -54,14 +52,16 @@ const Page = () => {
     };
 
     useEffect(() => {
-        fetchFiles();
+        if (loggedInUser) {
+            fetchFiles();
+        }
     }, [loggedInUser]);
 
     return (
         <div>
             <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
             {activeTab === 'upload' && <Upload fetchFiles={fetchFiles} uploadedFiles={uploadedFiles} />}
-            {activeTab === 'sent' && <FileTable files={sentFiles} />}
+            {activeTab === 'sent' && <FileTable files={sentFiles} config={config} />}
         </div>
     );
 };
