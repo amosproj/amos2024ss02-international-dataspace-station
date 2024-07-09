@@ -1,3 +1,5 @@
+import { FileInfo, Asset, CatalogItem, Policy } from "@/data/interface/file";
+
 export async function uploadFile(form: FormData) {
   try {
     const response = await fetch(`/api/uploadFile`, {
@@ -9,7 +11,7 @@ export async function uploadFile(form: FormData) {
         throw new Error("HTTP Error! Status: ${response.status}");
     }
     const data = await response.json();
-    return data.id;
+    return data;
   } catch (err) {
     console.error("Error uploading file: ", err);
     throw new Error("Failed to upload file");
@@ -58,15 +60,6 @@ export async function isDatabaseRunning(connectorName: string): Promise<boolean>
     }
 }
 
-interface CatalogItem {
-  date: string;
-  name: string;
-  author: string;
-  id: string;
-  contenttype: string;
-  size: string;
-  contractIds: string[];
-}
   
 export async function fetchCatalogItems(counterPartyName: string): Promise<CatalogItem[]> {
   try {
@@ -103,10 +96,6 @@ export async function fetchCatalogItems(counterPartyName: string): Promise<Catal
   }
 }
 
-interface Policy {
-  name: string;
-  description: string;
-}
 
 export async function getPolicies(): Promise<Policy[]> {
   try {
@@ -134,16 +123,6 @@ export async function getPolicies(): Promise<Policy[]> {
   }
 }
 
-interface Asset {
-  date: string;
-  name: string;
-  author: string;
-  id: string;
-  contenttype: string;
-  size: string;
-  baseUrl: string;
-}
-
 
 export async function getAssets(): Promise<Asset[]> {
   try {
@@ -168,6 +147,70 @@ export async function getAssets(): Promise<Asset[]> {
   } catch (err) {
     console.error('Error fetching assets: ', err);
     throw new Error('Failed to fetch assets');
+  }
+}
+
+export async function createAsset(file: FileInfo): Promise<boolean> {
+  try {
+    const response = await fetch('/api/createAsset', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: file.name,
+        description: file.title,
+        baseUrl: file.link,
+        assetId: file.id,
+        contenttype: file.type,
+        date: file.uploadDate,
+        size: file.size
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`API call failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    return true;
+  } catch (err) {
+    throw new Error("Error creating asset: ", err);
+  }
+}
+
+export async function createContractDefinition(contractId: string, policyId: string, assetId: string): Promise<boolean> {
+  try {
+    const response = await fetch('/api/createContractDefinition', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contractId: contractId,
+        policyId: policyId,
+        assetId: assetId
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`API call failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    return true;
+  } catch (err) {
+    throw new Error("Error creating contract definition: ", err);
   }
 }
 

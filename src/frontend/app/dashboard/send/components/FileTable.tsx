@@ -1,5 +1,5 @@
 import React from 'react';
-import {File, FileTableProps, TableColumnConfig} from "../../../../data/interface/file";
+import {FileInfo, FileTableProps, TableColumnConfig} from "@/data/interface/file";
 
 
 const FileTable: React.FC<FileTableProps> = ({ files, config }) => {

@@ -1,9 +1,10 @@
 'use client'
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from './Modal';
 import FileTable from './FileTable';
-import {File} from "../../../../data/interface/file";
+import { FileInfo, Policy } from "../../../../data/interface/file";
+import { createAsset, createContractDefinition, uploadFile, getPolicies } from '@/actions/api';
 
 
 const config = [
@@ -17,7 +18,7 @@ const config = [
 
 interface UploadProps {
     fetchFiles: () => void;
-    uploadedFiles: File[];
+    uploadedFiles: FileInfo[];
 }
 
 const Upload: React.FC<UploadProps> = ({ fetchFiles, uploadedFiles }) => {
@@ -26,6 +27,20 @@ const Upload: React.FC<UploadProps> = ({ fetchFiles, uploadedFiles }) => {
     const [showModal, setShowModal] = useState(false);
     const [output, setOutput] = useState('');
     const [connectionMessage, setConnectionMessage] = useState('');
+    const [policies, setPolicies] = useState<Policy[]>([]);
+
+    useEffect(() => {
+        const fetchPolicies = async () => {
+            try {
+                const policies = await getPolicies();
+                setPolicies(policies);
+            } catch (err) {
+                // TODO: Display error fetching policies
+                console.error("Failed to fetch policies", err);
+            }
+        };
+        fetchPolicies();
+    }, [showModal]);
 
     const handleClick = async () => {
         const response = await fetch('/api/execute_command');
@@ -47,27 +62,35 @@ const Upload: React.FC<UploadProps> = ({ fetchFiles, uploadedFiles }) => {
         setFileName(file ? file.name : null);
     };
 
-    const handleFileUpload = async () => {
+    function getFileSizeString(size: number) {
+        var fileSizes = new Array('Bytes', 'KB', 'MB', 'GB');
+        var i = 0;
+        while (size > 900) {
+            size /= 1024;
+            i++;
+        }
+        return (Math.round(size*100)/100) + " " + fileSizes[i];
+    }
+
+    const handleFileUpload = async (title: string, policyId: string) => {
         if (selectedFile) {
             const formData = new FormData();
             formData.append('file', selectedFile);
-
             try {
-                const response = await fetch('/api/uploadFile', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    console.log(`File uploaded successfully with ID: ${result.id}`);
-                    fetchFiles();
-                    setShowModal(false);
-                } else {
-                    console.error('Failed to upload file:', response.status);
-                }
-            } catch (error) {
-                console.error('Error uploading file:', error);
+                const databaseInfo = await uploadFile(formData);
+                const fileInfo: FileInfo = {
+                    name: selectedFile.name,
+                    title: title || "Untitled File",
+                    size: getFileSizeString(selectedFile.size),
+                    link: databaseInfo.url,
+                    id: databaseInfo.id,
+                    uploadDate: new Date().toJSON().slice(0,10)
+                };
+                createAsset(fileInfo);
+                createContractDefinition("contract-" + databaseInfo.id, policyId, databaseInfo.id);
+            } catch (err) {
+                // TODO: Error message in frontend
+                console.error(err);
             }
         }
     };
@@ -85,7 +108,7 @@ const Upload: React.FC<UploadProps> = ({ fetchFiles, uploadedFiles }) => {
             {output && <pre>{output}</pre>}
             {connectionMessage && <p className="text-black">{connectionMessage}</p>}
             <FileTable files={uploadedFiles} config={config}/>
-            {showModal && <Modal setShowModal={setShowModal} handleFileChange={handleFileChange} fileName={fileName} handleFileUpload={handleFileUpload} />}
+            {showModal && <Modal setShowModal={setShowModal} handleFileChange={handleFileChange} handleFileUpload={handleFileUpload} policies={policies}/>}
         </div>
     );
 };

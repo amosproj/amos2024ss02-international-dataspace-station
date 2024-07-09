@@ -7,7 +7,9 @@ export async function GET(req: NextRequest) {
     const policies = data.map((item: any) => ({
         name: item.privateProperties?.name || 'Unnamed Policy',
         description: item.privateProperties?.description || 'No description provided',
+        id: item["@id"]
     }));
+
     return NextResponse.json(policies);
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

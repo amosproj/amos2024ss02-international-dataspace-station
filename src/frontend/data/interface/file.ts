@@ -1,4 +1,5 @@
-export interface File {
+export interface FileInfo {
+    name: string;
     id: string;
     title: string;
     size: string;
@@ -10,11 +11,37 @@ export interface File {
 }
 
 export interface FileTableProps {
-    files: File[];
+    files: FileInfo[];
     config: TableColumnConfig[];
 }
 
 export interface TableColumnConfig {
     label: string;
-    field: keyof File;
+    field: keyof FileInfo;
+}
+
+export interface Asset {
+    date: string;
+    name: string;
+    author: string;
+    id: string;
+    contenttype: string;
+    size: string;
+    baseUrl: string;
+}
+
+export interface CatalogItem {
+    date: string;
+    name: string;
+    author: string;
+    id: string;
+    contenttype: string;
+    size: string;
+    contractIds: string[];
+}
+
+export interface Policy {
+    name: string;
+    description: string;
+    id: string;
 }

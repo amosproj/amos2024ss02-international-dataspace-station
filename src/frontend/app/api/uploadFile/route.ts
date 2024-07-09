@@ -8,8 +8,8 @@ export async function POST(req: NextRequest) {
         if (file == null) {
             return NextResponse.json({ error: "No file provided" }, { status: 406 });
         }
-        const id = await uploadFile(file);
-        return NextResponse.json({"id": id});
+        const databaseInfo = await uploadFile(file);
+        return NextResponse.json(databaseInfo);
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
