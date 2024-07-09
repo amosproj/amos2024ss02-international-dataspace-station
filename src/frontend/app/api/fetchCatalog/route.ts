@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     const formattedResult = result["dcat:dataset"].map((item: any) => ({
       date: item.date || "Unknown Date",
       name: item.name || "Unnamed Asset",
-      description: item.description || "No description",
+      title: item.description || "No description",
       author: item.author || "Unknown Author",
       id: item.id,
       contenttype: item.contenttype || "Unknown",

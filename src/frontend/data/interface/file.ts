@@ -28,6 +28,7 @@ export interface Asset {
     contenttype: string;
     size: string;
     baseUrl: string;
+    title: string;
 }
 
 export interface CatalogItem {
