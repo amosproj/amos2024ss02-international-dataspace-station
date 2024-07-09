@@ -15,6 +15,7 @@ ENV CLOUD_DOMAIN=amos.cloudness.dev
 
 RUN apk update
 RUN apk add --no-cache curl jq
+RUN apk add docker
 
 COPY package.json package-lock.json ./
 RUN npm install
