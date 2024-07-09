@@ -30,8 +30,9 @@ export default function ConnectorStatus({ connectorName }: ConnectorStatusProps)
         setDbRunning(null);
 
         try {
-            const connectorRunningResponse = await isConnectorRunning(connectorName || "");
-            if (connectorRunningResponse) {
+            const response = await fetch(`/api/check_status?connector=${connectorName}`); 
+            const data = await response.json();
+            if (data.status == 'running') {
                 connectorStatus = "Connector is running!";
                 connectorRunning = true;
             } else {
@@ -45,8 +46,9 @@ export default function ConnectorStatus({ connectorName }: ConnectorStatusProps)
         }
 
         try {
-            const databaseRunningResponse = await isDatabaseRunning(connectorName || "");
-            if (databaseRunningResponse) {
+            const response = await fetch(`/api/check_db_status?connector=${connectorName}`); 
+            const data = await response.json();
+            if (data.status == 'running') {
                 databaseStatus = "Database is running!";
                 databaseRunning = true;
             } else {

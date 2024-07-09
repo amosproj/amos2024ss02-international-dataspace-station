@@ -1,69 +1,214 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from 'react';
-import { User } from "../../../data/interface/user";
-import Cookies from 'js-cookie';
-import Tabs from './components/Tabs';
-import Upload from './components/Upload';
-import FileTable from './components/FileTable';
-import { File } from "../../../data/interface/file";
+import { ArrowPathIcon, TrashIcon, CloudArrowDownIcon } from '@heroicons/react/24/outline';
+import { createAsset, createContractDefinition, getAssets, uploadFile, getPolicies } from '@/actions/api';
+import { FileInfo, Policy } from "@/data/interface/file";
 
-const config = [
-    { label: 'Title', field: 'title' },
-    { label: 'File Size', field: 'size' },
-    { label: 'Link', field: 'link' },
-    { label: 'Sent Date', field: 'sentDate' },
-    { label: 'File Type', field: 'type' },
-    { label: 'Receiver', field: 'receiver' },
-];
+const MAX_FILE_SIZE_MB = 10;
 
-const Page = () => {
-    const [activeTab, setActiveTab] = useState('upload');
-    const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
-    const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-    const [sentFiles, setSentFiles] = useState<File[]>([]);
+const UploadPage: React.FC = () => {
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [title, setTitle] = useState('');
+    const [policyId, setPolicyId] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [files, setFiles] = useState<FileInfo[]>([]);
+    const [policies, setPolicies] = useState<Policy[]>([]);
 
     useEffect(() => {
-        const userCookie = Cookies.get('user');
-        if (userCookie) {
-            const user = JSON.parse(userCookie) as User;
-            setLoggedInUser(user);
-        }
+        fetchAssets();
+        fetchPolicies();
     }, []);
 
-    const fetchFiles = async () => {
+    const fetchAssets = async () => {
         try {
-            const response = await fetch('/api/getUploadedData');
-            if (response.ok) {
-                const data = await response.json();
-                const files = data.map((f: File) => ({
-                    id: f.id,
-                    uploadDate: f.uploadDate,
-                    fileTitle: f.fileTitle,
-                    size: f.size,
-                    link: f.link
-                }));
-                setUploadedFiles(files);
-            } else {
-                console.error('Failed to fetch files:', response.status);
-            }
+            const assets = await getAssets();
+            setFiles(assets);
         } catch (error) {
-            console.error('Error fetching files:', error);
+            console.error('Error fetching assets:', error);
         }
     };
 
-    useEffect(() => {
-        if (loggedInUser) {
-            fetchFiles();
+    const fetchPolicies = async () => {
+        try {
+            const fetchedPolicies = await getPolicies();
+            setPolicies(fetchedPolicies);
+        } catch (error) {
+            console.error('Error fetching policies:', error);
         }
-    }, [loggedInUser]);
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const file = e.target.files[0];
+            if (file.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
+                setErrorMessage(`File size should be less than ${MAX_FILE_SIZE_MB} MB.`);
+                setSelectedFile(null);
+            } else {
+                setSelectedFile(file);
+                setErrorMessage('');
+            }
+        }
+    };
+
+    function getFileSizeString(size: number) {
+        var fileSizes = new Array('Bytes', 'KB', 'MB', 'GB');
+        var i = 0;
+        while (size > 900) {
+            size /= 1024;
+            i++;
+        }
+        return (Math.round(size*100)/100) + " " + fileSizes[i];
+    }
+
+    const handleFileUpload = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (selectedFile && title && policyId) {
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            try {
+                const databaseInfo = await uploadFile(formData);
+                const fileInfo: FileInfo = {
+                    name: selectedFile.name,
+                    title: title || "Untitled File",
+                    size: getFileSizeString(selectedFile.size),
+                    link: databaseInfo.url,
+                    id: databaseInfo.id,
+                    uploadDate: new Date().toJSON().slice(0,10)
+                };
+                await createAsset(fileInfo);
+                await createContractDefinition(`contract-${databaseInfo.id}`, policyId, databaseInfo.id);
+                setTitle('');
+                setPolicyId('');
+                setSelectedFile(null);
+                fetchAssets();
+                setShowModal(false);
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                setErrorMessage('Error uploading file.');
+            }
+        } else {
+            setErrorMessage('Please fill in all fields and select a file.');
+        }
+    };
+
+    const handleDownload = (url: string) => {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = url.split('/').pop() || 'download';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     return (
-        <div>
-            <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-            {activeTab === 'upload' && <Upload fetchFiles={fetchFiles} uploadedFiles={uploadedFiles} />}
-            {activeTab === 'sent' && <FileTable files={sentFiles} config={config} />}
+        <div className="p-6">
+            <div className="flex justify-end mb-4">
+                <button
+                    onClick={fetchAssets}
+                    className="px-4 py-2 mr-2 bg-blue-500 text-white rounded flex items-center"
+                >
+                    <ArrowPathIcon className="w-5 h-5" />
+                </button>
+                <button onClick={() => setShowModal(true)} className="px-4 py-2 bg-green-500 text-white rounded">
+                    Upload File
+                </button>
+            </div>
+            <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                    <tr>
+                        {['Name', 'Size', 'Title', 'Date', 'Author', 'Content Type', 'Actions'].map((label) => (
+                            <th key={label} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                                {label}
+                            </th>
+                        ))}
+                    </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                    {files.map((file: File) => (
+                        <tr key={file.id}>
+                            <td className="px-6 py-4 text-sm font-medium text-gray-900 break-words">{file.name}</td>
+                            <td className="px-6 py-4 text-sm text-gray-500">{file.size}</td>
+                            <td className="px-6 py-4 text-sm text-gray-500">{file.title}</td>
+                            <td className="px-6 py-4 text-sm text-gray-500">{file.date}</td>
+                            <td className="px-6 py-4 text-sm text-gray-500">{file.author}</td>
+                            <td className="px-6 py-4 text-sm text-gray-500">{file.contenttype}</td>
+                            <td className="px-6 py-4 text-sm text-gray-500 flex space-x-2">
+                                <button onClick={() => handleDownload(file.baseUrl)} className="flex items-center px-4 py-2 bg-green-500 text-white rounded">
+                                    <CloudArrowDownIcon className="w-5 h-5" />
+                                </button>
+                                <button className="flex items-center px-4 py-2 bg-red-500 text-white rounded" disabled>
+                                    <TrashIcon className="w-5 h-5" />
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {showModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded">
+                        <form onSubmit={handleFileUpload} className="flex gap-4 flex-col">
+                            <div>
+                                <label htmlFor="title" className="block mb-2 text-sm font-medium">Title</label>
+                                <input
+                                    type="text"
+                                    name="title"
+                                    id="title"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    className="border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label htmlFor="policy" className="block mb-2 text-sm font-medium">Policy</label>
+                                <select
+                                    name="policy"
+                                    id="policy"
+                                    value={policyId}
+                                    onChange={(e) => setPolicyId(e.target.value)}
+                                    className="border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    required
+                                >
+                                    <option value="">Select Policy</option>
+                                    {policies.map((policy: Policy) => (
+                                        <option key={policy.id} value={policy.id}>{policy.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label htmlFor="file" className="block mb-2 text-sm font-medium">File</label>
+                                <input
+                                    type="file"
+                                    name="file"
+                                    id="file"
+                                    onChange={handleFileChange}
+                                    className="border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    required
+                                />
+                            </div>
+                            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+
+                            <div className="flex justify-end">
+                                <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-gray-500 text-white rounded mr-2">
+                                    Cancel
+                                </button>
+                                <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded">
+                                    Upload
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
-export default Page;
+export default UploadPage;
