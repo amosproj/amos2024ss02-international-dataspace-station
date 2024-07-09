@@ -23,7 +23,7 @@ export async function GET() {
             containerID = executeCommand("docker container ls --all | grep 'src-bank-1' | awk '{print $1}'");
         }
 
-        const result = executeCommand(`curl --unix-socket /var/run/docker.sock -X POST http://localhost/v1.45/containers/${containerID}/restart`);
+        const result = executeCommand(`curl --unix-socket /var/run/docker.sock -X POST http://localhost/v1.45/containers/${containerID}/unpause`);
         return NextResponse.json({ result });
 
     } catch (e) {

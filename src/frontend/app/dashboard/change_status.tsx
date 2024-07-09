@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { PauseCircleIcon, PlayCircleIcon } from '@heroicons/react/24/outline';
-import ConnectorStatus from "./connector_status";
 
 interface ConnectorStatusProps {
     connectorName: string | undefined;
@@ -23,17 +22,15 @@ export default function ChangeStatusButton({ connectorName }: ConnectorStatusPro
             const response = await fetch(`/api/check_status?connector=${connectorName}`);
             const data = await response.json();
             if (data.status === 'running') {
-                await fetch('/api/stopConnector');
+                await fetch('/api/pauseConnector');
                 setButtonText("Start the connector");
                 setIconName("PlayCircleIcon");
                 setButtonColor('bg-green-500');
-                ConnectorStatus(connectorName);
             } else {
-                await fetch('/api/startConnector');
+                await fetch('/api/unpauseConnector');
                 setButtonText("Pause the connector");
                 setIconName("PauseCircleIcon");
                 setButtonColor('bg-red-500');
-                ConnectorStatus(connectorName);
             }
         } catch (error) {
             setButtonText('Error checking status');
