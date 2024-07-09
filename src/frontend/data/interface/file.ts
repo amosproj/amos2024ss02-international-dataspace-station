@@ -35,6 +35,7 @@ export interface CatalogItem {
     name: string;
     author: string;
     id: string;
+    title: string;
     contenttype: string;
     size: string;
     contractIds: string[];

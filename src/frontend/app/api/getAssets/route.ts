@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
     const formattedAssets = data.map((item: any) => ({
       date: item.properties?.date || 'Unknown Date',
       name: item.properties?.name || 'Unnamed Item',
+      title: item.properties?.description || 'Unitled Item',
       author: item.properties?.author || 'Unknown Author',
       id: item.properties?.id || 'No ID',
       contenttype: item.properties?.contenttype || 'Unknown Content Type',
