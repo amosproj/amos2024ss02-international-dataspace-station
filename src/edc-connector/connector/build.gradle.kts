@@ -37,6 +37,8 @@ dependencies {
     implementation(libs.edc.data.plane.public.api)
     implementation(libs.edc.data.plane.core)
     implementation(libs.edc.data.plane.http)
+
+    implementation(libs.edc.auth.tokenbased)
 }
 
 application {

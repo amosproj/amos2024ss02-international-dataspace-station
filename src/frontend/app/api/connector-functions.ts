@@ -22,6 +22,8 @@ if (process.env.RUNNING_ENV == "local") {
     connectorApiUrl = connectorBaseUrl + ":443/api/";
 }
 
+const authenticationPassword = process.env.NEXT_PUBLIC_CONNECTOR_NAME + "-pass";
+
 function generateCreateAsset(description: string, contenttype: string, name: string, baseUrl: string, assetId: string) {
     const createAsset = {
         "@context": {
@@ -47,7 +49,8 @@ export async function createAsset(description: string, contenttype: string, name
         const result = await fetch(connectorManagementUrl + "v3/assets", {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateCreateAsset(description, contenttype, name, baseUrl, assetId))
         });
@@ -86,6 +89,7 @@ export async function fetchCatalog(counterPartyName: string) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateFetchCatalog(counterPartyName)),
         });
@@ -126,6 +130,7 @@ export async function registerDataplaneProvider(dataplaneId: string) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateRegisterDataPlaneProvider(dataplaneId)),
         });
@@ -165,6 +170,7 @@ export async function createPolicy(policyId: string) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateCreatePolicy(policyId)),
         });
@@ -197,6 +203,7 @@ export async function createContractDefinition(contractId: string, policyId: str
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateCreateContractDefinition(contractId, policyId)),
         });
@@ -235,6 +242,7 @@ export async function getDataset(assetId: string, counterPartyName: string) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateGetDataset(assetId, counterPartyName)),
         });
@@ -280,6 +288,7 @@ export async function negotiateContract(contractOfferId: string, assetId: string
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateNegotiateContract(contractOfferId, assetId, counterPartyName)),
         });
@@ -324,6 +333,7 @@ export async function startTransfer(contractId: string, assetId: string, counter
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateStartTransfer(contractId, assetId, counterPartyName)),
         });
