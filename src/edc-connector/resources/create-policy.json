@@ -3,6 +3,10 @@
     "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
     "odrl": "http://www.w3.org/ns/odrl/2/"
   },
+  "privateProperties": {
+    "name": "Policy A",
+    "description": "This policy has no restrictions"
+  },
   "@id": "aPolicy",
   "policy": {
     "@context": "http://www.w3.org/ns/odrl.jsonld",

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import ConnectorStatus from "./connector_status";
 import ChangeStatusButton from "./change_status";
 import './styles/style.css';
