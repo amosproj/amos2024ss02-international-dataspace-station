@@ -106,11 +106,11 @@ const UploadPage: React.FC = () => {
             <div className="flex justify-end mb-4">
                 <button
                     onClick={fetchAssets}
-                    className="px-4 py-2 mr-2 bg-neonBlue text-white rounded flex items-center"
+                    className="px-4 py-2 mr-2 bg-neonBlue rounded flex items-center"
                 >
                     <ArrowPathIcon className="w-5 h-5" />
                 </button>
-                <button onClick={() => setShowModal(true)} className="px-4 py-2 bg-neonGreen text-white rounded">
+                <button onClick={() => setShowModal(true)} className="px-4 py-2 bg-neonGreen rounded">
                     Upload File
                 </button>
             </div>
