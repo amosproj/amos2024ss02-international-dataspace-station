@@ -1,0 +1,6 @@
+Tax Advisor: John Doe
+Firm: Tax Experts Inc.
+Address: 789 Pine Street, Citytown, USA
+Phone: +1-555-789-1234
+Email: john.doe@taxexperts.com
+Specializations: Personal Tax, Corporate Tax

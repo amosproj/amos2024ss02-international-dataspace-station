@@ -17,7 +17,7 @@ async function checkDatabaseStatus(connectorName: string | null): Promise<boolea
         var data = await result.json();
         console.log("Got a new result.");
         console.log(data);
-        return data.response === "Running!"
+        return data.response === "Running!";
     } catch (err) {
         console.log(err);
         return false;

@@ -43,7 +43,7 @@ function generateCreateAsset(description: string, contenttype: string, name: str
             "contenttype": contenttype,
             "date": date,
             "size": size,
-            "author": process.env.NEXT_PUBLIC_CONNECTOR_NAME
+            "author": process.env.NEXT_PUBLIC_CONNECTOR_NAME || "Unknown Author"
         },
         "dataAddress": {
             "type": "HttpData",
@@ -59,6 +59,7 @@ export async function createAsset(description: string, contenttype: string, name
     try {
         const result = await fetch(connectorManagementUrl + "v3/assets", {
             method: 'POST',
+            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -97,6 +98,7 @@ export async function fetchCatalog(counterPartyName: string) {
     try {
         const result = await fetch(connectorManagementUrl + "v2/catalog/request", {
             method: 'POST',
+            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -118,6 +120,7 @@ export async function getPolicies() {
     try {
         const result = await fetch(connectorManagementUrl + "v2/policydefinitions/request", {
             method: 'POST',
+            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -138,6 +141,7 @@ export async function getAssets() {
     try {
         const result = await fetch(connectorManagementUrl + "v3/assets/request", {
             method: 'POST',
+            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -179,6 +183,7 @@ export async function registerDataplaneProvider(dataplaneId: string) {
     try {
         const result = await fetch(connectorManagementUrl + "v2/dataplanes", {
             method: 'POST',
+            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -218,6 +223,7 @@ export async function createPolicy(policyId: string) {
     try {
         const result = await fetch(connectorManagementUrl + "v2/policydefinitions", {
             method: 'POST',
+            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -258,6 +264,7 @@ export async function createContractDefinition(contractId: string, policyId: str
     try {
         const result = await fetch(connectorManagementUrl + "v2/contractdefinitions", {
             method: 'POST',
+            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -297,6 +304,7 @@ export async function getDataset(assetId: string, counterPartyName: string) {
     try {
         const result = await fetch(connectorManagementUrl + "v2/catalog/dataset/request", {
             method: 'POST',
+            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -343,6 +351,7 @@ export async function negotiateContract(contractOfferId: string, assetId: string
     try {
         const result = await fetch(connectorManagementUrl + "v2/contractnegotiations", {
             method: 'POST',
+            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -388,6 +397,7 @@ export async function startTransfer(contractId: string, assetId: string, counter
     try {
         const result = await fetch(connectorManagementUrl + "v2/transferprocesses", {
             method: 'POST',
+            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -408,6 +418,7 @@ export async function checkTransferStatus(transferId: string) {
     try {
         const result = await fetch(connectorManagementUrl + "v2/transferprocesses/" + transferId, {
             method: 'GET',
+            cache: 'no-cache'
         });
         if (!result.ok) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
@@ -424,6 +435,7 @@ export async function getEndpointDataReference(transferId: string) {
     try {
         const result = await fetch(connectorManagementUrl + "v1/edrs/" + transferId + "/dataaddress", {
             method: 'GET',
+            cache: 'no-cache'
         });
         if (!result.ok) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
@@ -447,6 +459,7 @@ export async function getData(authorizationKey: string, counterPartyName: string
     try {
         const result = await fetch(counterPartyAddress, {
             method: 'GET',
+            cache: 'no-cache',
             headers: {
                 'Authorization': authorizationKey,
             },

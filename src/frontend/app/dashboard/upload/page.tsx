@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowPathIcon, TrashIcon, CloudArrowDownIcon } from '@heroicons/react/24/outline';
 import { createAsset, createContractDefinition, getAssets, uploadFile, getPolicies } from '@/actions/api';
-import { FileInfo, Policy } from "@/data/interface/file";
+import { FileInfo, Policy, Asset } from "@/data/interface/file";
 
 const MAX_FILE_SIZE_MB = 10;
 
@@ -12,7 +12,7 @@ const UploadPage: React.FC = () => {
     const [policyId, setPolicyId] = useState('');
     const [showModal, setShowModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [files, setFiles] = useState<FileInfo[]>([]);
+    const [files, setFiles] = useState<Asset[]>([]);
     const [policies, setPolicies] = useState<Policy[]>([]);
 
     useEffect(() => {
@@ -22,11 +22,23 @@ const UploadPage: React.FC = () => {
 
     const fetchAssets = async () => {
         try {
-            const assets = await getAssets();
+            const assets = updateLinksForLocalhost(await getAssets());
             setFiles(assets);
         } catch (error) {
             console.error('Error fetching assets:', error);
         }
+    };
+
+    function updateLinksForLocalhost(files: Asset[]): Asset[] {
+        const isLocalhost = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+        if (isLocalhost) {
+            return files.map(file => {
+                const updatedLink = file.baseUrl.replace(/http:\/\/[^/]+:8080/, 'http://localhost:8080');
+                return { ...file, baseUrl: updatedLink };
+            });
+        }
+
+        return files;
     };
 
     const fetchPolicies = async () => {
@@ -74,6 +86,7 @@ const UploadPage: React.FC = () => {
                     size: getFileSizeString(selectedFile.size),
                     link: databaseInfo.url,
                     id: databaseInfo.id,
+                    contenttype: selectedFile.type,
                     uploadDate: new Date().toJSON().slice(0,10)
                 };
                 await createAsset(fileInfo);
@@ -126,7 +139,7 @@ const UploadPage: React.FC = () => {
                     </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                    {files.map((file: File) => (
+                    {files.map((file: Asset) => (
                         <tr key={file.id}>
                             <td className="px-6 py-4 text-sm font-medium text-gray-900 break-words">{file.name}</td>
                             <td className="px-6 py-4 text-sm text-gray-500">{file.size}</td>
@@ -149,7 +162,7 @@ const UploadPage: React.FC = () => {
             </div>
 
             {showModal && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-black">
                     <div className="bg-white p-6 rounded">
                         <form onSubmit={handleFileUpload} className="flex gap-4 flex-col">
                             <div>

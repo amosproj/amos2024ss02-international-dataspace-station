@@ -162,7 +162,7 @@ export async function createAsset(file: FileInfo): Promise<boolean> {
         description: file.title,
         baseUrl: file.link,
         assetId: file.id,
-        contenttype: file.type,
+        contenttype: file.contenttype,
         date: file.uploadDate,
         size: file.size
       })
