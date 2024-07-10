@@ -4,6 +4,8 @@ COPY --chown=gradle:gradle . /app
 
 EXPOSE 8080
 
+ENV CONNECTOR_NAME=bank
+
 RUN ./gradlew build
 
 CMD ["java", "-jar", "build/libs/filestorage-database.jar"]

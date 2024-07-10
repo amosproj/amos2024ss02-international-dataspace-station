@@ -38,6 +38,14 @@ public class FileController {
                 .body(fileEntity.getFileData());
     }
 
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<String> deleteFile(@PathVariable String id) {
+        if (fileService.deleteFileById(id)) {
+            return new ResponseEntity<>("Deleted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("File with ID does not exist", HttpStatus.OK);
+    }
+
     @GetMapping("/list")
     public ResponseEntity<List<FileDTO>> listFiles() {
         List<FileDTO> files = fileService.getAllFiles().stream().map(item -> new FileDTO(item.getId(), item.getFileName())).collect(Collectors.toList());

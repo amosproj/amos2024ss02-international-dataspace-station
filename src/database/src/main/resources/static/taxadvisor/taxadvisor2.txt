@@ -1,0 +1,4 @@
+Tax Advisor: John Doe
+Firm: Tax Experts Inc.
+Services Offered: Tax Preparation, Tax Planning, IRS Representation
+Client Focus: Individuals, Small Businesses

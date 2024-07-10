@@ -1,0 +1,6 @@
+Company: AMOS Corporation
+Industry: Software
+Address: Erwin-Rommel-Straße 60, Erlangen, GERMANY
+Phone: +49 1234 5678901
+Website: https://amos.uni.de
+Company Size: 100 employees

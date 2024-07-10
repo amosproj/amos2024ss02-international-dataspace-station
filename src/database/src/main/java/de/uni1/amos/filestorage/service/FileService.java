@@ -47,4 +47,11 @@ public class FileService {
     public List<FileEntity> getAllFiles() {
         return fileRepository.findAll();
     }
+
+    public boolean deleteFileById(String id) {
+        FileEntity file = fileRepository.findById(id).orElse(null);
+        if (file == null) return false;
+        fileRepository.deleteById(file.getId());
+        return true;
+    }
 }
