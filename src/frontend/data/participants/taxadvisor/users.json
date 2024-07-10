@@ -2,11 +2,11 @@
   {
     "username": "tax",
     "password": "123",
-    "role": "tax advisor"
+    "role": "tax_advisor"
   },
   {
     "username": "tax_advisor",
     "password": "123",
-    "role": "tax advisor"
+    "role": "tax_advisor"
   }
 ]

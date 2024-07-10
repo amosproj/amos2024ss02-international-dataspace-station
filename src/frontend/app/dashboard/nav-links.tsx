@@ -16,13 +16,13 @@ const links = [
     icon: HomeIcon
   },
   {
-    name: 'Send',
-    href: '/dashboard/send',
+    name: 'Upload',
+    href: '/dashboard/upload',
     icon: ArrowUpTrayIcon,
   },
   {
-    name: 'Receive',
-    href: '/dashboard/receive',
+    name: 'Download',
+    href: '/dashboard/download',
     icon: ArrowDownTrayIcon
   },
 ];
