@@ -1,1 +1,2 @@
 org.eclipse.edc.extension.status.StatusEndpointExtension
+org.eclipse.edc.extension.bootstrap.BootstrapLoaderExtension
