@@ -5,9 +5,8 @@ export interface FileInfo {
     size: string;
     type?: string;
     uploadDate?: string;
-    sentDate?: string;
-    receiver?: string;
     link: string;
+    contenttype: string;
 }
 
 export interface FileTableProps {
