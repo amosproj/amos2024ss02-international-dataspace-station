@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 function getDataBaseStatusUrl(connectorName: string | null) {
     if (process.env.RUNNING_ENV == "local") {
-        return "http://" + "database" + ":8080/status";
+        return "http://" + process.env.NEXT_PUBLIC_CONNECTOR_NAME + "-database" + ":8080/status";
     } else {
-        return "https://" + "database" + "." + process.env.CLOUD_DOMAIN + ":443/status";
+        return "https://" + process.env.NEXT_PUBLIC_CONNECTOR_NAME + "." + process.env.CLOUD_DOMAIN + ":443/database/status";
     }
 }
 

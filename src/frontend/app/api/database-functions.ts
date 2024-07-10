@@ -2,9 +2,9 @@ var databaseUrl: string;
 
 
 if (process.env.RUNNING_ENV == "local" || process.env.RUNNING_ENV == undefined) {
-    databaseUrl = "http://" + "database:8080";
+    databaseUrl = "http://" + process.env.NEXT_PUBLIC_CONNECTOR_NAME + "-database:8080";
 } else {
-    databaseUrl = "https://" + process.env.NEXT_PUBLIC_CONNECTOR_NAME + "." + process.env.CLOUD_DOMAIN + "/database";
+    databaseUrl = "https://" + process.env.NEXT_PUBLIC_CONNECTOR_NAME + "." + process.env.CLOUD_DOMAIN + ":443/database";
 }
 
 
