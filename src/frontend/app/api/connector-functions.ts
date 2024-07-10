@@ -21,14 +21,14 @@ if (process.env.RUNNING_ENV == "local" || process.env.RUNNING_ENV == undefined) 
     connectorControlUrl = connectorBaseUrl + ":19192/control/";
     connectorPublicUrl = connectorBaseUrl + ":19291/public/";
     connectorProtocolUrl = connectorBaseUrl + ":19194/protocol/";
-    connectorApiUrl = connectorBaseUrl + ":19191/api/";
+    connectorApiUrl = connectorBaseUrl + ":19191/connector-api/";
 } else {
     connectorBaseUrl = "https://" + process.env.NEXT_PUBLIC_CONNECTOR_NAME + "." + process.env.CLOUD_DOMAIN;
     connectorManagementUrl = connectorBaseUrl + ":443/management/";
     connectorControlUrl = connectorBaseUrl + ":443/control/";
     connectorPublicUrl = connectorBaseUrl + ":443/public/";
     connectorProtocolUrl = connectorBaseUrl + ":443/protocol/";
-    connectorApiUrl = connectorBaseUrl + ":443/api/";
+    connectorApiUrl = connectorBaseUrl + ":443/connector-api/";
 }
 
 function generateCreateAsset(description: string, contenttype: string, name: string, baseUrl: string, assetId: string, date: string, size: string) {

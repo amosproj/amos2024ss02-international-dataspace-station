@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 function getConnectorStatusUrl(connectorName: string | null) {
     if (process.env.RUNNING_ENV == "local") {
-        return "http://" + connectorName + ":19191/api/status";
+        return "http://" + connectorName + ":19191/connector-api/status";
     } else {
-        return "https://" + connectorName + "." + process.env.CLOUD_DOMAIN + ":443/api/status";
+        return "https://" + connectorName + "." + process.env.CLOUD_DOMAIN + ":443/connector-api/status";
     }
 }
 
