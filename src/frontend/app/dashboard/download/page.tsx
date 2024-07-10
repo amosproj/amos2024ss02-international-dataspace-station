@@ -6,6 +6,7 @@ import { FileInfo } from "../../../../data/interface/file";
 import ports from '@/data/ports.json';
 import { User } from "../../../../data/interface/user";
 import Cookies from 'js-cookie';
+import {Asset} from "../../../data/interface/file";
 
 const DownloadPage: React.FC = () => {
     const [connector, setConnector] = useState<string>('');
@@ -29,9 +30,21 @@ const DownloadPage: React.FC = () => {
         }
     }, [connector]);
 
+    function updateLinksForLocalhost(files: Asset[]): Asset[] {
+        const isLocalhost = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+        if (isLocalhost) {
+            return files.map(file => {
+                const updatedLink = file.baseUrl.replace(/http:\/\/[^/]+:8080/, 'http://localhost:8080');
+                return { ...file, baseUrl: updatedLink };
+            });
+        }
+
+        return files;
+    };
+
     const fetchAssets = async () => {
         try {
-            const fetchedAssets = await getAssets();
+            const fetchedAssets = updateLinksForLocalhost(await getAssets());
             // Filter assets by connector if needed
             setAssets(fetchedAssets);
         } catch (error) {
