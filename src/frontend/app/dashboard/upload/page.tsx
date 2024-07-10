@@ -33,7 +33,21 @@ const UploadPage: React.FC = () => {
         const isLocalhost = location.hostname === "localhost" || location.hostname === "127.0.0.1";
         if (isLocalhost) {
             return files.map(file => {
-                const updatedLink = file.baseUrl.replace(/http:\/\/[^/]+:8080/, 'http://localhost:8080');
+                var port: string;
+                switch (process.env.NEXT_PUBLIC_CONNECTOR_NAME) {
+                    case "company":
+                        port = "8081";
+                        break;
+                    case "taxadvisor":
+                        port = "8082";
+                        break;
+                    case "bank":
+                        port = "8083";
+                        break;
+                    default:
+                        port = "8080";
+                }
+                const updatedLink = file.baseUrl.replace(/http:\/\/[^/]+:8080/, 'http://localhost:' + port);
                 return { ...file, baseUrl: updatedLink };
             });
         }
