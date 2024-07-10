@@ -340,7 +340,7 @@ function generateNegotiateContract(contractOfferId: string, assetId: string, cou
             "@context": "http://www.w3.org/ns/odrl.jsonld",
             "@id": contractOfferId,
             "@type": "Offer",
-            "assigner": "provider",
+            "assigner": counterPartyName,
             "target": assetId
         }
     };
