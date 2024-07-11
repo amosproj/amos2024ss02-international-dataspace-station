@@ -1,5 +1,6 @@
 import { execSync } from 'child_process';
 import { NextResponse } from 'next/server';
+import { auth } from "@/auth"
 
 const executeCommand = (command: string) => {
     try {
@@ -12,8 +13,11 @@ const executeCommand = (command: string) => {
     }
 };
 
-export async function GET() {
+export const GET = auth(async function GET(req) {
     try {
+        if (!req.auth) {
+            return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+        }
         let containerID;
         if (process.env.NEXT_PUBLIC_CONNECTOR_NAME === "company") {
             containerID = executeCommand("docker container ls --all | grep 'src-company-1' | awk '{print $1}'");
@@ -29,4 +33,4 @@ export async function GET() {
     } catch (e) {
         return NextResponse.json({ error: (e as Error).message }, { status: 500 });
     }
-}
+})

@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { downloadFile } from '../database-functions';
+import { auth } from "@/auth"
 
 
-export async function GET(request: NextRequest) {
+export const GET = auth(async function GET(request) {
     try {
+        if (!request.auth) {
+            return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+        }
         const { searchParams } = new URL(request.url);
         var fileId = searchParams.get('id');
 
@@ -30,4 +34,4 @@ export async function GET(request: NextRequest) {
         console.error('Error occurred while downloading file:', error);
         return NextResponse.json({ error: 'Error occurred while downloading file' }, { status: 500 });
     }
-}
+})

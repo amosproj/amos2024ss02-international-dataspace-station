@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadFile } from '../database-functions';
+import { auth } from "@/auth"
 
-export async function POST(req: NextRequest) {
+export const POST = auth(async function POST(req) {
     try {
+        if (!req.auth) {
+            return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+        }
         const formData = await req.formData();
         const file = formData.get("file");
         if (file == null) {
@@ -13,4 +17,4 @@ export async function POST(req: NextRequest) {
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
-}
+})

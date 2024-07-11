@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchCatalog } from '../connector-functions';
+import { auth } from "@/auth"
 
 interface CatalogItem {
   date: string;
@@ -11,8 +12,11 @@ interface CatalogItem {
   contractIds: string[];
 }
 
-export async function POST(req: NextRequest) {
+export const POST = auth(async function POST(req) {
   try {
+      if (!req.auth) {
+          return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      }
     const body = await req.json();
     const { counterPartyName } = body;
     const result = await fetchCatalog(counterPartyName);
@@ -32,4 +36,4 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-}
+})
