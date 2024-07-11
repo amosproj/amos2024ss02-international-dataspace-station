@@ -31,14 +31,14 @@ To run the connectors on your own machine, installing Docker is enough. If you d
 To run the code using docker, use the following commands in the `src` folder:
 
 ```
-sudo docker compose build
+sudo docker compose --profile complete build
 sudo docker compose --profile <company|taxadvisor|bank> up
 ```
 
 Or to start all participants at the same time
 
 ```
-sudo docker compose --profile company --profile taxadvisor --profile bank up
+sudo docker compose --profile complete up
 ```
 
 <br>
