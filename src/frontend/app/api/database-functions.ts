@@ -34,3 +34,18 @@ export async function uploadFile(file: FormDataEntryValue) {
         throw new Error("Failed to upload file");
     }
 }
+
+export async function downloadFile(fileId: string) {
+    const response = await fetch(databaseUrl + "/files/get/" + fileId, {
+        method: 'GET',
+        headers: {
+            'X-API-Key': authenticationPassword
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("Couldn't fetch file from database: STATUS " + response.status + " MESSAGE " + await response.text());
+    }
+
+    return response;
+}
