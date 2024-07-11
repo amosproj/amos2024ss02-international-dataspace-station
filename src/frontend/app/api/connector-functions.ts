@@ -33,8 +33,6 @@ if (process.env.RUNNING_ENV == "local" || process.env.RUNNING_ENV == undefined) 
 
 const authenticationPassword = process.env.NEXT_PUBLIC_CONNECTOR_NAME + "-pass";
 
-const authenticationPassword = process.env.NEXT_PUBLIC_CONNECTOR_NAME + "-pass";
-
 function generateCreateAsset(description: string, contenttype: string, name: string, baseUrl: string, assetId: string, date: string, size: string) {
     const createAsset = {
         "@context": {
