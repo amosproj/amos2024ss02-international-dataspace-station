@@ -5,6 +5,9 @@ services:
     build:
       context: edc-connector
       dockerfile: company_connector.Dockerfile
+    profiles:
+      - company
+      - complete
     ports:
       - "19191:19191"
       - "19192:19192"
@@ -16,6 +19,9 @@ services:
     build:
       context: edc-connector
       dockerfile: tax_advisor_connector.Dockerfile
+    profiles:
+      - taxadvisor
+      - complete
     ports:
       - "29191:19191"
       - "29192:19192"
@@ -27,6 +33,9 @@ services:
     build:
       context: edc-connector
       dockerfile: bank_connector.Dockerfile
+    profiles:
+      - bank
+      - complete
     ports:
       - "39191:19191"
       - "39192:19192"
@@ -34,29 +43,68 @@ services:
       - "39194:19194"
       - "39291:19291"
 
-  company_frontend:
+  company-frontend:
     build:
       context: frontend
       dockerfile: company_frontend.Dockerfile
+    profiles:
+      - company
+      - complete
     ports:
       - "3001:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
-  tax_advisor_frontend:
+  taxadvisor-frontend:
     build:
       context: frontend
       dockerfile: tax_advisor_frontend.Dockerfile
+    profiles:
+      - taxadvisor
+      - complete
     ports:
       - "3002:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
-  bank_frontend:
+  bank-frontend:
     build:
       context: frontend
       dockerfile: bank_frontend.Dockerfile
+    profiles:
+      - bank
+      - complete
     ports:
       - "3003:3000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
-  database:
+  company-database:
     build:
       context: database
+      dockerfile: company_database.Dockerfile
+    profiles:
+      - company
+      - complete
     ports:
-      - "8080:8080"
+      - "8081:8080"
+
+  taxadvisor-database:
+    build:
+      context: database
+      dockerfile: taxadvisor_database.Dockerfile
+    profiles:
+      - taxadvisor
+      - complete
+    ports:
+      - "8082:8080"
+
+  bank-database:
+    build:
+      context: database
+      dockerfile: bank_database.Dockerfile
+    profiles:
+      - bank
+      - complete
+    ports:
+      - "8083:8080"

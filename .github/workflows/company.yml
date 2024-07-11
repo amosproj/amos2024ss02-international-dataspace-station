@@ -67,9 +67,62 @@ jobs:
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
 
-  build-and-push-image-frontend:
+  build-and-push-image-database:
     runs-on: ubuntu-latest
     needs: build-and-push-image-connector
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-company_database
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=sha
+
+      - name: Change directory and copy Dockerfile
+        working-directory: ./src/database
+        run: cp company_database.Dockerfile Dockerfile
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./src/database
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
+          build-args: |
+            RUNNING_ENV=cloud
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-company_database
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+
+  build-and-push-image-frontend:
+    runs-on: ubuntu-latest
+    needs: build-and-push-image-database
     permissions:
       contents: read
       packages: write

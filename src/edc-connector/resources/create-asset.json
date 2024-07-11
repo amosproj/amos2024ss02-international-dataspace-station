@@ -2,17 +2,20 @@
   "@context": {
     "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
   },
-  "@id": "0010",
+  "@id": "asset01",
   "properties": {
-    "name": "A text file for transfer",
-    "contenttype": "text/plain"
+    "name": "Asset 01",
+    "contenttype": "text/plain",
+    "date": "07. Juli",
+    "author": "Daniel",
+    "size": "3 MB"
   },
   "dataAddress": {
     "type": "HttpData",
     "name": "example-text-file",
     "proxyPath": "true",
     "properties": {
-      "baseUrl": "http://localhost:8000/test.txt",
+      "baseUrl": "http://database:8080/files/get/databaseId",
       "method": "GET"
     }
   }
