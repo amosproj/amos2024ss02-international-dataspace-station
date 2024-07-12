@@ -1,0 +1,41 @@
+{
+  "bank": [
+    {
+      "username": "bank",
+      "image": "https://api.dicebear.com/9.x/personas/png?seed=bank",
+      "password": "123"
+    },
+    {
+      "username": "bank1",
+      "image": "https://api.dicebear.com/9.x/personas/png?seed=bank2",
+      "password": "1234"
+    }
+  ],
+  "company": [
+    {
+      "username": "company",
+      "image": "https://api.dicebear.com/9.x/personas/png?seed=company",
+      "password": "123"
+    }
+  ],
+  "taxadvisor": [
+    {
+      "username": "tax",
+      "image": "https://api.dicebear.com/9.x/personas/png?seed=tax",
+      "password": "123"
+    },
+    {
+      "username": "tax_advisor",
+      "image": "https://api.dicebear.com/9.x/personas/png?seed=taxadvisor",
+      "password": "123"
+    }
+  ],
+  "default": [
+    {
+      "username": "user",
+      "image": "https://api.dicebear.com/9.x/personas/png?seed=user",
+      "password": "123"
+    }
+  ]
+}
+

@@ -1,8 +1,21 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
+
+function getParticipant() {
+  switch(process.env.NEXT_PUBLIC_CONNECTOR_NAME) {
+    case "bank":
+      return "Bank";
+    case "taxadvisor":
+      return "Tax Advisor";
+    case "company":
+      return "Company";
+  }
+  return "Bank"
+}
+
 const conList: ContainerProps[] = [
-  { href: '/login', title: 'Tax Advisor', description: 'This is a tax advisor login page' },
+  { href: '/login', title: getParticipant(), description: "Get to the " + getParticipant().toLowerCase() + " user interface!" },
 ];
 
 interface ContainerProps{
