@@ -1,23 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-
-function getParticipant() {
-  switch(process.env.NEXT_PUBLIC_CONNECTOR_NAME) {
-    case "bank":
-      return "Bank";
-    case "taxadvisor":
-      return "Tax Advisor";
-    case "company":
-      return "Company";
-  }
-  return "Default Participant"
-}
-
-const conList: ContainerProps[] = [
-  { href: '/login', title: getParticipant(), description: "Get to the " + getParticipant().toLowerCase() + " user interface!" },
-];
-
 interface ContainerProps{
   href: string;
   title: string;
@@ -39,7 +22,26 @@ const  Container = (props: ContainerProps) => {
   )
 }
 
-export default function Page() {
+export default async function Page() {
+  var participantName: string = process.env.NEXT_PUBLIC_CONNECTOR_NAME ?? "";
+  switch(participantName) {
+    case "bank":
+      participantName = "Bank";
+      break;
+    case "taxadvisor":
+      participantName = "Tax Advisor";
+      break;
+    case "company":
+      participantName = "Company";
+      break;
+    default:
+      participantName = "Default Participant"
+  }
+
+  const conList: ContainerProps[] = [
+    { href: '/login', title: participantName, description: "Get to the " + participantName.toLowerCase() + " user interface!" },
+  ];
+
   return (
       <main className="flex min-h-screen flex-col p-6 bg-black">
         <div className="m-8 flex grow flex-col gap-4 md:flex-row ">
