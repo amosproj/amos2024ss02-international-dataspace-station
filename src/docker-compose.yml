@@ -46,7 +46,8 @@ services:
   company-frontend:
     build:
       context: frontend
-      dockerfile: company_frontend.Dockerfile
+    environment:
+      - NEXT_PUBLIC_CONNECTOR_NAME=company
     profiles:
       - company
       - complete
@@ -58,7 +59,8 @@ services:
   taxadvisor-frontend:
     build:
       context: frontend
-      dockerfile: tax_advisor_frontend.Dockerfile
+    environment:
+      - NEXT_PUBLIC_CONNECTOR_NAME=taxadvisor
     profiles:
       - taxadvisor
       - complete
@@ -70,7 +72,8 @@ services:
   bank-frontend:
     build:
       context: frontend
-      dockerfile: bank_frontend.Dockerfile
+    environment:
+      - NEXT_PUBLIC_CONNECTOR_NAME=bank
     profiles:
       - bank
       - complete
@@ -82,7 +85,8 @@ services:
   company-database:
     build:
       context: database
-      dockerfile: company_database.Dockerfile
+    environment:
+      - CONNECTOR_NAME=company
     profiles:
       - company
       - complete
@@ -92,7 +96,8 @@ services:
   taxadvisor-database:
     build:
       context: database
-      dockerfile: taxadvisor_database.Dockerfile
+    environment:
+      - CONNECTOR_NAME=taxadvisor
     profiles:
       - taxadvisor
       - complete
@@ -102,7 +107,8 @@ services:
   bank-database:
     build:
       context: database
-      dockerfile: bank_database.Dockerfile
+    environment:
+      - CONNECTOR_NAME=bank
     profiles:
       - bank
       - complete
