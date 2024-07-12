@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowPathIcon, TrashIcon, CloudArrowDownIcon } from '@heroicons/react/24/outline';
 import { createAsset, createContractDefinition, getAssets, uploadFile, getPolicies } from '@/actions/api';
 import { FileInfo, Policy, Asset } from "@/data/interface/file";
+import PolicyModal from './policyModal';
 
 const MAX_FILE_SIZE_MB = 10;
 
@@ -11,6 +12,7 @@ const UploadPage: React.FC = () => {
     const [title, setTitle] = useState('');
     const [policyId, setPolicyId] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const [showPolicyModal, setShowPolicyModal] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [files, setFiles] = useState<Asset[]>([]);
     const [policies, setPolicies] = useState<Policy[]>([]);
@@ -112,15 +114,18 @@ const UploadPage: React.FC = () => {
 
     return (
         <div className="p-6">
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-end mb-4 gap-2">
                 <button
                     onClick={fetchAssets}
-                    className="px-4 py-2 mr-2 bg-neonBlue rounded flex items-center"
+                    className="px-4 py-2 bg-neonBlue rounded flex items-center"
                 >
                     <ArrowPathIcon className="w-5 h-5" />
                 </button>
                 <button onClick={() => setShowModal(true)} className="px-4 py-2 bg-neonGreen rounded">
                     Upload File
+                </button>
+                <button onClick={() => setShowPolicyModal(true)} className="px-4 py-2 bg-neonGreen rounded">
+                    Create Policy
                 </button>
             </div>
             <div className="overflow-x-auto">
@@ -156,6 +161,8 @@ const UploadPage: React.FC = () => {
                     </tbody>
                 </table>
             </div>
+
+            <PolicyModal isOpen={showPolicyModal} onClose={() => setShowPolicyModal(false)} />
 
             {showModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-black">
@@ -215,6 +222,8 @@ const UploadPage: React.FC = () => {
                         </form>
                     </div>
                 </div>
+
+                
             )}
         </div>
     );

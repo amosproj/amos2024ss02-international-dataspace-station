@@ -207,14 +207,16 @@ export async function registerDataplaneProvider(dataplaneId: string) {
     }
 };
 
-function generateCreatePolicy(policyId: string) {
-    // TODO: acutal policy with permission/prohibition/obligation
+function generateCreatePolicy(name: string, description: string) {
     const createPolicy = {
         "@context": {
             "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
             "odrl": "http://www.w3.org/ns/odrl/2/"
         },
-        "@id": policyId,
+        "privateProperties": {
+            "name": name,
+            "description": description
+          },
         "policy": {
             "@context": "http://www.w3.org/ns/odrl.jsonld",
             "@type": "Set",
@@ -226,7 +228,7 @@ function generateCreatePolicy(policyId: string) {
     return createPolicy;
 };
 
-export async function createPolicy(policyId: string) {
+export async function createPolicy(name: string, description: string) {
     try {
         const result = await fetch(connectorManagementUrl + "v2/policydefinitions", {
             method: 'POST',
@@ -235,7 +237,7 @@ export async function createPolicy(policyId: string) {
                 'Content-Type': 'application/json',
                 'X-API-Key': authenticationPassword
             },
-            body: JSON.stringify(generateCreatePolicy(policyId)),
+            body: JSON.stringify(generateCreatePolicy(name, description)),
         });
         if (!result.ok) {
             throw new Error(`HTTP Error! Status: ${result.status}`);

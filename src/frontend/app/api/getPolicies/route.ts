@@ -9,7 +9,7 @@ export const GET = auth(async function GET(req) {
       }
     const data = await getPolicies();
     const policies = data.map((item: any) => ({
-        name: item.privateProperties?.name || 'Unnamed Policy',
+        name: item.privateProperties?.name || 'Default Policy',
         description: item.privateProperties?.description || 'No description provided',
         id: item["@id"]
     }));

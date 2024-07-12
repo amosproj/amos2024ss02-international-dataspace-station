@@ -185,6 +185,35 @@ export async function createAsset(file: FileInfo): Promise<boolean> {
   }
 }
 
+export async function createPolicy(name: string, description: string): Promise<boolean> {
+  try {
+    const response = await fetch('/api/createPolicy', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name,
+        description: description
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`API call failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    return true;
+  } catch (err) {
+    throw new Error("Error creating policy: ", err);
+  }
+}
+
 export async function createContractDefinition(contractId: string, policyId: string, assetId: string): Promise<boolean> {
   try {
     const response = await fetch('/api/createContractDefinition', {
