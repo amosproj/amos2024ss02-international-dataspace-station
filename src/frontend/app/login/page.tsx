@@ -1,8 +1,18 @@
+"use client"
 import React, { useState } from "react";
 import Image from "next/image";
-import { signIn } from "@/auth";
+import { handleSignIn } from "@/actions/handleSignIn";
 
 export default function SignIn() {
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const handleSubmit = async (formData: FormData) => {
+        try {
+            await handleSignIn(formData)
+        } catch (error) {
+            setErrorMessage("Failed to sign in. Please check your credentials and try again.");
+        }
+    }
 
     return (
         <div className="flex min-h-screen justify-center items-center p-6 bg-black">
@@ -15,11 +25,7 @@ export default function SignIn() {
                     {/*</p>*/}
                 </div>
                 <form className="mt-5" 
-                    action={async (formData) => {
-                        "use server"
-                        console.log("SIGNING IN");
-                        console.log(await signIn("credentials", formData))
-                    }}
+                    action={handleSubmit}
                 >
                     <input type="hidden" name="redirectTo" value="/dashboard" />
                     <div className="mb-4">
@@ -40,6 +46,11 @@ export default function SignIn() {
                             placeholder="Password"
                         />
                     </div>
+                    {errorMessage && (
+                        <div className="mb-4 text-red-600">
+                            {errorMessage}
+                        </div>
+                    )}
                     <div className="flex items-center justify-center">
                         <button
                             className="bg-neonGreen rounded-lg hover:bg-neonBlue hover:text-black text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

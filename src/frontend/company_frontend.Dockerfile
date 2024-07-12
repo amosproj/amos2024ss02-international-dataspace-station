@@ -4,24 +4,21 @@ WORKDIR /amos
 
 COPY --chown=node:node . .
 
-COPY app/participants/company ./app/
-COPY data/participants/company ./data/
-
 ARG RUNNING_ENV=local
 ENV RUNNING_ENV=${RUNNING_ENV}
 
 ENV NEXT_PUBLIC_CONNECTOR_NAME=company
 ENV CLOUD_DOMAIN=amos.cloudness.dev
+ENV AUTH_SECRET=kVJNSZuX/mIGvO3scL8p1c49quBPf2r/HAkIGfVvfbIQ
 
 RUN apk update
 RUN apk add --no-cache curl jq
 RUN apk add docker
 
-COPY package.json package-lock.json ./
 RUN npm install
 
-COPY . .
+RUN npm run build
 
 EXPOSE 3000
 
-CMD npm run dev
+CMD npm start
