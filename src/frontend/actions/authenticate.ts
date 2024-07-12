@@ -11,9 +11,10 @@ type Users = {
     bank: UserDatabase[];
     company: UserDatabase[];
     taxadvisor: UserDatabase[];
+    default: UserDatabase[];
 };
 
-const participant: keyof Users = (process.env.NEXT_PUBLIC_CONNECTOR_NAME as keyof Users) || "bank";
+const participant: keyof Users = (process.env.NEXT_PUBLIC_CONNECTOR_NAME as keyof Users) || "default";
 
 const userArray: UserDatabase[] = (users as Users)[participant];
 

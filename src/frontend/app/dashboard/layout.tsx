@@ -14,7 +14,7 @@ export default async function Layout({children}: { children: React.ReactNode }) 
             </div>
             <div className="flex-grow md:flex flex-col">
                 <div className="flex flex-row justify-between p-6 bg-neonGreen text-black">
-                    <div className="flex items-center">{process.env.NEXT_PUBLIC_CONNECTOR_NAME?.toUpperCase() || "bank"}</div>
+                    <div className="flex items-center">{process.env.NEXT_PUBLIC_CONNECTOR_NAME?.toUpperCase() || "NO ROLE"}</div>
                     <div className="flex flex-row gap-4">
                         <div
                             // className="hover:bg-neonBlue rounded-xl bg-gray-50"
