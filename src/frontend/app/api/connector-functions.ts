@@ -51,7 +51,8 @@ function generateCreateAsset(description: string, contenttype: string, name: str
             "type": "HttpData",
             "name": name,
             "baseUrl": baseUrl,
-            "proxyPath": "true"
+            "proxyPath": "true",
+            "header:X-API-Key": process.env.NEXT_PUBLIC_CONNECTOR_NAME + "-db-pass"
         }
     };
     return createAsset;
