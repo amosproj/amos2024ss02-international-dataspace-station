@@ -21,7 +21,11 @@ export const POST = auth(async function POST(req) {
     const { counterPartyName } = body;
     const result = await fetchCatalog(counterPartyName);
 
-    const formattedResult = result["dcat:dataset"].map((item: any) => ({
+    const datasets = Array.isArray(result["dcat:dataset"])
+                      ? result["dcat:dataset"]
+                      : [result["dcat:dataset"]];
+
+    const formattedResult = datasets.map((item: any) => ({
       date: item.date || "Unknown Date",
       name: item.name || "Unnamed Asset",
       title: item.description || "No description",
@@ -29,7 +33,7 @@ export const POST = auth(async function POST(req) {
       id: item.id,
       contenttype: item.contenttype || "Unknown",
       size: item.size || "-",
-      contractIds: item["odrl:hasPolicy"]?.["@id"] || []
+      contractIds: item["odrl:hasPolicy"]?.["@id"] || null
     }));
 
     return NextResponse.json(formattedResult);

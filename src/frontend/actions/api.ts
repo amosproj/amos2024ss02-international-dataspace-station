@@ -68,7 +68,7 @@ export async function fetchCatalogItems(counterPartyName: string): Promise<Catal
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ counterPartyName }),
+      body: JSON.stringify({ counterPartyName: counterPartyName }),
     });
 
     if (!response.ok) {
@@ -85,6 +85,7 @@ export async function fetchCatalogItems(counterPartyName: string): Promise<Catal
       date: item.date,
       name: item.name,
       author: item.author,
+      title: item.title,
       id: item.id,
       contenttype: item.contenttype,
       size: item.size,

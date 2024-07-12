@@ -1,52 +1,30 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { CloudArrowDownIcon } from '@heroicons/react/24/outline';
-import { getAssets } from '@/actions/api';
-import { FileInfo } from "../../../../data/interface/file";
-import ports from '@/data/ports.json';
-import { User } from "../../../../data/interface/user";
-import Cookies from 'js-cookie';
-import {Asset} from "../../../data/interface/file";
+import { fetchCatalogItems } from '@/actions/api';
+import participants from '@/data/participants.json';
+import { CatalogItem } from "@/data/interface/file";
 
 const DownloadPage: React.FC = () => {
     const [connector, setConnector] = useState<string>('');
-    const [assets, setAssets] = useState<FileInfo[]>([]);
+    const [catalogItems, setCatalogItems] = useState<CatalogItem[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>('');
-    const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+
 
     useEffect(() => {
-        const userCookie = Cookies.get('user');
-        if (userCookie) {
-            const user = JSON.parse(userCookie) as User;
-            setLoggedInUser(user);
-        }
-    }, []);
-
-    useEffect(() => {
+        setErrorMessage("");
+        setCatalogItems([]);
         if (connector) {
-            fetchAssets();
+            fetchItems();
         } else {
-            setAssets([]);
+            setCatalogItems([]);
         }
     }, [connector]);
 
-    function updateLinksForLocalhost(files: Asset[]): Asset[] {
-        const isLocalhost = location.hostname === "localhost" || location.hostname === "127.0.0.1";
-        if (isLocalhost) {
-            return files.map(file => {
-                const updatedLink = file.baseUrl.replace(/http:\/\/[^/]+:8080/, 'http://localhost:8080');
-                return { ...file, baseUrl: updatedLink };
-            });
-        }
-
-        return files;
-    };
-
-    const fetchAssets = async () => {
+    const fetchItems = async () => {
         try {
-            const fetchedAssets = updateLinksForLocalhost(await getAssets());
+            const fetchedCatalog = await fetchCatalogItems(connector);
             // Filter assets by connector if needed
-            setAssets(fetchedAssets);
+            setCatalogItems(fetchedCatalog);
         } catch (error) {
             console.error('Error fetching assets:', error);
             setErrorMessage('Error fetching assets.');
@@ -74,10 +52,10 @@ const DownloadPage: React.FC = () => {
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 mr-2"
                     >
                         <option value="">Select Connector</option>
-                        {ports.map(({ role }) => (
-                            role !== loggedInUser?.role &&
-                            <option key={role} value={role}>
-                                {role}
+                        {participants.map((participant) => (
+                            participant.id !== process.env.NEXT_PUBLIC_CONNECTOR_NAME &&
+                            <option key={participant.id} value={participant.id}>
+                                {participant.displayName}
                             </option>
                         ))}
                     </select>
@@ -104,18 +82,17 @@ const DownloadPage: React.FC = () => {
                             </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                            {assets.map((file) => (
-                                <tr key={file.id}>
-                                    <td className="px-6 py-4 text-sm font-medium text-gray-900 break-words">{file.name}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{file.size}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{file.title}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{file.date}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{file.author}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{file.contenttype}</td>
+                            {catalogItems.map((item) => (
+                                <tr key={item.id}>
+                                    <td className="px-6 py-4 text-sm font-medium text-gray-900 break-words">{item.name}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-500">{item.size}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-500">{item.title}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-500">{item.date}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-500">{item.author}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-500">{item.contenttype}</td>
                                     <td className="px-6 py-4 text-sm text-gray-500">
-                                        <button onClick={() => handleDownload(file.baseUrl)} className="flex items-center px-4 py-2 bg-neonGreen text-white rounded">
-                                            {/*<CloudArrowDownIcon className="w-5 h-5 mr-2" /> */}
-                                            GET
+                                        <button onClick={() => console.log(item)} className="flex items-center px-4 py-2 bg-neonGreen text-white rounded">
+                                            NEGOTIATE
                                         </button>
                                     </td>
                                 </tr>
