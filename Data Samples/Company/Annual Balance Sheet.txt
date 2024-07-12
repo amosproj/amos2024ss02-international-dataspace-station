@@ -1,0 +1,36 @@
+Annual Balance Sheet
+Company: ABC Corporation
+Date: December 31, 2023
+Assets
+Current Assets:
+	•	Cash and Cash Equivalents: $150,000
+	•	Accounts Receivable: $200,000
+	•	Inventory: $100,000
+	•	Prepaid Expenses: $50,000
+	•	Total Current Assets: $500,000
+Non-Current Assets:
+	•	Property, Plant, and Equipment: $1,000,000
+	◦	Less: Accumulated Depreciation: ($200,000)
+	◦	Net Property, Plant, and Equipment: $800,000
+	•	Intangible Assets: $100,000
+	◦	Less: Accumulated Amortization: ($20,000)
+	◦	Net Intangible Assets: $80,000
+	•	Investments: $150,000
+	•	Total Non-Current Assets: $1,030,000
+Total Assets: $1,530,000
+Liabilities and Shareholders' Equity
+Current Liabilities:
+	•	Accounts Payable: $120,000
+	•	Short-Term Debt: $80,000
+	•	Accrued Expenses: $70,000
+	•	Total Current Liabilities: $270,000
+Non-Current Liabilities:
+	•	Long-Term Debt: $500,000
+	•	Deferred Tax Liabilities: $30,000
+	•	Total Non-Current Liabilities: $530,000
+Total Liabilities: $800,000
+Shareholders' Equity:
+	•	Common Stock: $300,000
+	•	Retained Earnings: $430,000
+	•	Total Shareholders' Equity: $730,000
+Total Liabilities and Shareholders' Equity: $1,530,000

@@ -1,0 +1,55 @@
+VAT Declaration
+Company: ABC Corporation
+
+For the Year Ended: December 31, 2023
+
+VAT Summary:
+
+VAT Registration Number: 123456789
+Output VAT (VAT Collected on Sales):
+
+Domestic Sales (Standard Rate): $1,200,000
+VAT Rate: 20%
+Output VAT: $240,000
+Export Sales (Zero Rate): $300,000
+VAT Rate: 0%
+Output VAT: $0
+Total Output VAT: $240,000
+Input VAT (VAT Paid on Purchases):
+
+Purchases (Standard Rate): $600,000
+VAT Rate: 20%
+Input VAT: $120,000
+Imports (Standard Rate): $150,000
+VAT Rate: 20%
+Input VAT: $30,000
+Total Input VAT: $150,000
+VAT Payable / (Recoverable):
+
+Total Output VAT: $240,000
+Total Input VAT: $150,000
+Net VAT Payable: $90,000
+Details of Major Transactions:
+
+Domestic Sales:
+Sales Invoice 001: $200,000
+VAT Collected: $40,000
+Sales Invoice 002: $400,000
+VAT Collected: $80,000
+Sales Invoice 003: $600,000
+VAT Collected: $120,000
+Purchases:
+Purchase Invoice 101: $200,000
+VAT Paid: $40,000
+Purchase Invoice 102: $400,000
+VAT Paid: $80,000
+Imports:
+Import Invoice 201: $150,000
+VAT Paid: $30,000
+VAT Declaration:
+
+Total Sales (Excluding VAT): $1,500,000
+Total Purchases (Excluding VAT): $750,000
+Total VAT Collected: $240,000
+Total VAT Paid: $150,000
+Net VAT Payable: $90,000
