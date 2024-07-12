@@ -4,7 +4,7 @@ services:
   company:
     build:
       context: edc-connector
-    environemnt:
+    environment:
       - EDC_CONFIG=resources/configuration/company-configuration.properties
     profiles:
       - company
