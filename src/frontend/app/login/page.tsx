@@ -1,11 +1,18 @@
-'use client';
+"use client"
 import React, { useState } from "react";
 import Image from "next/image";
-import { authenticate } from '../../actions/authenticate';
+import { handleSignIn } from "@/actions/handleSignIn";
 
-const SignIn = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+export default function SignIn() {
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const handleSubmit = async (formData: FormData) => {
+        try {
+            await handleSignIn(formData)
+        } catch (error) {
+            setErrorMessage("Failed to sign in. Please check your credentials and try again.");
+        }
+    }
 
     return (
         <div className="flex min-h-screen justify-center items-center p-6 bg-black">
@@ -17,31 +24,33 @@ const SignIn = () => {
                     {/*    Enter your account to sign-in to the system*/}
                     {/*</p>*/}
                 </div>
-                <form className="mt-5" onSubmit={(e) => {
-                    e.preventDefault();
-                    authenticate({ username, password });
-                }}
+                <form className="mt-5" 
+                    action={handleSubmit}
                 >
+                    <input type="hidden" name="redirectTo" value="/dashboard" />
                     <div className="mb-4">
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="username"
+                            name="username"
                             type="username"
                             placeholder="Username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
                         />
                     </div>
                     <div className="mb-6">
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="password"
+                            name="password"
                             type="password"
                             placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
+                    {errorMessage && (
+                        <div className="mb-4 text-red-600">
+                            {errorMessage}
+                        </div>
+                    )}
                     <div className="flex items-center justify-center">
                         <button
                             className="bg-neonGreen rounded-lg hover:bg-neonBlue hover:text-black text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -55,5 +64,3 @@ const SignIn = () => {
         </div>
     );
 };
-
-export default SignIn;

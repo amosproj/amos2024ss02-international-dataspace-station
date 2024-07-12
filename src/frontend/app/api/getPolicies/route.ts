@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {getPolicies} from '../connector-functions';
+import { auth } from "@/auth"
 
-export async function GET(req: NextRequest) {
+export const GET = auth(async function GET(req) {
   try {
+      if (!req.auth) {
+          return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      }
     const data = await getPolicies();
     const policies = data.map((item: any) => ({
         name: item.privateProperties?.name || 'Unnamed Policy',
@@ -14,4 +18,4 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-}
+})

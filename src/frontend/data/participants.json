@@ -1,0 +1,14 @@
+[
+  {
+    "id": "company",
+    "displayName": "Company"
+  },
+  {
+    "id": "taxadvisor",
+    "displayName": "Tax Advisor"
+  },
+  {
+    "id": "bank",
+    "displayName": "Bank"
+  }
+]

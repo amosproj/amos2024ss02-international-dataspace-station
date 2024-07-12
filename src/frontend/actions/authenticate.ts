@@ -1,28 +1,36 @@
-'use server';
+import { User } from '@/data/interface/user';
+import users from '@/data/users.json';
 
-import { redirect} from 'next/navigation';
-import { cookies } from 'next/headers';
+type UserDatabase = {
+    username: string;
+    image: string;
+    password: string;
+}
 
-import { User } from '../data/interface/user';
-import users from '../data/users.json';
+type Users = {
+    bank: UserDatabase[];
+    company: UserDatabase[];
+    taxadvisor: UserDatabase[];
+    default: UserDatabase[];
+};
 
-const userArray: User[] = users;
+const participant: keyof Users = (process.env.NEXT_PUBLIC_CONNECTOR_NAME as keyof Users) || "default";
 
-export const authenticate = (formData: { password: string; username: string }) => {
-    const username = formData.username;
-    const password = formData.password;
+const userArray: UserDatabase[] = (users as Users)[participant];
+
+export const authenticate = (username: any, password: any) => {
 
     if (!username || !password) {
-        return {
-            message: 'Please fill all fields',
-            success: false,
-        };
+        return null
     }
 
-    const user = userArray.find(u => u.username === username && u.password === password);
+    const dbUser = userArray.find(u => u.username === username && u.password === password);
 
-    if (user){
-        cookies().set('user' as any, JSON.stringify(user) as any);
-        redirect('/dashboard');
+    if (!dbUser) return null;
+
+    const user: User = {
+        name: dbUser.username,
+        image: dbUser.image
     }
+    return user
 };

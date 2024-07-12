@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from "@/auth"
 
 
 function getDataBaseStatusUrl(connectorName: string | null) {
@@ -24,8 +25,11 @@ async function checkDatabaseStatus(connectorName: string | null): Promise<boolea
     }
 }
 
-export async function GET(request: NextRequest) {
+export const GET = auth(async function GET(request) {
     try {
+        if (!request.auth) {
+            return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+        }
         const { searchParams } = new URL(request.url);
         var connectorName = searchParams.get('connector');
         if (connectorName == null && process.env.NEXT_PUBLIC_CONNECTOR_NAME) {
@@ -40,4 +44,4 @@ export async function GET(request: NextRequest) {
         console.error('Error occurred while checking connector status:', error);
         return NextResponse.json({ error: 'Error occurred while checking connector status' }, { status: 500 });
     }
-}
+})

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchCatalog } from '../connector-functions';
+import { auth } from "@/auth"
 
 interface CatalogItem {
   date: string;
@@ -11,13 +12,20 @@ interface CatalogItem {
   contractIds: string[];
 }
 
-export async function POST(req: NextRequest) {
+export const POST = auth(async function POST(req) {
   try {
+      if (!req.auth) {
+          return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      }
     const body = await req.json();
     const { counterPartyName } = body;
     const result = await fetchCatalog(counterPartyName);
 
-    const formattedResult = result["dcat:dataset"].map((item: any) => ({
+    const datasets = Array.isArray(result["dcat:dataset"])
+                      ? result["dcat:dataset"]
+                      : [result["dcat:dataset"]];
+
+    const formattedResult = datasets.map((item: any) => ({
       date: item.date || "Unknown Date",
       name: item.name || "Unnamed Asset",
       title: item.description || "No description",
@@ -25,11 +33,11 @@ export async function POST(req: NextRequest) {
       id: item.id,
       contenttype: item.contenttype || "Unknown",
       size: item.size || "-",
-      contractIds: item["odrl:hasPolicy"]?.["@id"] || []
+      contractIds: item["odrl:hasPolicy"]?.["@id"] || null
     }));
 
     return NextResponse.json(formattedResult);
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-}
+})

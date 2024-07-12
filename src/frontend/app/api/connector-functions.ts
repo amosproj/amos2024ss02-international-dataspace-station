@@ -31,6 +31,8 @@ if (process.env.RUNNING_ENV == "local" || process.env.RUNNING_ENV == undefined) 
     connectorApiUrl = connectorBaseUrl + ":443/connector-api/";
 }
 
+const authenticationPassword = process.env.NEXT_PUBLIC_CONNECTOR_NAME + "-pass";
+
 function generateCreateAsset(description: string, contenttype: string, name: string, baseUrl: string, assetId: string, date: string, size: string) {
     const createAsset = {
         "@context": {
@@ -61,7 +63,8 @@ export async function createAsset(description: string, contenttype: string, name
             method: 'POST',
             cache: 'no-cache',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateCreateAsset(description, contenttype, name, baseUrl, assetId, date, size))
         });
@@ -101,6 +104,7 @@ export async function fetchCatalog(counterPartyName: string) {
             cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateFetchCatalog(counterPartyName)),
         });
@@ -123,6 +127,7 @@ export async function getPolicies() {
             cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(queryRequestJson),
         });
@@ -144,6 +149,7 @@ export async function getAssets() {
             cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(queryRequestJson),
         });
@@ -186,6 +192,7 @@ export async function registerDataplaneProvider(dataplaneId: string) {
             cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateRegisterDataPlaneProvider(dataplaneId)),
         });
@@ -226,6 +233,7 @@ export async function createPolicy(policyId: string) {
             cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateCreatePolicy(policyId)),
         });
@@ -267,6 +275,7 @@ export async function createContractDefinition(contractId: string, policyId: str
             cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateCreateContractDefinition(contractId, policyId, assetId)),
         });
@@ -307,6 +316,7 @@ export async function getDataset(assetId: string, counterPartyName: string) {
             cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateGetDataset(assetId, counterPartyName)),
         });
@@ -354,6 +364,7 @@ export async function negotiateContract(contractOfferId: string, assetId: string
             cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateNegotiateContract(contractOfferId, assetId, counterPartyName)),
         });
@@ -400,6 +411,7 @@ export async function startTransfer(contractId: string, assetId: string, counter
             cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
             },
             body: JSON.stringify(generateStartTransfer(contractId, assetId, counterPartyName)),
         });
@@ -418,7 +430,10 @@ export async function checkTransferStatus(transferId: string) {
     try {
         const result = await fetch(connectorManagementUrl + "v2/transferprocesses/" + transferId, {
             method: 'GET',
-            cache: 'no-cache'
+            cache: 'no-cache',
+            headers: {
+                'X-API-Key': authenticationPassword
+            }
         });
         if (!result.ok) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
@@ -435,7 +450,10 @@ export async function getEndpointDataReference(transferId: string) {
     try {
         const result = await fetch(connectorManagementUrl + "v1/edrs/" + transferId + "/dataaddress", {
             method: 'GET',
-            cache: 'no-cache'
+            cache: 'no-cache',
+            headers: {
+                'X-API-Key': authenticationPassword
+            }
         });
         if (!result.ok) {
             throw new Error(`HTTP Error! Status: ${result.status}`);

@@ -7,6 +7,7 @@ if (process.env.RUNNING_ENV == "local" || process.env.RUNNING_ENV == undefined) 
     databaseUrl = "https://" + process.env.NEXT_PUBLIC_CONNECTOR_NAME + "." + process.env.CLOUD_DOMAIN + ":443/database";
 }
 
+const authenticationPassword = process.env.NEXT_PUBLIC_CONNECTOR_NAME + "-db-pass";
 
 export async function uploadFile(file: FormDataEntryValue) {
     try {
@@ -15,6 +16,9 @@ export async function uploadFile(file: FormDataEntryValue) {
         const result = await fetch(databaseUrl + "/files/upload", {
             method: 'POST',
             body: formData,
+            headers: {
+                'X-API-Key': authenticationPassword
+            }
         });
         if (!result.ok) {
             throw new Error("HTTP Error! Status: ${result.status}");
@@ -29,4 +33,19 @@ export async function uploadFile(file: FormDataEntryValue) {
         console.error("Error uploading file: ", err);
         throw new Error("Failed to upload file");
     }
+}
+
+export async function downloadFile(fileId: string) {
+    const response = await fetch(databaseUrl + "/files/get/" + fileId, {
+        method: 'GET',
+        headers: {
+            'X-API-Key': authenticationPassword
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("Couldn't fetch file from database: STATUS " + response.status + " MESSAGE " + await response.text());
+    }
+
+    return response;
 }

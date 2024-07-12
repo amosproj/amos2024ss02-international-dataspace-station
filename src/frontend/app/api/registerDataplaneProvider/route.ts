@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { registerDataplaneProvider } from '../connector-functions';
+import { auth } from "@/auth"
 
-export async function POST(req: NextRequest) {
+export const POST = auth(async function POST(req) {
   try {
+      if (!req.auth) {
+          return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      }
     const body = await req.json();
     const { dataplaneId } = body;
     const result = await registerDataplaneProvider(dataplaneId);
@@ -10,4 +14,4 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-}
+})

@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getData } from '../connector-functions';
+import { auth } from "@/auth"
 
-export async function GET(req: NextRequest) {
+export const GET = auth(async function GET(req) {
   try {
+      if (!req.auth) {
+          return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      }
     const { searchParams } = new URL(req.url);
     const authorizationKey = searchParams.get('authorizationKey');
     const counterPartyName = searchParams.get('counterPartyName');
@@ -11,4 +15,4 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-}
+})

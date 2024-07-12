@@ -1,22 +1,11 @@
 import SideNav from '@/app/dashboard/sidenav';
-import {cookies} from "next/headers";
-import {User} from "@/data/interface/user";
-import Cookies from 'js-cookie';
-import {redirect} from "next/navigation";
-import Link from "next/link";
 import {ArrowRightEndOnRectangleIcon} from "@heroicons/react/24/solid";
+import { auth, signOut } from '@/auth';
 
-export default function Layout({children}: { children: React.ReactNode }) {
-    const userCookie = cookies().get('user' as any)?.value;
-    let user: User | null = null;
+export default async function Layout({children}: { children: React.ReactNode }) {
+    const session = await auth()
 
-    if (userCookie) {
-        try {
-            user = JSON.parse(userCookie) as User;
-        } catch (error) {
-            console.error('Failed to parse user cookie:', error);
-        }
-    }
+    if (!session?.user) return null
 
     return (
         <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
@@ -25,24 +14,28 @@ export default function Layout({children}: { children: React.ReactNode }) {
             </div>
             <div className="flex-grow md:flex flex-col">
                 <div className="flex flex-row justify-between p-6 bg-neonGreen text-black">
-                    {user &&
-                    <>
-                        <div className="flex items-center">{user?.role?.toUpperCase()}</div>
-                        <div className="flex flex-row gap-4">
-                            <div
-                                // className="hover:bg-neonBlue rounded-xl bg-gray-50"
+                    <div className="flex items-center">{process.env.NEXT_PUBLIC_CONNECTOR_NAME?.toUpperCase() || "NO ROLE"}</div>
+                    <div className="flex flex-row gap-4">
+                        <div
+                            // className="hover:bg-neonBlue rounded-xl bg-gray-50"
+                            className="flex h-[48px] grow items-center text-black justify-center gap-2 rounded-md bg-white p-3 text-sm font-medium hover:bg-neonBlue focus:bg-neonBlue shadow-xl md:flex-none md:justify-start md:p-2 md:px-3"
+                            >
+                            Hi, <strong>{session.user.name}!</strong>
+                            <img src={session.user.image} alt="profile-picture" className="h-8 w-8 rounded-full"/>
+                        </div>
+                        <form
+                            action={async (formData) => {
+                                "use server"
+                                await signOut({ redirectTo: '/', redirect:true })
+                            }}
+                        >
+                            <button
                                 className="flex h-[48px] grow items-center text-black justify-center gap-2 rounded-md bg-white p-3 text-sm font-medium hover:bg-neonBlue focus:bg-neonBlue shadow-xl md:flex-none md:justify-start md:p-2 md:px-3"
-                                >
-                                Hi, <strong>{user?.username}</strong>!
-                            </div>
-                            <Link href={'/'}
-                                  className="flex h-[48px] grow items-center text-black justify-center gap-2 rounded-md bg-white p-3 text-sm font-medium hover:bg-neonBlue focus:bg-neonBlue shadow-xl md:flex-none md:justify-start md:p-2 md:px-3"
                             >
                                 <ArrowRightEndOnRectangleIcon className="w-6"/>
-                            </Link>
-                        </div>
-                    </>
-                    }
+                            </button>
+                        </form>
+                    </div>
                 </div>
                 <div className="flex-grow p-6 bg-white md:overflow-y-auto md:p-12">
                     {children}
