@@ -10,6 +10,7 @@ ENV RUNNING_ENV=${RUNNING_ENV}
 ENV NEXT_PUBLIC_CONNECTOR_NAME=bank
 ENV CLOUD_DOMAIN=amos.cloudness.dev
 ENV AUTH_SECRET=kVJNSZuX/mIGvO3scL8p1c49quBPf2r/HAkIGfVvfbIQ
+ENV AUTH_TRUST_HOST=true
 
 RUN apk update
 RUN apk add --no-cache curl jq
