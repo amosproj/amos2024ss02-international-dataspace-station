@@ -4,7 +4,8 @@ services:
   company:
     build:
       context: edc-connector
-      dockerfile: company_connector.Dockerfile
+    environemnt:
+      - EDC_CONFIG=resources/configuration/company-configuration.properties
     profiles:
       - company
       - complete
@@ -18,7 +19,8 @@ services:
   taxadvisor:
     build:
       context: edc-connector
-      dockerfile: tax_advisor_connector.Dockerfile
+    environment:
+      - EDC_CONFIG=resources/configuration/tax_advisor-configuration.properties
     profiles:
       - taxadvisor
       - complete
@@ -32,7 +34,8 @@ services:
   bank:
     build:
       context: edc-connector
-      dockerfile: bank_connector.Dockerfile
+    environment:
+      - EDC_CONFIG=resources/configuration/bank-configuration.properties
     profiles:
       - bank
       - complete
