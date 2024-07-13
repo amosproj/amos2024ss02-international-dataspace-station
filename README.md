@@ -64,6 +64,6 @@ But if you still want to run and test the connectors without using Docker, pleas
 
 [![Contributors](https://contrib.rocks/image?repo=amosproj/amos2024ss02-international-dataspace-station)](https://github.com/amosproj/amos2024ss02-international-dataspace-station/graphs/contributors)
 
-[documentation]: https://github.com/amosproj/amos2024ss02-international-dataspace-station/tree/517a4b7d82583a143a45eb2662876e17c74cd477/Documentation
+[documentation]: https://github.com/amosproj/amos2024ss02-international-dataspace-station/tree/main/Documentation
 
-[build-documentation]: https://github.com/amosproj/amos2024ss02-international-dataspace-station/blob/517a4b7d82583a143a45eb2662876e17c74cd477/Documentation/build-documentation.md
+[build-documentation]: https://github.com/amosproj/amos2024ss02-international-dataspace-station/blob/main/Documentation/build-documentation.md
