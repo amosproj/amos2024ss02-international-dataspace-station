@@ -37,14 +37,24 @@ In each case the user will be automatically redirected to the login page of the 
 
 ## Login Page
 The login page redirects the user to the next page where they can enter the username and the password required to log in.
+![login_page1.png](user_documentation_images%2Flogin_page1.png)
+![login_page2.png](user_documentation_images%2Flogin_page2.png)
 
-### Home
-The **Home** page consists of two buttons. The first one shows the status of the connector that belongs to the logged-in user.
-The second one enables to create a connection between two connectors and do the contract definition and agreement.
+## Home
+In the **Home** page the user can see whether the connectors for the backend and database are running. There is also a button to refresh the statuses.
+![home_page.png](user_documentation_images%2Fhome_page.png)
 
-### Send
-The **Send** page offers the possibility to send the data to the chosen connector. The user can choose the connector they want to send the data to, they have the possibility of uploading the data, and finally, sending the file itself.
+## Upload
+The **Upload** page allows the user to upload new files into their personal database.
+![upload_page1.png](user_documentation_images%2Fupload_page1.png)
 
-### Receive
-The **Receive** page offers the possibility to view the previously exchanged files, as well as the possibility to download or delete them.
+They can do so by clicking the button *Upload file* in the upper right corner.
+![upload_page2.png](user_documentation_images%2Fupload_page2.png)
+
+## Download
+The **Download** page allows the user the possibility to download the files from other connectors.
+![download_page1.png](user_documentation_images%2Fdownload_page1.png)
+
+In order to do so, the user has to choose the connector from whom they want to download the file and next, choose the desired file.
+![download_page2.png](user_documentation_images%2Fdownload_page2.png)
 ***
