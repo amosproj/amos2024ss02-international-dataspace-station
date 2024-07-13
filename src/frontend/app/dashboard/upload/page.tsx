@@ -3,17 +3,19 @@ import React, { useState, useEffect } from 'react';
 import { ArrowPathIcon, TrashIcon, CloudArrowDownIcon } from '@heroicons/react/24/outline';
 import { createAsset, createContractDefinition, getAssets, uploadFile, getPolicies } from '@/actions/api';
 import { FileInfo, Policy, Asset } from "@/data/interface/file";
+import PolicyDropdown from './PolicyDropdown';
 
 const MAX_FILE_SIZE_MB = 10;
 
 const UploadPage: React.FC = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [title, setTitle] = useState('');
-    const [policyId, setPolicyId] = useState('');
+    const [policy, setPolicy] = useState<Policy | null>(null);
     const [showModal, setShowModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [files, setFiles] = useState<Asset[]>([]);
     const [policies, setPolicies] = useState<Policy[]>([]);
+    const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
     useEffect(() => {
         fetchAssets();
@@ -69,9 +71,22 @@ const UploadPage: React.FC = () => {
         return (Math.round(size*100)/100) + " " + fileSizes[i];
     }
 
+    const closeModal = () => {
+        setTitle('');
+        setPolicy(null);
+        setSelectedFile(null);
+        fetchAssets();
+        setShowModal(false);
+        setErrorMessage("");
+        setIsSubmitted(false);
+    }
+
     const handleFileUpload = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (selectedFile && title && policyId) {
+        setIsSubmitted(true);
+        if (!policy) return;
+
+        if (selectedFile && title && policy?.id) {
             const formData = new FormData();
             formData.append('file', selectedFile);
             try {
@@ -86,12 +101,8 @@ const UploadPage: React.FC = () => {
                     uploadDate: new Date().toJSON().slice(0,10)
                 };
                 await createAsset(fileInfo);
-                await createContractDefinition(`contract-${databaseInfo.id}`, policyId, databaseInfo.id);
-                setTitle('');
-                setPolicyId('');
-                setSelectedFile(null);
-                fetchAssets();
-                setShowModal(false);
+                await createContractDefinition(`contract-${databaseInfo.id}`, policy.id, databaseInfo.id);
+                closeModal();
             } catch (error) {
                 console.error('Error uploading file:', error);
                 setErrorMessage('Error uploading file.');
@@ -100,6 +111,11 @@ const UploadPage: React.FC = () => {
             setErrorMessage('Please fill in all fields and select a file.');
         }
     };
+
+    const handleDropdownChange = (policy: Policy) => {
+        setPolicy(policy);
+        setIsSubmitted(false);
+      };
 
     const handleDownload = (url: string) => {
         const link = document.createElement('a');
@@ -175,20 +191,13 @@ const UploadPage: React.FC = () => {
                             </div>
 
                             <div>
-                                <label htmlFor="policy" className="block mb-2 text-sm font-medium">Policy</label>
-                                <select
-                                    name="policy"
-                                    id="policy"
-                                    value={policyId}
-                                    onChange={(e) => setPolicyId(e.target.value)}
-                                    className="border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    required
-                                >
-                                    <option value="">Select Policy</option>
-                                    {policies.map((policy: Policy) => (
-                                        <option key={policy.id} value={policy.id}>{policy.name}</option>
-                                    ))}
-                                </select>
+                                <label className="block mb-2 text-sm font-medium">Policy</label>
+                                <PolicyDropdown policies={policies} value={policy} onChange={handleDropdownChange}/>
+                                <div className="h-5">
+                                    {isSubmitted && !policy && (
+                                        <p style={{ color: 'red' }}>Please select a policy.</p>
+                                    )}
+                                </div>
                             </div>
 
                             <div>
@@ -205,7 +214,7 @@ const UploadPage: React.FC = () => {
                             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
                             <div className="flex justify-end">
-                                <button onClick={() => setShowModal(false)} className="px-4 py-2 bg-gray-500 text-white rounded mr-2">
+                                <button onClick={() => closeModal()} className="px-4 py-2 bg-gray-500 text-white rounded mr-2">
                                     Cancel
                                 </button>
                                 <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded">
