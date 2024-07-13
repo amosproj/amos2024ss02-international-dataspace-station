@@ -355,6 +355,7 @@ function generateNegotiateContract(contractOfferId: string, assetId: string, cou
             "target": assetId
         }
     };
+    console.log(negotiateContract);
     return negotiateContract;
 };
 
@@ -379,6 +380,27 @@ export async function negotiateContract(contractOfferId: string, assetId: string
         throw new Error("Failed to negotiate contract");
     }
 };
+
+export async function getContractNegotiationStatus(negotiationId: string) {
+    try {
+        const result = await fetch(connectorManagementUrl + `v2/contractnegotiations/${negotiationId}`, {
+            method: 'GET',
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
+            }
+        });
+        if (!result.ok) {
+            throw new Error(`HTTP Error! Status: ${result.status}`);
+        }
+        const data = await result.json();
+        return data;
+    } catch (err) {
+        console.error("Error getting contract negotiation status: ", err);
+        throw new Error("Failed to get contract negotiation status");
+    }
+}
 
 function generateStartTransfer(contractId: string, assetId: string, counterPartyName: string) {
     var counterPartyAddress: string = "";

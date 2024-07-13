@@ -8,6 +8,7 @@ const DownloadPage: React.FC = () => {
     const [connector, setConnector] = useState<string>('');
     const [catalogItems, setCatalogItems] = useState<CatalogItem[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
 
     useEffect(() => {
@@ -29,6 +30,91 @@ const DownloadPage: React.FC = () => {
             console.error('Error fetching assets:', error);
             setErrorMessage('Error fetching assets.');
         }
+    };
+
+    const handleNegotiateClick = async (item: CatalogItem) => {
+        setLoading(true);
+        //setErrorMessage(null);
+
+        try {
+            // Fetch catalog
+            const catalogResponse = await fetch('/api/fetchCatalog', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ counterPartyName: item.author })
+            });
+
+            if (!catalogResponse.ok) {
+                throw new Error(`Failed to fetch catalog: ${catalogResponse.statusText}`);
+            }
+
+            const catalog = await catalogResponse.json();
+            console.log("response fetch catalog: ", catalog[0]);
+            
+            // Negotiate contract
+            const negotiateResponse = await fetch('/api/negotiateContract', {
+                method: 'POST',   
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contractOfferId: catalog[0].contractIds, 
+                    assetId: item.id,
+                    counterPartyName: item.author
+                })
+            });
+
+            if (!negotiateResponse.ok) {
+                throw new Error(`Failed to negotiate contract: ${negotiateResponse.statusText}`);
+            }
+            
+            const negotiationResult = await negotiateResponse.json();
+            console.log("negotiateResponse: ", negotiationResult);
+
+            const negotiationId = negotiationResult['@id'];
+
+            // Get agreement ID
+            const agreementResponse = await fetch(`/api/getContractAgreementId/${negotiationId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!agreementResponse.ok) {
+                throw new Error(`Failed to get agreement ID: ${agreementResponse.statusText}`);
+            }
+            const agreementResult = await agreementResponse.json();
+            const agreementId = agreementResult.agreementId;
+            /*
+            // Start transfer
+            const transferResponse = await fetch('/api/startTransfer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    agreementId,
+                    assetId: item.id,
+                    counterPartyName: item.author
+                })
+            });
+
+            if (!transferResponse.ok) {
+                throw new Error(`Failed to start transfer: ${transferResponse.statusText}`);
+            }
+
+            const transferResult = await transferResponse.json();
+            console.log('Transfer started successfully:', transferResult);
+            */
+        } catch (err) {
+            setErrorMessage(err.message);
+            console.error('An error occurred:', err);
+        } finally {
+            setLoading(false);
+        }
+
     };
 
     const handleDownload = (url: string) => {
@@ -91,8 +177,10 @@ const DownloadPage: React.FC = () => {
                                     <td className="px-6 py-4 text-sm text-gray-500">{item.author}</td>
                                     <td className="px-6 py-4 text-sm text-gray-500">{item.contenttype}</td>
                                     <td className="px-6 py-4 text-sm text-gray-500">
-                                        <button onClick={() => console.log(item)} className="flex items-center px-4 py-2 bg-neonGreen text-white rounded">
-                                            NEGOTIATE
+                                        <button onClick={() => handleNegotiateClick(item)}
+                                            className="flex items-center px-4 py-2 bg-neonGreen text-white rounded"
+                                            disabled={loading}>
+                                            {loading ? 'Processing...' : 'NEGOTIATE'}
                                         </button>
                                     </td>
                                 </tr>
