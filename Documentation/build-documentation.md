@@ -1,28 +1,30 @@
 # Requirements
 
-To run the connectors on your own machine, installing Docker is enough. If you don't want to use Docker, make sure that you have the following packages installed:
+To run the connectors on your own machine, installing Docker is enough. You don't need to install any additional packages or dependencies.
 
-| Package  | Version |
-| -------- | ------- |
-| JDK  | 17  |
-| Gradle  | 8.7 |
-| jq  | 1.7.1 |
-| npm  | 10.7 |
-| node  | 22.2 | 
+[![Docker](https://img.shields.io/badge/Docker-v27-blue.svg)](https://docs.docker.com/get-docker/)
+
 <br>
 
 # Build process
 
 ## Docker usage
 
-To run the code using docker, use the following command in the `src` folder:
+To run the code using docker, use the following commands in the `src` folder:
 
 ```
-sudo docker compose up
+sudo docker compose --profile complete build
+sudo docker compose --profile complete up
 ```
+To start only selected profiles, use:
+
+````
+sudo docker compose --profile <company|taxadvisor|bank> up
+````
+
 <br>
 
-<span style="color:red"><b> Note: </b></span> If you are using macOS, you might have to modify the `config.json` file:
+<b>Note:</b> If you are using macOS, you might have to modify the `config.json` file:
 1. Go to `~/.docker/config.json`.
 2. Change the `credsStore` value from `desktop` to `osxkeychain`.
 
@@ -32,9 +34,18 @@ Alternatively you may:
 
 <br>
 
-## Running the connectors locally
+## Running connectors locally
 
-To run the connectors without using Docker, you have to use four different terminals. Use the following commands in separate terminals:
+If you want to run and test the connectors without using Docker, make sure you have the following packages installed:
+
+| Package  | Version |
+| -------- | ------- |
+| JDK  | 17  |
+| Gradle  | 8.7 |
+| curl | 8.6 |
+| jq  | 1.7.1 |
+
+Use the following commands in separate terminals from the `src/edc-connector` folder:
 
 ### Company connector
 
@@ -61,17 +72,35 @@ In the third terminal, use the following command to run the bank connector:
 ```
 java -Dedc.keystore=resources/certs/cert.pfx -Dedc.keystore.password=123456 -Dedc.vault=resources/configuration/bank-vault.properties -Dedc.fs.config=resources/configuration/bank-configuration.properties -jar connector/build/libs/connector.jar
 ```
+<br>
 
-### Running the web app
+## Running database locally
 
-Run the app in the forth (main) terminal:
+Run the following commands from the `src/databse` folder to build Gradle project and start the database:
 
 ```
-cd frontend_socket/international-dataspace-station
-npm run dev
+./gradlew build
+
+java -jar build/libs/filestorage-database.jar
 ```
 
-After this, you can access the app at `https://localhost:3000`.
+Show files in the database:
+
+```
+curl localhost:8080/files/list
+```
+
+Upload file:
+
+```
+curl -X POST -F "file=@/path/to/your/textfile.txt" http://localhost:8080/files/upload
+```
+
+Download file:
+
+```
+curl localhost:8080/files/get/{id}
+```
 
 <br>
 
@@ -129,9 +158,9 @@ curl -d @resources/negotiate-contract.json \
   -s | jq
 ```
 
-#### 7. Get contract agreement id
+#### 7. Get contract agreement ID
 
-Replace `{{id}}` with the contract negotiation id from the consumer terminal:
+Replace `{{id}}` with the contract negotiation ID from the consumer terminal:
 
 ```
 curl -X GET "http://localhost:{{consumer port}}/management/v2/contractnegotiations/{{id}}" \
@@ -139,7 +168,14 @@ curl -X GET "http://localhost:{{consumer port}}/management/v2/contractnegotiatio
     -s | jq
 ```
 
-<br>
 The connectors have now been configured successfully and are ready to be used.
 
-[software_architecture]: https://github.com/amosproj/amos2024ss02-international-dataspace-station/blob/main/Deliverables/sprint-02/software-architecture.pdf
+#### 8.  Start the transfer
+
+Before executing the request, modify `start-transfer.json` by inserting the contract agreement ID from the previous step. You can re-use the same asset, policies and contract negotiation from before.
+
+```
+curl -d @resources/negotiate-contract.json \
+  -X POST -H 'content-type: application/json' http://localhost:{{consumer port}}/management/v2/contractnegotiations \
+  -s | jq
+```
