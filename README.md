@@ -31,14 +31,13 @@ To run the code using docker, use the following commands in the `src` folder:
 
 ```
 sudo docker compose --profile complete build
-sudo docker compose --profile <company|taxadvisor|bank> up
-```
-
-To start only selected profiles, use:
-
-```
 sudo docker compose --profile complete up
 ```
+To start only selected profiles, use:
+
+````
+sudo docker compose --profile <company|taxadvisor|bank> up
+````
 
 <br>
 
