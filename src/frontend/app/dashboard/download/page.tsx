@@ -10,7 +10,7 @@ const DownloadPage: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
-
+    /*
     useEffect(() => {
         setErrorMessage("");
         setCatalogItems([]);
@@ -20,7 +20,7 @@ const DownloadPage: React.FC = () => {
             setCatalogItems([]);
         }
     }, [connector]);
-
+    */
     const fetchItems = async () => {
         try {
             const fetchedCatalog = await fetchCatalogItems(connector);
@@ -37,30 +37,16 @@ const DownloadPage: React.FC = () => {
         //setErrorMessage(null);
 
         try {
-            // Fetch catalog
-            const catalogResponse = await fetch('/api/fetchCatalog', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ counterPartyName: item.author })
-            });
-
-            if (!catalogResponse.ok) {
-                throw new Error(`Failed to fetch catalog: ${catalogResponse.statusText}`);
-            }
-
-            const catalog = await catalogResponse.json();
-            console.log("response fetch catalog: ", catalog[0]);
-            
+            console.log(item);
             // Negotiate contract
             const negotiateResponse = await fetch('/api/negotiateContract', {
                 method: 'POST',   
+                cache: 'no-cache',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    contractOfferId: catalog[0].contractIds, 
+                    contractOfferId: item.contractIds[0], 
                     assetId: item.id,
                     counterPartyName: item.author
                 })
@@ -78,6 +64,7 @@ const DownloadPage: React.FC = () => {
             // Get agreement ID
             const agreementResponse = await fetch(`/api/getContractAgreementId/${negotiationId}`, {
                 method: 'GET',
+                cache: 'no-cache',
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -145,12 +132,13 @@ const DownloadPage: React.FC = () => {
                             </option>
                         ))}
                     </select>
-                    {/*<button*/}
-                    {/*    onClick={fetchAssets}*/}
-                    {/*    className="px-4 py-2 bg-green-500 text-white rounded flex items-center"*/}
-                    {/*>*/}
-                    {/*    Fetch*/}
-                    {/*</button>*/}
+                    <button
+                        onClick={fetchItems}
+                        className="px-4 py-2 bg-blue-500 text-white rounded flex items-center"
+                        disabled={!connector || loading}
+                    >
+                        {loading ? 'Loading...' : 'Fetch Items'}
+                    </button>
                 </div>
             </div>
             {connector && (
