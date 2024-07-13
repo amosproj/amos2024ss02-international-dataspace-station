@@ -61,7 +61,7 @@ export async function isDatabaseRunning(connectorName: string): Promise<boolean>
 }
 
   
-export async function fetchCatalogItems(counterPartyName: string): Promise<CatalogItem[]> {
+export async function fetchCatalogItems(counterPartyName: string | null = null): Promise<CatalogItem[]> {
   try {
     const response = await fetch(`/api/fetchCatalog`, {
       method: 'POST',

@@ -1,8 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { ArrowPathIcon, TrashIcon, CloudArrowDownIcon } from '@heroicons/react/24/outline';
-import { createAsset, createContractDefinition, getAssets, uploadFile, getPolicies } from '@/actions/api';
-import { FileInfo, Policy, Asset } from "@/data/interface/file";
+import { ArrowPathIcon, TrashIcon, CloudArrowDownIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { createAsset, createContractDefinition, getAssets, uploadFile, getPolicies, fetchCatalogItems } from '@/actions/api';
+import { FileInfo, Policy, Asset, CatalogItem } from "@/data/interface/file";
 import PolicyDropdown from './PolicyDropdown';
 
 const MAX_FILE_SIZE_MB = 10;
@@ -14,6 +14,7 @@ const UploadPage: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [files, setFiles] = useState<Asset[]>([]);
+    const [catalogItems, setCatalogItems] = useState<CatalogItem[]>([]);
     const [policies, setPolicies] = useState<Policy[]>([]);
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
@@ -26,6 +27,8 @@ const UploadPage: React.FC = () => {
         try {
             const assets = updateLinksForLocalhost(await getAssets());
             setFiles(assets);
+            const ownCatalogItems = await fetchCatalogItems();
+            setCatalogItems(ownCatalogItems);
         } catch (error) {
             console.error('Error fetching assets:', error);
         }
@@ -38,6 +41,10 @@ const UploadPage: React.FC = () => {
             return { ...file, baseUrl: updatedLink };
         });
     };
+
+    const isOffered = (fileId: string): boolean => {
+        return catalogItems.some(item => item.id === fileId);
+    }
 
     const fetchPolicies = async () => {
         try {
@@ -143,7 +150,7 @@ const UploadPage: React.FC = () => {
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                     <tr>
-                        {['Name', 'Size', 'Title', 'Date', 'Author', 'Content Type', 'Actions'].map((label) => (
+                        {['Name', 'Size', 'Title', 'Date', 'Author', 'Content Type', 'Offered', 'Actions'].map((label) => (
                             <th key={label} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                 {label}
                             </th>
@@ -159,6 +166,13 @@ const UploadPage: React.FC = () => {
                             <td className="px-6 py-4 text-sm text-gray-500">{file.date}</td>
                             <td className="px-6 py-4 text-sm text-gray-500">{file.author}</td>
                             <td className="px-6 py-4 text-sm text-gray-500">{file.contenttype}</td>
+                            <td className="px-6 py-4 text-sm text-gray-500">
+                                {isOffered(file.id) ? (
+                                    <CheckCircleIcon className="w-5 h-5 text-green-500 ml-4 scale-150"/>
+                                ) : (
+                                    <XCircleIcon className="w-5 h-5 text-red-500 ml-4 scale-150"/>
+                                )}
+                            </td>
                             <td className="px-6 py-4 text-sm text-gray-500 flex space-x-2">
                                 <button onClick={() => handleDownload(file.baseUrl)} className="flex items-center px-4 py-2 bg-green-500 text-white rounded">
                                     <CloudArrowDownIcon className="w-5 h-5" />

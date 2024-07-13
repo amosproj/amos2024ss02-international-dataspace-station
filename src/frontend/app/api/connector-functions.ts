@@ -81,9 +81,11 @@ export async function createAsset(description: string, contenttype: string, name
 
 
 
-function generateFetchCatalog(counterPartyName: string) {
+function generateFetchCatalog(counterPartyName: string | null) {
     var counterPartyAddress: string = "";
-    if (process.env.RUNNING_ENV == "local") {
+    if (!counterPartyName) {
+        counterPartyAddress = "http://localhost:19194/protocol";
+    } else if (process.env.RUNNING_ENV == "local") {
         counterPartyAddress = "http://" + counterPartyName + ":19194" + "/protocol";
     } else {
         counterPartyAddress = "https://" + counterPartyName + "." + process.env.CLOUD_DOMAIN + ":443/protocol";
@@ -98,7 +100,7 @@ function generateFetchCatalog(counterPartyName: string) {
     return fetchCatalog;
 };
 
-export async function fetchCatalog(counterPartyName: string) {
+export async function fetchCatalog(counterPartyName: string | null) {
     try {
         const result = await fetch(connectorManagementUrl + "v2/catalog/request", {
             method: 'POST',
