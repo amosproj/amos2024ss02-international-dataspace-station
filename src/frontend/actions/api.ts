@@ -168,13 +168,13 @@ export async function createAsset(file: FileInfo): Promise<boolean> {
         size: file.size
       })
     });
-
+    console.log("create asset: ", response);
     if (!response.ok) {
       throw new Error(`API call failed with status ${response.status}`);
     }
 
     const data = await response.json();
-
+    console.log("created asset response: ", data);
     if (data.error) {
       throw new Error(data.error);
     }
@@ -204,7 +204,7 @@ export async function createContractDefinition(contractId: string, policyId: str
     }
 
     const data = await response.json();
-
+    console.log("response contract definition: ", data);
     if (data.error) {
       throw new Error(data.error);
     }

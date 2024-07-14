@@ -134,7 +134,7 @@ const DownloadPage: React.FC = () => {
                     </select>
                     <button
                         onClick={fetchItems}
-                        className="px-4 py-2 bg-blue-500 text-white rounded flex items-center"
+                        className="px-4 py-2 bg-neonGreen text-white rounded flex items-center"
                         disabled={!connector || loading}
                     >
                         {loading ? 'Loading...' : 'Fetch Items'}

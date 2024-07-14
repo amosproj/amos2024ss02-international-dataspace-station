@@ -10,6 +10,7 @@ export const POST = auth(async function POST(req) {
     const body = await req.json();
     const { policyId } = body;
     const result = await createPolicy(policyId);
+    console.log("CREATED POLICY: ", result);
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -285,6 +285,7 @@ export async function createContractDefinition(contractId: string, policyId: str
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
+        console.log("contract definition: ", data);
         return data;
     } catch (err) {
         console.error("Error creating contract definition: ", err);
