@@ -423,21 +423,14 @@ function generateStartTransfer(contractId: string, assetId: string, counterParty
         "contractId": contractId,
         "assetId": assetId,
         "protocol": "dataspace-protocol-http",
-        "transferType": "HttpData-PULL",
-        "properties": {
-            "baseUrl": `http://${counterPartyName}:4000/receiver/urn:connector:provider/callback`,
-            "method": "POST",
-            "headers": {
-                "X-API-Key": process.env.NEXT_PUBLIC_CONNECTOR_NAME + "-db-pass"
-            }
-        }
+        "transferType": "HttpData-PULL"
     };
     return startTransfer;
 };
 
 export async function startTransfer(contractId: string, assetId: string, counterPartyName: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/transferprocesses", {
+        const result = await fetch(connectorManagementUrl + "v3/transferprocesses", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -461,7 +454,7 @@ export async function startTransfer(contractId: string, assetId: string, counter
 
 export async function checkTransferStatus(transferId: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/transferprocesses/" + transferId, {
+        const result = await fetch(connectorManagementUrl + "v3/transferprocesses/" + transferId, {
             method: 'GET',
             cache: 'no-cache',
             headers: {
