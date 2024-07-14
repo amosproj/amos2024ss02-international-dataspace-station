@@ -7,7 +7,7 @@
   "protocol": "dataspace-protocol-http",
   "policy": {
     "@context": "http://www.w3.org/ns/odrl.jsonld",
-    "@id": "Y29udHJhY3QwMQ==:YXNzZXQwMQ==:MTMzNDc4MDUtOWU0Ni00NjE4LThjODMtMmRmOGUxYzZhNThl",
+    "@id": "Y29udHJhY3QwMQ==:YXNzZXQwMQ==:NzliOWE2N2YtM2IxMC00NzY3LWI4MjEtMWM4OGQ2ZGFlOWFl",
     "@type": "Offer",
     "assigner": "company",
     "target": "asset01"

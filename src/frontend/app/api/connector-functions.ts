@@ -423,8 +423,13 @@ function generateStartTransfer(contractId: string, assetId: string, counterParty
         "contractId": contractId,
         "assetId": assetId,
         "protocol": "dataspace-protocol-http",
-        "dataDestination": {
-            "type": "HttpProxy"
+        "transferType": "HttpData-PULL",
+        "properties": {
+            "baseUrl": `http://${counterPartyName}:4000/receiver/urn:connector:provider/callback`,
+            "method": "POST",
+            "headers": {
+                "X-API-Key": process.env.NEXT_PUBLIC_CONNECTOR_NAME + "-db-pass"
+            }
         }
     };
     return startTransfer;
@@ -441,11 +446,11 @@ export async function startTransfer(contractId: string, assetId: string, counter
             },
             body: JSON.stringify(generateStartTransfer(contractId, assetId, counterPartyName)),
         });
+        console.log("result ", result);
         if (!result.ok) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
-        console.log(result);
         console.log("Result data transfer: ", data);
         return data;
     } catch (err) {
