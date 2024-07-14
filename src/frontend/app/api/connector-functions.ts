@@ -81,9 +81,11 @@ export async function createAsset(description: string, contenttype: string, name
 
 
 
-function generateFetchCatalog(counterPartyName: string) {
+function generateFetchCatalog(counterPartyName: string | null) {
     var counterPartyAddress: string = "";
-    if (process.env.RUNNING_ENV == "local") {
+    if (!counterPartyName) {
+        counterPartyAddress = "http://localhost:19194/protocol";
+    } else if (process.env.RUNNING_ENV == "local") {
         counterPartyAddress = "http://" + counterPartyName + ":19194" + "/protocol";
     } else {
         counterPartyAddress = "https://" + counterPartyName + "." + process.env.CLOUD_DOMAIN + ":443/protocol";
@@ -98,7 +100,7 @@ function generateFetchCatalog(counterPartyName: string) {
     return fetchCatalog;
 };
 
-export async function fetchCatalog(counterPartyName: string) {
+export async function fetchCatalog(counterPartyName: string | null) {
     try {
         const result = await fetch(connectorManagementUrl + "v2/catalog/request", {
             method: 'POST',
@@ -164,6 +166,28 @@ export async function getAssets() {
         throw new Error("Failed to get policies");
     }
 }
+
+export async function getContractDefinitions() {
+    try {
+        const result = await fetch(connectorManagementUrl + "v2/contractdefinitions/request", {
+            method: 'POST',
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
+            },
+            body: JSON.stringify(queryRequestJson),
+        });
+        if (!result.ok) {
+            throw new Error(`HTTP Error! Status: ${result.status}`);
+        }
+        const data = await result.json();
+        return data;
+    } catch (err) {
+        console.error("Error getting policies: ", err);
+        throw new Error("Failed to get policies");
+    }
+};
 
 function generateRegisterDataPlaneProvider(dataplaneId: string) {
     const registerDataPlaneProvider = {
@@ -493,3 +517,51 @@ export async function getData(authorizationKey: string, counterPartyName: string
         throw new Error("Failed to get data");
     }
 };
+
+export async function deleteContractDefinition(contractId: string) {
+    try {
+        const result = await fetch(connectorManagementUrl + "v2/contractdefinitions/" + contractId, {
+            method: 'DELETE',
+            cache: 'no-cache',
+            headers: {
+                'X-API-Key': authenticationPassword
+            }
+        });
+
+        if (!result.ok) {
+            console.error(await result.text());
+            throw new Error(`HTTP Error! Status: ${result.status}`);
+        }
+        const data = await result.text();
+        return data;
+    } catch (err) {
+        console.error("Error deleting contract definition: ", err);
+        throw new Error("Failed to delete contract definition");
+    }
+}
+
+export async function deleteAsset(assetId: string) {
+    try {
+        const result = await fetch(connectorManagementUrl + "v3/assets/" + assetId, {
+            method: 'DELETE',
+            cache: 'no-cache',
+            headers: {
+                'X-API-Key': authenticationPassword
+            }
+        });
+
+        if (result.status === 409) {
+            throw new Error("Asset could not be deleted because it's referenced by a contract agreement");
+        }
+
+        if (!result.ok) {
+            console.error(await result.text());
+            throw new Error(`HTTP Error! Status: ${result.status}`);
+        }
+        const data = await result.text();
+        return data;
+    } catch (err) {
+        console.error("Error deleting contract definition: ", err);
+        throw new Error("Failed to delete contract definition");
+    }
+}

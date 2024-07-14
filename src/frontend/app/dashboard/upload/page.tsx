@@ -1,8 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { ArrowPathIcon, TrashIcon, CloudArrowDownIcon } from '@heroicons/react/24/outline';
-import { createAsset, createContractDefinition, getAssets, uploadFile, getPolicies } from '@/actions/api';
-import { FileInfo, Policy, Asset } from "@/data/interface/file";
+import { ArrowPathIcon, TrashIcon, CloudArrowDownIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { createAsset, createContractDefinition, getAssets, uploadFile, getPolicies, fetchCatalogItems, deleteAsset, deleteContractDefinition, deleteFile, getContractDefinitions } from '@/actions/api';
+import { FileInfo, Policy, Asset, CatalogItem } from "@/data/interface/file";
 import PolicyDropdown from './PolicyDropdown';
 
 const MAX_FILE_SIZE_MB = 10;
@@ -14,22 +14,60 @@ const UploadPage: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [files, setFiles] = useState<Asset[]>([]);
+    const [contractDefinitions, setContractDefinitions] = useState<[]>([]);
     const [policies, setPolicies] = useState<Policy[]>([]);
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+    const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
     useEffect(() => {
         fetchAssets();
         fetchPolicies();
     }, []);
 
+    const handleMouseEnterOffered = (fileId: string) => {
+        setHoveredItem(fileId);
+    }
+    const handleMouseLeave = () => {
+        setHoveredItem(null);
+    }
+
+    const getPolicyInfo = (policyId: string) => {
+        const policy = policies.find(policy => policy.id === policyId);
+        return policy || null;
+    }
+
+    const getPolicyFromContract = (contractId: string) => {
+        const contract = contractDefinitions.find(contract => contract["@id"] === contractId);
+        if (!contract) return null;
+        return getPolicyInfo(contract["accessPolicyId"]);
+    }
+
     const fetchAssets = async () => {
         try {
             const assets = updateLinksForLocalhost(await getAssets());
             setFiles(assets);
+            const ownContractDefinitions = await getContractDefinitions();
+            setContractDefinitions(ownContractDefinitions);
         } catch (error) {
             console.error('Error fetching assets:', error);
         }
     };
+
+    const deleteCallback = async (asset: Asset) => {
+        try {
+            await deleteContractDefinition("contract-" + asset.id)
+            try {
+                await deleteAsset(asset.id);
+                await fetchAssets();
+                await deleteFile(asset.id);
+            } catch (err) {
+                console.error("Asset could not be deleted: ", err);
+                await fetchAssets();
+            }
+        } catch (err) {
+            console.error("Contract could not be deleted: ", err);
+        }
+    }
 
     function updateLinksForLocalhost(files: Asset[]): Asset[] {
         return files.map(file => {
@@ -38,6 +76,15 @@ const UploadPage: React.FC = () => {
             return { ...file, baseUrl: updatedLink };
         });
     };
+
+    const isOffered = (fileId: string): boolean => {
+        try {
+            return contractDefinitions.some(item => item["@id"] === "contract-" + fileId);
+        } catch (err) {
+            console.error("Failed to look for contracts: ", err)
+            return false;
+        }
+    }
 
     const fetchPolicies = async () => {
         try {
@@ -143,7 +190,7 @@ const UploadPage: React.FC = () => {
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                     <tr>
-                        {['Name', 'Size', 'Title', 'Date', 'Author', 'Content Type', 'Actions'].map((label) => (
+                        {['Name', 'Size', 'Title', 'Date', 'Author', 'Content Type', 'Offered', 'Actions'].map((label) => (
                             <th key={label} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                 {label}
                             </th>
@@ -151,7 +198,9 @@ const UploadPage: React.FC = () => {
                     </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                    {files.map((file: Asset) => (
+                    {files.map((file: Asset) => {
+                        const policy = getPolicyFromContract("contract-" + file.id);
+                        return (
                         <tr key={file.id}>
                             <td className="px-6 py-4 text-sm font-medium text-gray-900 break-words">{file.name}</td>
                             <td className="px-6 py-4 text-sm text-gray-500">{file.size}</td>
@@ -159,16 +208,32 @@ const UploadPage: React.FC = () => {
                             <td className="px-6 py-4 text-sm text-gray-500">{file.date}</td>
                             <td className="px-6 py-4 text-sm text-gray-500">{file.author}</td>
                             <td className="px-6 py-4 text-sm text-gray-500">{file.contenttype}</td>
+                            <td className="px-6 py-4 text-sm text-gray-500 relative">
+                                {isOffered(file.id) ? (
+                                    
+                                    <CheckCircleIcon className="w-5 h-5 text-green-500 ml-4 scale-150" onMouseEnter={() => handleMouseEnterOffered(file.id)} onMouseLeave={handleMouseLeave}/>
+                                ) : (
+                                    <XCircleIcon className="w-5 h-5 text-red-500 ml-4 scale-150"/>
+                                )}
+                                { hoveredItem === file.id && (
+                                    
+                                    <div className="absolute left-0 mt-2 -translate-x-1/2 w-64 p-2 bg-white border border-gray-300 rounded shadow-lg z-10 ml-12">
+                                        <div className="text-xs text-gray-300 font-bold">OFFERED WITH</div>
+                                        <div className="font-bold text-black text-lg">{policy?.name}</div>
+                                        <div className="text-sm text-gray-700">{policy?.description}</div>
+                                    </div>
+                                )}
+                            </td>
                             <td className="px-6 py-4 text-sm text-gray-500 flex space-x-2">
                                 <button onClick={() => handleDownload(file.baseUrl)} className="flex items-center px-4 py-2 bg-green-500 text-white rounded">
                                     <CloudArrowDownIcon className="w-5 h-5" />
                                 </button>
-                                <button className="flex items-center px-4 py-2 bg-red-500 text-white rounded" disabled>
+                                <button onClick={() => deleteCallback(file)} className="flex items-center px-4 py-2 bg-red-500 text-white rounded">
                                     <TrashIcon className="w-5 h-5" />
                                 </button>
                             </td>
                         </tr>
-                    ))}
+                    )})}
                     </tbody>
                 </table>
             </div>
