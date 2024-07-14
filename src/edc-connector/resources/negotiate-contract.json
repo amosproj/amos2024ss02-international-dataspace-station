@@ -3,11 +3,11 @@
     "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
   },
   "@type": "ContractRequest",
-  "counterPartyAddress": "http://localhost:19194/protocol",
+  "counterPartyAddress": "http://company:19194/protocol",
   "protocol": "dataspace-protocol-http",
   "policy": {
     "@context": "http://www.w3.org/ns/odrl.jsonld",
-    "@id": "Y29udHJhY3QwMQ==:YXNzZXQwMQ==:ZTU3MTI3OWYtNTQ3NC00YzFmLWFhYzgtNTMyZWQ2OGNhOWI3",
+    "@id": "Y29udHJhY3QwMQ==:YXNzZXQwMQ==:MTMzNDc4MDUtOWU0Ni00NjE4LThjODMtMmRmOGUxYzZhNThl",
     "@type": "Offer",
     "assigner": "company",
     "target": "asset01"

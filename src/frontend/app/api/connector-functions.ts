@@ -383,8 +383,10 @@ export async function negotiateContract(contractOfferId: string, assetId: string
 };
 
 export async function getContractNegotiationStatus(negotiationId: string) {
+    const test = connectorManagementUrl + "v2/contractnegotiations/" + negotiationId;
+    console.log("get agreemend id pre: ", test);
     try {
-        const result = await fetch(connectorManagementUrl + `v2/contractnegotiations/${negotiationId}`, {
+        const result = await fetch(connectorManagementUrl + "v2/contractnegotiations/" + negotiationId, {
             method: 'GET',
             cache: 'no-cache',
             headers: {

@@ -62,9 +62,8 @@ const DownloadPage: React.FC = () => {
             const negotiationId = negotiationResult['@id'];
 
             // Get agreement ID
-            const agreementResponse = await fetch(`/api/getContractAgreementId/${negotiationId}`, {
+            const agreementResponse = await fetch('/api/getContractAgreementId/'+ negotiationId, {
                 method: 'GET',
-                cache: 'no-cache',
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -82,7 +81,7 @@ const DownloadPage: React.FC = () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    agreementId,
+                    contractId: agreementId,
                     assetId: item.id,
                     counterPartyName: item.author
                 })

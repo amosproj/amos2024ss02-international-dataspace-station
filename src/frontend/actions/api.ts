@@ -168,7 +168,6 @@ export async function createAsset(file: FileInfo): Promise<boolean> {
         size: file.size
       })
     });
-    console.log("create asset: ", response);
     if (!response.ok) {
       throw new Error(`API call failed with status ${response.status}`);
     }
@@ -198,7 +197,6 @@ export async function createContractDefinition(contractId: string, policyId: str
         assetId: assetId
       })
     });
-
     if (!response.ok) {
       throw new Error(`API call failed with status ${response.status}`);
     }

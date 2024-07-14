@@ -2,9 +2,9 @@
   "@context": {
     "@vocab": "https://w3id.org/edc/v0.0.1/ns/"
   },
-  "@id": "contract0",
-  "accessPolicyId": "un",
-  "contractPolicyId": "un",
+  "@id": "contract01",
+  "accessPolicyId": "aPolicy",
+  "contractPolicyId": "aPolicy",
   "assetsSelector": [
     {
       "@type": "CriterionDto",
