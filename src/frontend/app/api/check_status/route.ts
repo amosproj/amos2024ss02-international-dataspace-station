@@ -1,5 +1,17 @@
 import { NextResponse } from 'next/server';
+import { execSync } from 'child_process';
 import { auth } from "@/auth"
+
+const executeCommand = (command: string) => {
+    try {
+        const output = execSync(command, { encoding: 'utf-8' });
+        console.log(output);
+        return output.trim(); // Return the trimmed output
+    } catch (error) {
+        console.error(error);
+        throw new Error((error as Error).message);
+    }
+};
 
 function getConnectorStatusUrl(connectorName: string | null) {
     if (process.env.RUNNING_ENV == "local") {
@@ -12,6 +24,11 @@ function getConnectorStatusUrl(connectorName: string | null) {
 async function checkConnectorStatus(connectorName: string | null): Promise<boolean> {
     const url = getConnectorStatusUrl(connectorName);
     try {
+        let containerID; 
+        containerID = executeCommand("docker container ls -f 'status=paused' | grep 'src-" + connectorName + "-1' | awk '{print $1}'");
+        if (containerID) { // Checks if connector is paused, otherwise fetch will hang
+            return false;
+        }
         console.log("Trying to fetch connector status from URL " + url);
         var result = await fetch(url, {cache: "no-store"});
         var data = await result.json();

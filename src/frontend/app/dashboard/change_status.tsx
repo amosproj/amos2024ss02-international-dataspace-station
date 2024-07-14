@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { PauseCircleIcon, PlayCircleIcon } from '@heroicons/react/24/outline';
+import { PauseCircleIcon, PlayCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import { isConnectorRunning } from '@/actions/api';
 
 interface ConnectorStatusProps {
     connectorName: string | undefined;
@@ -7,7 +8,7 @@ interface ConnectorStatusProps {
 
 export default function ChangeStatusButton({ connectorName }: ConnectorStatusProps) {
     const [buttonText, setButtonText] = useState<string>('Checking status...');
-    const [iconName, setIconName] = useState<string>('PauseCircleIcon');
+    const [iconName, setIconName] = useState<string>('ExclamationCircleIcon');
     const [buttonColor, setButtonColor] = useState<string>('bg-green-500');
 
     const iconMapping: { [key: string]: React.ElementType } = {
@@ -19,9 +20,8 @@ export default function ChangeStatusButton({ connectorName }: ConnectorStatusPro
         if (!connectorName) return;
 
         try {
-            const response = await fetch(`/api/check_status?connector=${connectorName}`);
-            const data = await response.json();
-            if (data.status === 'running') {
+            const connectorRunningResponse = await isConnectorRunning(connectorName || "");
+            if (connectorRunningResponse) {
                 await fetch('/api/pauseConnector');
                 setButtonText("Start the connector");
                 setIconName("PlayCircleIcon");
@@ -34,6 +34,8 @@ export default function ChangeStatusButton({ connectorName }: ConnectorStatusPro
             }
         } catch (error) {
             setButtonText('Error checking status');
+            setIconName("ExclamationCircleIcon");
+            setButtonColor('bg-red-500');
         }
     };
 
@@ -42,9 +44,8 @@ export default function ChangeStatusButton({ connectorName }: ConnectorStatusPro
             if (!connectorName) return;
 
             try {
-                const response = await fetch(`/api/check_status?connector=${connectorName}`);
-                const data = await response.json();
-                if (data.status === 'running') {
+                const connectorRunningResponse = await isConnectorRunning(connectorName || "");
+                if (connectorRunningResponse) {
                     setButtonText("Pause the connector");
                     setIconName("PauseCircleIcon");
                     setButtonColor('bg-red-500');
@@ -55,13 +56,15 @@ export default function ChangeStatusButton({ connectorName }: ConnectorStatusPro
                 }
             } catch (error) {
                 setButtonText('Error checking status');
+                setIconName("ExclamationCircleIcon");
+                setButtonColor('bg-red-500');
             }
         };
 
         fetchInitialStatus();
     }, [connectorName]);
 
-    const IconComponent = iconMapping[iconName] || PauseCircleIcon;
+    const IconComponent = iconMapping[iconName] || ExclamationCircleIcon;
 
     return (
         <div className="flex justify-start pb-5">
