@@ -212,6 +212,60 @@ export async function createContractDefinition(contractId: string, policyId: str
     throw new Error("Error creating contract definition: ", err);
   }
 }
+export async function getContractAgreemendId(negotiationId: string): Promise<string> {
+  try {
+    const agreementResponse = await fetch(`/api/getContractAgreementId?negotiationId=${negotiationId}`, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  });
+    if (!agreementResponse.ok) {
+      throw new Error(`API call failed with status ${agreementResponse.status}`);
+    }
+
+    const data = await agreementResponse.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Error fetching assets: ', err);
+    throw new Error('Failed to fetch assets');
+  }
+}
+
+  export async function startTransfer(contractId: string, assetId: string, counterPartyName: string, ): Promise<boolean> {
+    try {
+      const response = await fetch('/api/startTransfer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contractId: contractId,
+          counterPartyName: counterPartyName,
+          assetId: assetId
+        })
+      });
+      if (!response.ok) {
+        throw new Error(`API call failed with status ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log("Transfer: ", data);
+      if (data.error) {
+        throw new Error(data.error);
+      }
+  
+      return data.state === "STARTED";
+    } catch (err) {
+      throw new Error("Error starting transfer: ", err);
+    }
+  }
+
 
 
 

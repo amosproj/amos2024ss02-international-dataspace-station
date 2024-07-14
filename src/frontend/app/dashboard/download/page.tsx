@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { fetchCatalogItems } from '@/actions/api';
+import { fetchCatalogItems, getContractAgreemendId, startTransfer} from '@/actions/api';
 import participants from '@/data/participants.json';
 import { CatalogItem } from "@/data/interface/file";
 
@@ -62,38 +62,20 @@ const DownloadPage: React.FC = () => {
             const negotiationId = negotiationResult['@id'];
 
             // Get agreement ID
-            const agreementResponse = await fetch('/api/getContractAgreementId/'+ negotiationId, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (!agreementResponse.ok) {
-                throw new Error(`Failed to get agreement ID: ${agreementResponse.statusText}`);
-            }
-            const agreementResult = await agreementResponse.json();
-            const agreementId = agreementResult.agreementId;
-            /*
+            console.log("negotiation id ", negotiationId);
+            const response = await getContractAgreemendId(negotiationId);
+            console.log("response: ", response);
+            //const agreementResult = await agreementResponse.json();
+            const agreementId = response['agreementId' as any];
+            
             // Start transfer
-            const transferResponse = await fetch('/api/startTransfer', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    contractId: agreementId,
-                    assetId: item.id,
-                    counterPartyName: item.author
-                })
-            });
+            const transferResponse = await startTransfer(agreementId, item.id, item.author);
 
-            if (!transferResponse.ok) {
-                throw new Error(`Failed to start transfer: ${transferResponse.statusText}`);
+            if (!transferResponse) {
+                throw new Error(`Failed to start transfer: ${transferResponse}`);
             }
-
-            const transferResult = await transferResponse.json();
-            console.log('Transfer started successfully:', transferResult);
-            */
+            console.log('Transfer started successfully:');
+            
         } catch (err) {
             setErrorMessage(err.message);
             console.error('An error occurred:', err);

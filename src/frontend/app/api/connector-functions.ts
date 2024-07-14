@@ -445,6 +445,8 @@ export async function startTransfer(contractId: string, assetId: string, counter
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
+        console.log(result);
+        console.log("Result data transfer: ", data);
         return data;
     } catch (err) {
         console.error("Error starting transfer: ", err);
