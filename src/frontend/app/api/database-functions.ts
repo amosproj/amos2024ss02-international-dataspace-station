@@ -49,3 +49,21 @@ export async function downloadFile(fileId: string) {
 
     return response;
 }
+
+export async function deleteFile(fileId: string) {
+    try {
+        const result = await fetch(databaseUrl + "/files/delete/" + fileId, {
+            method: 'GET',
+            headers: {
+                'X-API-Key': authenticationPassword
+            }
+        });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
+        return true;
+    } catch (err) {
+        console.error("Error uploading file: ", err);
+        throw new Error("Failed to upload file");
+    }
+}

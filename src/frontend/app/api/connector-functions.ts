@@ -167,6 +167,28 @@ export async function getAssets() {
     }
 }
 
+export async function getContractDefinitions() {
+    try {
+        const result = await fetch(connectorManagementUrl + "v2/contractdefinitions/request", {
+            method: 'POST',
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
+            },
+            body: JSON.stringify(queryRequestJson),
+        });
+        if (!result.ok) {
+            throw new Error(`HTTP Error! Status: ${result.status}`);
+        }
+        const data = await result.json();
+        return data;
+    } catch (err) {
+        console.error("Error getting policies: ", err);
+        throw new Error("Failed to get policies");
+    }
+};
+
 function generateRegisterDataPlaneProvider(dataplaneId: string) {
     const registerDataPlaneProvider = {
         "@context": {
@@ -495,3 +517,51 @@ export async function getData(authorizationKey: string, counterPartyName: string
         throw new Error("Failed to get data");
     }
 };
+
+export async function deleteContractDefinition(contractId: string) {
+    try {
+        const result = await fetch(connectorManagementUrl + "v2/contractdefinitions/" + contractId, {
+            method: 'DELETE',
+            cache: 'no-cache',
+            headers: {
+                'X-API-Key': authenticationPassword
+            }
+        });
+
+        if (!result.ok) {
+            console.error(await result.text());
+            throw new Error(`HTTP Error! Status: ${result.status}`);
+        }
+        const data = await result.text();
+        return data;
+    } catch (err) {
+        console.error("Error deleting contract definition: ", err);
+        throw new Error("Failed to delete contract definition");
+    }
+}
+
+export async function deleteAsset(assetId: string) {
+    try {
+        const result = await fetch(connectorManagementUrl + "v3/assets/" + assetId, {
+            method: 'DELETE',
+            cache: 'no-cache',
+            headers: {
+                'X-API-Key': authenticationPassword
+            }
+        });
+
+        if (result.status === 409) {
+            throw new Error("Asset could not be deleted because it's referenced by a contract agreement");
+        }
+
+        if (!result.ok) {
+            console.error(await result.text());
+            throw new Error(`HTTP Error! Status: ${result.status}`);
+        }
+        const data = await result.text();
+        return data;
+    } catch (err) {
+        console.error("Error deleting contract definition: ", err);
+        throw new Error("Failed to delete contract definition");
+    }
+}

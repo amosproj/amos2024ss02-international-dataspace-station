@@ -151,6 +151,32 @@ export async function getAssets(): Promise<Asset[]> {
   }
 }
 
+export async function getContractDefinitions() {
+  try {
+    const response = await fetch('/api/getContractDefinitions', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API call failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Error fetching contract definitions: ', err);
+    throw new Error('Failed to fetch contract definitions');
+  }
+}
+
 export async function createAsset(file: FileInfo): Promise<boolean> {
   try {
     const response = await fetch('/api/createAsset', {
@@ -212,6 +238,58 @@ export async function createContractDefinition(contractId: string, policyId: str
     return true;
   } catch (err) {
     throw new Error("Error creating contract definition: ", err);
+  }
+}
+
+export async function deleteAsset(assetId: string) {
+  try {
+    const response = await fetch('/api/deleteAsset?assetId=' + assetId, {
+      method: 'GET'
+    });
+
+    if (response.status === 500) {
+      throw new Error("Asset couldn't be deleted because it's referenced by a contract agreement");
+    }
+
+    if (!response.ok) {
+      throw new Error(`API call failed with status ${response.status}`);
+    }
+
+    return true;
+  } catch (err) {
+    throw new Error("Error deleting asset: ", err);
+  }
+}
+
+export async function deleteContractDefinition(contractId: string) {
+  try {
+    const response = await fetch('/api/deleteContractDefinition?contractId=' + contractId, {
+      method: 'GET'
+    });
+
+    if (!response.ok) {
+      throw new Error(`API call failed with status ${response.status}`);
+    }
+
+    return true;
+  } catch (err) {
+    throw new Error("Error deleting contract definition: ", err);
+  }
+}
+
+export async function deleteFile(fileId: string) {
+  try {
+    const response = await fetch('/api/deleteContractDefinition?fileId=' + fileId, {
+      method: 'GET'
+    });
+
+    if (!response.ok) {
+      throw new Error(`API call failed with status ${response.status}`);
+    }
+
+    return true;
+  } catch (err) {
+    throw new Error("Error deleting contract definition: ", err);
   }
 }
 
