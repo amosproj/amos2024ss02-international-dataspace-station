@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { PauseCircleIcon, PlayCircleIcon } from '@heroicons/react/24/outline';
+import { PauseCircleIcon, PlayCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 
 interface ConnectorStatusProps {
     connectorName: string | undefined;
+    connectorStatus: boolean | null;
+    callbackFunction: () => void;
 }
 
-export default function ChangeStatusButton({ connectorName }: ConnectorStatusProps) {
+export default function ChangeStatusButton({ connectorName, connectorStatus, callbackFunction }: ConnectorStatusProps) {
     const [buttonText, setButtonText] = useState<string>('Checking status...');
-    const [iconName, setIconName] = useState<string>('PauseCircleIcon');
-    const [buttonColor, setButtonColor] = useState<string>('bg-green-500');
+    const [iconName, setIconName] = useState<string>('ExclamationCircleIcon');
+    const [buttonColor, setButtonColor] = useState<string>('bg-gray-700');
 
     const iconMapping: { [key: string]: React.ElementType } = {
         PauseCircleIcon: PauseCircleIcon,
@@ -17,54 +19,41 @@ export default function ChangeStatusButton({ connectorName }: ConnectorStatusPro
 
     const changeStatus = async () => {
         if (!connectorName) return;
+        if (connectorStatus == null) return;
 
         try {
-            const response = await fetch(`/api/check_status?connector=${connectorName}`);
-            const data = await response.json();
-            if (data.status === 'running') {
+            if (connectorStatus) {
                 await fetch('/api/pauseConnector');
-                setButtonText("Start the connector");
-                setIconName("PlayCircleIcon");
-                setButtonColor('bg-green-500');
             } else {
                 await fetch('/api/unpauseConnector');
-                setButtonText("Pause the connector");
-                setIconName("PauseCircleIcon");
-                setButtonColor('bg-red-500');
             }
+            await callbackFunction();
         } catch (error) {
-            setButtonText('Error checking status');
+            console.error("There was an error changing conenctor status");
         }
     };
 
     useEffect(() => {
-        const fetchInitialStatus = async () => {
-            if (!connectorName) return;
+        if (connectorStatus == null) {
+            setButtonText("Checking status...");
+            setIconName("ExclamationCircleIcon");
+            setButtonColor("bg-gray-700");
+        } else if (connectorStatus) {
+            setButtonText("Pause the connector");
+            setIconName("PauseCircleIcon");
+            setButtonColor('bg-red-500');
+        } else {
+            setButtonText("Start the connector");
+            setIconName("PlayCircleIcon");
+            setButtonColor('bg-green-500');
+        }
+    }, [connectorStatus])
 
-            try {
-                const response = await fetch(`/api/check_status?connector=${connectorName}`);
-                const data = await response.json();
-                if (data.status === 'running') {
-                    setButtonText("Pause the connector");
-                    setIconName("PauseCircleIcon");
-                    setButtonColor('bg-red-500');
-                } else {
-                    setButtonText("Start the connector");
-                    setIconName("PlayCircleIcon");
-                    setButtonColor('bg-green-500');
-                }
-            } catch (error) {
-                setButtonText('Error checking status');
-            }
-        };
 
-        fetchInitialStatus();
-    }, [connectorName]);
-
-    const IconComponent = iconMapping[iconName] || PauseCircleIcon;
+    const IconComponent = iconMapping[iconName] || ExclamationCircleIcon;
 
     return (
-        <div className="flex justify-start pb-5">
+        <div className="flex justify-start mt-5">
             <button onClick={changeStatus}
                 className={`mb-4 px-4 py-2 rounded-md hover:bg-neonBlue text-white flex items-center ${buttonColor}`}
                 style={{ height: '50px', width: '240px' }}> 
