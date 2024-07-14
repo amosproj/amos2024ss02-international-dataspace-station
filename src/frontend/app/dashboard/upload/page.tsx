@@ -185,7 +185,7 @@ const UploadPage: React.FC = () => {
                 >
                     <ArrowPathIcon className="w-5 h-5" />
                 </button>
-                <button onClick={() => setShowModal(true)} className="px-4 py-2 bg-neonGreen rounded">
+                <button onClick={() => {setShowModal(true); fetchPolicies();}} className="px-4 py-2 bg-neonGreen rounded">
                     Upload File
                 </button>
                 <button onClick={() => setShowPolicyModal(true)} className="px-4 py-2 bg-neonGreen rounded">
@@ -222,11 +222,12 @@ const UploadPage: React.FC = () => {
                                     <XCircleIcon className="w-5 h-5 text-red-500 ml-4 scale-150"/>
                                 )}
                                 { hoveredItem === file.id && (
-                                    
-                                    <div className="absolute left-0 mt-2 -translate-x-1/2 w-64 p-2 bg-white border border-gray-300 rounded shadow-lg z-10 ml-12">
-                                        <div className="text-xs text-gray-300 font-bold">OFFERED WITH</div>
-                                        <div className="font-bold text-black text-lg">{policy?.name}</div>
-                                        <div className="text-sm text-gray-700">{policy?.description}</div>
+                                    <div className="absolute left-0 mt-2">
+                                        <div className="fixed mt-2 -translate-x-1/2 w-64 p-2 bg-white border border-gray-300 rounded shadow-lg z-10 ml-12">
+                                            <div className="text-xs text-gray-300 font-bold">OFFERED WITH</div>
+                                            <div className="font-bold text-black text-lg">{policy?.name}</div>
+                                            <div className="text-sm text-gray-700">{policy?.description}</div>
+                                        </div>
                                     </div>
                                 )}
                             </td>
@@ -244,7 +245,7 @@ const UploadPage: React.FC = () => {
                 </table>
             </div>
 
-            <PolicyModal isOpen={showPolicyModal} onClose={() => setShowPolicyModal(false)} />
+            <PolicyModal isOpen={showPolicyModal} onClose={() => {setShowPolicyModal(false); fetchPolicies();}} />
 
             {showModal && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-black">
