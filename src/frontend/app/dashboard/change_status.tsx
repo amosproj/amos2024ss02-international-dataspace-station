@@ -9,7 +9,6 @@ export default function ChangeStatusButton({ connectorName }: ConnectorStatusPro
     const [buttonText, setButtonText] = useState<string>('Checking status...');
     const [iconName, setIconName] = useState<string>('PauseCircleIcon');
     const [buttonColor, setButtonColor] = useState<string>('bg-green-500');
-    const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
     const iconMapping: { [key: string]: React.ElementType } = {
         PauseCircleIcon: PauseCircleIcon,
@@ -27,13 +26,11 @@ export default function ChangeStatusButton({ connectorName }: ConnectorStatusPro
                 setButtonText("Start the connector");
                 setIconName("PlayCircleIcon");
                 setButtonColor('bg-green-500');
-                setIsDisabled(false);
             } else {
                 await fetch('/api/unpauseConnector');
                 setButtonText("Pause the connector");
                 setIconName("PauseCircleIcon");
                 setButtonColor('bg-red-500');
-                setIsDisabled(false);
             }
         } catch (error) {
             setButtonText('Error checking status');
@@ -51,12 +48,10 @@ export default function ChangeStatusButton({ connectorName }: ConnectorStatusPro
                     setButtonText("Pause the connector");
                     setIconName("PauseCircleIcon");
                     setButtonColor('bg-red-500');
-                    setIsDisabled(true);
                 } else {
                     setButtonText("Start the connector");
                     setIconName("PlayCircleIcon");
                     setButtonColor('bg-green-500');
-                    setIsDisabled(false);
                 }
             } catch (error) {
                 setButtonText('Error checking status');
