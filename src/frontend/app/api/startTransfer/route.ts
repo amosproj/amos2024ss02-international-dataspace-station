@@ -22,27 +22,11 @@ export const POST = auth(async function POST(req) {
     const edr = await getEndpointDataReference(transferProcess["@id"]);
     console.log("edr: ", edr);
 
-    const url = edr.endpoint.replace('company', counterPartyName);
+    const url = edr.endpoint.replace(counterPartyName, 'localhost');
+    console.log(url);
     return NextResponse.json({ url, authorization: edr.authorization });
 
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 })
-    /*
-     Download the data from the provided endpoint
-    const dataResponse = await fetch(edr.endpoint, {
-      method: 'GET',
-      headers: { 'Authorization': `Bearer ${edr.authorization}` }
-    });
-    console.log("dataResponse: ", dataResponse);
-    
-    if (!dataResponse.ok) {
-      const errorDetails = await dataResponse.text();
-      console.error(`Failed to download data: ${dataResponse.statusText}`, errorDetails);
-      throw new Error(`Failed to download data: ${dataResponse.statusText}`);
-    }
-
-    const data = await dataResponse.json();
-    console.log("data: ", data);
-*/
