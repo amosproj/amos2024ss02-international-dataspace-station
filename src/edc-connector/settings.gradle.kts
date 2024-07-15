@@ -12,7 +12,7 @@
  *
  */
 
-rootProject.name = "samples"
+rootProject.name = "international-dataspace-station"
 
 pluginManagement {
     repositories {
@@ -29,14 +29,3 @@ dependencyResolutionManagement {
 }
 
 include(":connector")
-
-
-//policy
-include(":policy:policy-01-policy-enforcement:policy-enforcement-company")
-include(":policy:policy-01-policy-enforcement:policy-enforcement-tax_provider")
-include(":policy:policy-01-policy-enforcement:policy-enforcement-bank")
-include(":policy:policy-01-policy-enforcement:policy-functions")
-
-include(":util:http-request-logger")
-
-include(":system-tests")

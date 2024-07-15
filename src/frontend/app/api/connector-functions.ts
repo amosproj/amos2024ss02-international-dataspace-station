@@ -100,7 +100,7 @@ function generateFetchCatalog(counterPartyName: string) {
 
 export async function fetchCatalog(counterPartyName: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/catalog/request", {
+        const result = await fetch(connectorManagementUrl + "v3/catalog/request", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -123,7 +123,7 @@ export async function fetchCatalog(counterPartyName: string) {
 
 export async function getPolicies() {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/policydefinitions/request", {
+        const result = await fetch(connectorManagementUrl + "v3/policydefinitions/request", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -229,7 +229,7 @@ function generateCreatePolicy(policyId: string) {
 
 export async function createPolicy(policyId: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/policydefinitions", {
+        const result = await fetch(connectorManagementUrl + "v3/policydefinitions", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -271,7 +271,7 @@ function generateCreateContractDefinition(contractId: string, policyId: string, 
 
 export async function createContractDefinition(contractId: string, policyId: string, assetId: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/contractdefinitions", {
+        const result = await fetch(connectorManagementUrl + "v3/contractdefinitions", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -313,7 +313,7 @@ function generateGetDataset(assetId: string, counterPartyName: string) {
 
 export async function getDataset(assetId: string, counterPartyName: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/catalog/dataset/request", {
+        const result = await fetch(connectorManagementUrl + "v3/catalog/dataset/request", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -362,7 +362,7 @@ function generateNegotiateContract(contractOfferId: string, assetId: string, cou
 
 export async function negotiateContract(contractOfferId: string, assetId: string, counterPartyName: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/contractnegotiations", {
+        const result = await fetch(connectorManagementUrl + "v3/contractnegotiations", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -383,10 +383,10 @@ export async function negotiateContract(contractOfferId: string, assetId: string
 };
 
 export async function getContractNegotiationStatus(negotiationId: string) {
-    const test = connectorManagementUrl + "v2/contractnegotiations/" + negotiationId;
+    const test = connectorManagementUrl + "v3/contractnegotiations/" + negotiationId;
     console.log("get agreemend id pre: ", test);
     try {
-        const result = await fetch(connectorManagementUrl + "v2/contractnegotiations/" + negotiationId, {
+        const result = await fetch(connectorManagementUrl + "v3/contractnegotiations/" + negotiationId, {
             method: 'GET',
             cache: 'no-cache',
             headers: {
@@ -454,7 +454,7 @@ export async function startTransfer(contractId: string, assetId: string, counter
 
 export async function checkTransferStatus(transferId: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v3/transferprocesses/" + transferId, {
+        const result = await fetch(connectorManagementUrl + "v2/transferprocesses/" + transferId, {
             method: 'GET',
             cache: 'no-cache',
             headers: {
@@ -474,7 +474,7 @@ export async function checkTransferStatus(transferId: string) {
 
 export async function getEndpointDataReference(transferId: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v1/edrs/" + transferId + "/dataaddress", {
+        const result = await fetch(connectorManagementUrl + "v3/edrs/" + transferId + "/dataaddress", {
             method: 'GET',
             cache: 'no-cache',
             headers: {
