@@ -290,7 +290,86 @@ export async function negotiateContract(item: CatalogItem) {
     console.error("Error negotiating contract", err);
     throw new Error("Failed to negotiate contract: ", err);
   }
+}
 
+interface ContractAgreement {
+  providerId: string;
+  [key: string]: any;
+}
+
+export async function getNegotiatedContracts(counterpartyname: string) {
+   try {
+    const response = await fetch("/api/getNegotiatedContracts", {
+      method: "GET"
+  });
+    if (!response.ok) {
+      throw new Error(`API call failed with status ${response.status}`);
+    }
+
+    const data: ContractAgreement[] = await response.json();
+
+    return data.filter(item => item.providerId === counterpartyname);
+
+  } catch (err) {
+    console.error('Error getting contract agreement info: ', err);
+    throw new Error('Failed to get contract agreement info');
+  }
+}
+
+export async function getContractAgreementInfo(agreementId: string) {
+  try {
+    const response = await fetch("/api/getContractAgreementInfo", {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        agreementId: agreementId
+      })
+  });
+    if (!response.ok) {
+      throw new Error(`API call failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data.error) {
+      throw new Error(data.error);
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Error getting contract agreement info: ', err);
+    throw new Error('Failed to get contract agreement info');
+  }
+}
+
+export async function uploadContractAgreementInfo(item: CatalogItem, agreementId: string) {
+    try {
+    const response = await fetch("/api/getContractAgreementInfo", {
+      method: "POST",
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        agreementId: agreementId,
+        fileName: item.name,
+        fileSize: item.size,
+        title: item.title,
+        date: item.date,
+        author: item.author,
+        contenttype: item.contenttype
+      })
+  });
+    if (!response.ok) {
+      throw new Error(`API call failed with status ${response.status}`);
+    }
+
+    return true;
+  } catch (err) {
+    console.error('Error uploading contract agreement info: ', err);
+    throw new Error('Failed to upload contract agreement info');
+  }
 }
 
 

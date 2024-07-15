@@ -165,6 +165,28 @@ export async function getAssets() {
     }
 }
 
+export async function getNegotiatedContracts() {
+    try {
+        const result = await fetch(connectorManagementUrl + "v3/contractagreements/request", {
+            method: 'POST',
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
+            },
+            body: JSON.stringify(queryRequestJson),
+        });
+        if (!result.ok) {
+            throw new Error(`HTTP Error! Status: ${result.status}`);
+        }
+        const data = await result.json();
+        return data;
+    } catch (err) {
+        console.error("Error getting contractagreements: ", err);
+        throw new Error("Failed to get contractagreements");
+    }
+};
+
 function generateRegisterDataPlaneProvider(dataplaneId: string) {
     const registerDataPlaneProvider = {
         "@context": {
