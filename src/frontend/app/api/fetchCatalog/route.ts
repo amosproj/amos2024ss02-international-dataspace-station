@@ -20,7 +20,6 @@ export const POST = auth(async function POST(req) {
     const body = await req.json();
     const { counterPartyName } = body;
     const result = await fetchCatalog(counterPartyName);
-    console.log("fetch catalog:", result);
     const datasets = Array.isArray(result["dcat:dataset"])
                       ? result["dcat:dataset"]
                       : [result["dcat:dataset"]];

@@ -285,7 +285,6 @@ export async function createContractDefinition(contractId: string, policyId: str
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
-        console.log("contract definition: ", data);
         return data;
     } catch (err) {
         console.error("Error creating contract definition: ", err);
@@ -356,7 +355,6 @@ function generateNegotiateContract(contractOfferId: string, assetId: string, cou
             "target": assetId
         }
     };
-    console.log(negotiateContract);
     return negotiateContract;
 };
 
@@ -383,8 +381,6 @@ export async function negotiateContract(contractOfferId: string, assetId: string
 };
 
 export async function getContractNegotiationStatus(negotiationId: string) {
-    const test = connectorManagementUrl + "v3/contractnegotiations/" + negotiationId;
-    console.log("get agreemend id pre: ", test);
     try {
         const result = await fetch(connectorManagementUrl + "v3/contractnegotiations/" + negotiationId, {
             method: 'GET',
@@ -439,7 +435,6 @@ export async function startTransfer(contractId: string, assetId: string, counter
             },
             body: JSON.stringify(generateStartTransfer(contractId, assetId, counterPartyName)),
         });
-        console.log("result ", result);
         if (!result.ok) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }

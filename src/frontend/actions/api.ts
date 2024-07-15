@@ -173,7 +173,6 @@ export async function createAsset(file: FileInfo): Promise<boolean> {
     }
 
     const data = await response.json();
-    console.log("created asset response: ", data);
     if (data.error) {
       throw new Error(data.error);
     }
@@ -202,7 +201,6 @@ export async function createContractDefinition(contractId: string, policyId: str
     }
 
     const data = await response.json();
-    console.log("response contract definition: ", data);
     if (data.error) {
       throw new Error(data.error);
     }
@@ -212,7 +210,7 @@ export async function createContractDefinition(contractId: string, policyId: str
     throw new Error("Error creating contract definition: ", err);
   }
 }
-export async function getContractAgreemendId(negotiationId: string): Promise<string> {
+export async function getContractAgreementId(negotiationId: string): Promise<string> {
   try {
     const agreementResponse = await fetch(`/api/getContractAgreementId?negotiationId=${negotiationId}`, {
       method: 'GET',
@@ -230,7 +228,7 @@ export async function getContractAgreemendId(negotiationId: string): Promise<str
       throw new Error(data.error);
     }
 
-    return data;
+    return data['agreementId' as any];
   } catch (err) {
     console.error('Error fetching assets: ', err);
     throw new Error('Failed to fetch assets');
@@ -266,6 +264,34 @@ export async function getContractAgreemendId(negotiationId: string): Promise<str
     }
   }
 
+export async function negotiateContract(item: CatalogItem) {
+  try {
+    const negotiateResponse = await fetch('/api/negotiateContract', {
+      method: 'POST',   
+      cache: 'no-cache',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          contractOfferId: item.contractIds[0], 
+          assetId: item.id,
+          counterPartyName: item.author
+      })
+    });
 
+    if (!negotiateResponse.ok) {
+        throw new Error(`Failed to negotiate contract: ${negotiateResponse.statusText}`);
+    }
+
+    const negotiationResult = await negotiateResponse.json();
+    const negotiationId = negotiationResult['@id'];
+    return negotiationId;
+
+  } catch (err) {
+    console.error("Error negotiating contract", err);
+    throw new Error("Failed to negotiate contract: ", err);
+  }
+
+}
 
 

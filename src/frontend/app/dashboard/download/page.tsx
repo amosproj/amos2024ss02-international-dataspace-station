@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { fetchCatalogItems, getContractAgreemendId, startTransfer} from '@/actions/api';
+import { fetchCatalogItems, getContractAgreementId, negotiateContract, startTransfer} from '@/actions/api';
 import participants from '@/data/participants.json';
 import { CatalogItem } from "@/data/interface/file";
 
@@ -10,7 +10,6 @@ const DownloadPage: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
-    /*
     useEffect(() => {
         setErrorMessage("");
         setCatalogItems([]);
@@ -20,11 +19,11 @@ const DownloadPage: React.FC = () => {
             setCatalogItems([]);
         }
     }, [connector]);
-    */
+
     const fetchItems = async () => {
+        setErrorMessage("");
         try {
             const fetchedCatalog = await fetchCatalogItems(connector);
-            // Filter assets by connector if needed
             setCatalogItems(fetchedCatalog);
         } catch (error) {
             console.error('Error fetching assets:', error);
@@ -35,39 +34,10 @@ const DownloadPage: React.FC = () => {
     const handleNegotiateClick = async (item: CatalogItem) => {
         setLoading(true);
         //setErrorMessage(null);
-
         try {
-            console.log(item);
-            // Negotiate contract
-            const negotiateResponse = await fetch('/api/negotiateContract', {
-                method: 'POST',   
-                cache: 'no-cache',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    contractOfferId: item.contractIds[0], 
-                    assetId: item.id,
-                    counterPartyName: item.author
-                })
-            });
-
-            if (!negotiateResponse.ok) {
-                throw new Error(`Failed to negotiate contract: ${negotiateResponse.statusText}`);
-            }
-            
-            const negotiationResult = await negotiateResponse.json();
-            console.log("negotiateResponse: ", negotiationResult);
-
-            const negotiationId = negotiationResult['@id'];
-
+            const negotiationId = await negotiateContract(item);
             // Get agreement ID
-            console.log("negotiation id ", negotiationId);
-            const response = await getContractAgreemendId(negotiationId);
-            console.log("response: ", response);
-            //const agreementResult = await agreementResponse.json();
-            const agreementId = response['agreementId' as any];
-            
+            const agreementId = await getContractAgreementId(negotiationId);
             // Start transfer
             const transferResponse = await startTransfer(agreementId, item.id, item.author);
 
@@ -118,7 +88,7 @@ const DownloadPage: React.FC = () => {
                         className="px-4 py-2 bg-neonGreen text-white rounded flex items-center"
                         disabled={!connector || loading}
                     >
-                        {loading ? 'Loading...' : 'Fetch Items'}
+                        {loading ? 'Loading...' : 'Refresh'}
                     </button>
                 </div>
             </div>

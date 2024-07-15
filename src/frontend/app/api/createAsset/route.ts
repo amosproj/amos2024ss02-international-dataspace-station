@@ -10,7 +10,6 @@ export const POST = auth(async function POST(request) {
     const body = await request.json();
     const { description, contenttype, name, baseUrl, assetId, date, size } = body;
     const result = await createAsset(description, contenttype, name, baseUrl, assetId, date, size);
-    console.log("create asset: ", result);
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
