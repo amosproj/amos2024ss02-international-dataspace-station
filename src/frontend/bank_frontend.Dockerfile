@@ -16,7 +16,7 @@ RUN apk update
 RUN apk add --no-cache curl jq
 RUN apk add docker
 
-RUN npm install
+RUN npm install 
 
 RUN npm run build
 
