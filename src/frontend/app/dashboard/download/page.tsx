@@ -13,6 +13,7 @@ const DownloadPage: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [downloadUrl, setDownloadUrl] = useState<{ [key: string]: { url: string, authorization: string } }>({});
     const [transferredItems, setTransferredItems] = useState<string[]>([]);
+    const [activeTabIndex, setActiveTabIndex] = useState(0);
 
     useEffect(() => {
         setErrorMessage("");
@@ -94,6 +95,10 @@ const DownloadPage: React.FC = () => {
             setErrorMessage('Error downloading file.');
         }
     };
+    
+    const handleTabSelect = (index: number) => {
+        setActiveTabIndex(index); // Update active tab index
+    };
 
     return (
         <div className="p-6">
@@ -125,17 +130,15 @@ const DownloadPage: React.FC = () => {
             </div>
             {connector && (
                 <>
-                <Tabs defaultIndex={0}>
-                <TabList className="flex border-b border-gray-200">
-                            <Tab className="px-4 py-2 cursor-pointer text-black"
-                                selectedClassName="text-black border-b-2 border-blue-600">
-                                All Files
-                            </Tab>
-                            <Tab className="px-4 py-2 cursor-pointer text-gray-500"
-                                selectedClassName="text-black border-b-2 border-blue-600">
-                                Transferred Files
-                            </Tab>
-                        </TabList>
+                <Tabs defaultIndex={0} onSelect={handleTabSelect}>
+                    <TabList className="flex border-b border-gray-200">
+                        <Tab className={`px-4 py-2 cursor-pointer ${activeTabIndex === 0 ? 'text-black border-b-2 border-blue-600' : 'text-gray-500'}`}>
+                            All Files
+                        </Tab>
+                        <Tab className={`px-4 py-2 cursor-pointer ${activeTabIndex === 1 ? 'text-black border-b-2 border-blue-600' : 'text-gray-500'}`}>
+                            Transferred Files
+                        </Tab>
+                    </TabList>
                     <TabPanel>
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
