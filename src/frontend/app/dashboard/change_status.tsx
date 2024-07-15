@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { PauseCircleIcon, PlayCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 
 interface ConnectorStatusProps {
@@ -23,13 +24,20 @@ export default function ChangeStatusButton({ connectorName, connectorStatus, cal
 
         try {
             if (connectorStatus) {
-                await fetch('/api/pauseConnector');
+                const response = await fetch('/api/pauseConnector');
+                if (!response.ok) {
+                    toast.error("There was an error pausing the connector!");
+                }
             } else {
-                await fetch('/api/unpauseConnector');
+                const response = await fetch('/api/unpauseConnector');
+                if (!response.ok) {
+                    toast.error("There was an error starting the connector!");
+                }
             }
             await callbackFunction();
         } catch (error) {
             console.error("There was an error changing conenctor status");
+            toast.error("There was an error changing conenctor status!");
         }
     };
 
@@ -55,6 +63,7 @@ export default function ChangeStatusButton({ connectorName, connectorStatus, cal
     return (
         <div className="flex justify-start mt-5">
             <button onClick={changeStatus}
+                disabled={connectorStatus === null}
                 className={`mb-4 px-4 py-2 rounded-md hover:bg-neonBlue text-white flex items-center ${buttonColor}`}
                 style={{ height: '50px', width: '240px' }}> 
                 <IconComponent className="w-6 mr-1" style={{ height: '30px', width: '30px' }}/>

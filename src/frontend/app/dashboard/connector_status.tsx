@@ -77,9 +77,10 @@ export default function ConnectorStatus({ connectorName }: ConnectorStatusProps)
                 <div className="flex items-baseline space-x-4">
                     <button 
                         onClick={fetchStatus}
+                        disabled={running === null}
                         className="px-4 py-2 text-black bg-white rounded hover:bg-neonBlue shadow-xl flex"
                     >
-                        <ArrowPathIcon className="w-6 mr-1"/>
+                        <ArrowPathIcon className={`w-6 mr-1 ${running === null ? "spinning" : ""}`}/>
                         Refresh
                     </button>
                     <div className="flex flex-col gap-4">
