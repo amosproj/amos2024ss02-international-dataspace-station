@@ -9,6 +9,7 @@ const DownloadPage: React.FC = () => {
     const [catalogItems, setCatalogItems] = useState<CatalogItem[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
+    const [downloadUrl, setDownloadUrl] = useState<{ [key: string]: { url: string, authorization: string } }>({});
 
     useEffect(() => {
         setErrorMessage("");
@@ -39,13 +40,15 @@ const DownloadPage: React.FC = () => {
             // Get agreement ID
             const agreementId = await getContractAgreementId(negotiationId);
             // Start transfer
-            const transferResponse = await startTransfer(agreementId, item.id, item.author);
+            const { url, authorization } = await startTransfer(agreementId, item.id, item.author);
 
-            if (!transferResponse) {
-                throw new Error(`Failed to start transfer: ${transferResponse}`);
+            if (url && authorization) {
+                setDownloadUrl((prev) => ({ ...prev, [item.id]: { url, authorization } }));
             }
+    
+            // TODO: check if transfer was successfull
             console.log('Transfer started successfully:');
-            
+
         } catch (err) {
             setErrorMessage(err.message);
             console.error('An error occurred:', err);
@@ -55,13 +58,35 @@ const DownloadPage: React.FC = () => {
 
     };
 
-    const handleDownload = (url: string) => {
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = url.split('/').pop() || 'download';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    const handleDownload = async (itemId: string) => {
+        const downloadInfo = downloadUrl[itemId];
+        if (!downloadInfo) return;
+
+        const { url, authorization } = downloadInfo;
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${authorization}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to download file: ${response.statusText}`);
+            }
+
+            const blob = await response.blob();
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = url.split('/').pop() || 'download';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error('Error downloading file:', error);
+            setErrorMessage('Error downloading file.');
+        }
     };
 
     return (
@@ -116,11 +141,21 @@ const DownloadPage: React.FC = () => {
                                     <td className="px-6 py-4 text-sm text-gray-500">{item.author}</td>
                                     <td className="px-6 py-4 text-sm text-gray-500">{item.contenttype}</td>
                                     <td className="px-6 py-4 text-sm text-gray-500">
-                                        <button onClick={() => handleNegotiateClick(item)}
-                                            className="flex items-center px-4 py-2 bg-neonGreen text-white rounded"
-                                            disabled={loading}>
-                                            {loading ? 'Processing...' : 'NEGOTIATE'}
+                                    <button
+                                            onClick={() => handleNegotiateClick(item)}
+                                            className="px-4 py-2 bg-blue-500 text-white rounded"
+                                            disabled={loading}
+                                        >
+                                            {loading ? 'Negotiating...' : 'Negotiate'}
                                         </button>
+                                        {downloadUrl[item.id] && (
+                                            <button
+                                                onClick={() => handleDownload(item.id)}
+                                                className="px-4 py-2 bg-green-500 text-white rounded ml-2"
+                                            >
+                                                Download
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                             ))}

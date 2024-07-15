@@ -235,7 +235,7 @@ export async function getContractAgreementId(negotiationId: string): Promise<str
   }
 }
 
-  export async function startTransfer(contractId: string, assetId: string, counterPartyName: string, ): Promise<boolean> {
+  export async function startTransfer(contractId: string, assetId: string, counterPartyName: string): Promise<{ url: string, authorization: string }> {
     try {
       const response = await fetch('/api/startTransfer', {
         method: 'POST',
@@ -257,8 +257,7 @@ export async function getContractAgreementId(negotiationId: string): Promise<str
       if (data.error) {
         throw new Error(data.error);
       }
-  
-      return data.state === "STARTED";
+      return { url: data.url, authorization: data.authorization };
     } catch (err) {
       throw new Error("Error starting transfer: ", err);
     }
