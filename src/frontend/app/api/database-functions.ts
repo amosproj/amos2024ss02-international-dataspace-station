@@ -21,7 +21,7 @@ export async function uploadFile(file: FormDataEntryValue) {
             }
         });
         if (!result.ok) {
-            throw new Error("HTTP Error! Status: ${result.status}");
+            throw new Error(`HTTP error! status: ${result.status}`);
         }
         const id = await result.text();
         console.log("FILE UPLOADED! ", id);
@@ -48,4 +48,56 @@ export async function downloadFile(fileId: string) {
     }
 
     return response;
+}
+
+export async function uploadContractAgreementInfo(agreementId: string, fileName: string, fileSize: string, title: string, date: string, author: string, contenttype: string) {
+    try {
+        const response = await fetch(databaseUrl + "/contracts/store", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
+            },
+            body: JSON.stringify({
+                id: agreementId,
+                fileName: fileName,
+                fileSize: fileSize,
+                title: title,
+                date: date,
+                author: author,
+                contenttype: contenttype
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return;
+    } catch (err) {
+        console.error("Error uploading contract agreement info: ", err);
+        throw new Error("Failed to upload contract agreement info");
+    }
+}
+
+export async function getContractAgreementInfo(agreementId: string) {
+    try {
+        const response = await fetch(databaseUrl + "/contracts/get/" + agreementId, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const contractAgreement = await response.json();
+        return contractAgreement;
+    } catch (err) {
+        console.error('Failed to get contract agreement info:', err);
+        throw new Error("Failed to get contract agreement info");
+    }
 }
