@@ -1,4 +1,4 @@
-import { FileInfo, Asset, CatalogItem, Policy } from "@/data/interface/file";
+import { FileInfo, Asset, CatalogItem, Policy, EnrichedContractAgreement } from "@/data/interface/file";
 
 export async function uploadFile(form: FormData) {
   try {
@@ -337,6 +337,8 @@ export async function getContractAgreementInfo(agreementId: string) {
       throw new Error(data.error);
     }
 
+    console.log("")
+
     return data;
   } catch (err) {
     console.error('Error getting contract agreement info: ', err);
@@ -346,7 +348,7 @@ export async function getContractAgreementInfo(agreementId: string) {
 
 export async function uploadContractAgreementInfo(item: CatalogItem, agreementId: string) {
     try {
-    const response = await fetch("/api/getContractAgreementInfo", {
+    const response = await fetch("/api/uploadContractAgreementInfo", {
       method: "POST",
       headers: {
           'Content-Type': 'application/json'
@@ -369,6 +371,24 @@ export async function uploadContractAgreementInfo(item: CatalogItem, agreementId
   } catch (err) {
     console.error('Error uploading contract agreement info: ', err);
     throw new Error('Failed to upload contract agreement info');
+  }
+}
+
+export async function getEnrichedContractAgreements(counterpartyname: string): Promise<EnrichedContractAgreement[]> {
+  try {
+    const negotiatedContracts = await getNegotiatedContracts(counterpartyname);
+
+    const enrichedContractAgreements = [];
+    for (const contract of negotiatedContracts) {
+      const agreementId = contract["@id"];
+      const contractAgreementInfo = await getContractAgreementInfo(agreementId);
+      contractAgreementInfo["assetId"] = contract["assetId"];
+      enrichedContractAgreements.push(contractAgreementInfo);
+    }
+
+    return enrichedContractAgreements;
+  } catch (err) {
+    throw new Error("Failed to enrich contract agreement");
   }
 }
 
