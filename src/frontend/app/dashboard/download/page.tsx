@@ -13,6 +13,8 @@ const DownloadPage: React.FC = () => {
     const [errorMessageNegotiated, setErrorMessageNegotiated] = useState<string>("");
     const [negotiatingId, setNegotiatingId] = useState<string>("");
     const [negotiatedContracts, setNegotiatedContracts] = useState<EnrichedContractAgreement[]>([]);
+    const [activeTabIndex, setActiveTabIndex] = useState(0);
+
 
     useEffect(() => {
         setCatalogItems([]);
@@ -89,6 +91,10 @@ const DownloadPage: React.FC = () => {
             setErrorMessage('Error downloading file.');
         }
     };
+    
+    const handleTabSelect = (index: number) => {
+        setActiveTabIndex(index); // Update active tab index
+    };
 
     return (
         <div className="p-6">
@@ -120,17 +126,16 @@ const DownloadPage: React.FC = () => {
             </div>
             {connector && (
                 <>
-                <Tabs defaultIndex={0}>
-                <TabList className="flex border-b border-gray-200">
-                            <Tab className="px-4 py-2 cursor-pointer text-black"
-                                selectedClassName="text-black border-b-2 border-blue-600">
-                                Catalog Offers
-                            </Tab>
-                            <Tab className="px-4 py-2 cursor-pointer text-gray-500"
-                                selectedClassName="text-black border-b-2 border-blue-600">
-                                Negotiated Contracts
-                            </Tab>
-                        </TabList>
+
+                <Tabs defaultIndex={0} onSelect={handleTabSelect}>
+                    <TabList className="flex border-b border-gray-200">
+                        <Tab className={`px-4 py-2 cursor-pointer ${activeTabIndex === 0 ? 'text-black border-b-2 border-blue-600' : 'text-gray-500'}`}>
+                            Catalog Offers
+                        </Tab>
+                        <Tab className={`px-4 py-2 cursor-pointer ${activeTabIndex === 1 ? 'text-black border-b-2 border-blue-600' : 'text-gray-500'}`}>
+                            Negotiated Contracts
+                        </Tab>
+                    </TabList>
                     <TabPanel>
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
