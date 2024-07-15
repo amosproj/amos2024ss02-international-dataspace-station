@@ -1,2 +1,3 @@
 org.eclipse.edc.extension.status.StatusEndpointExtension
 org.eclipse.edc.extension.bootstrap.BootstrapLoaderExtension
+org.eclipse.edc.extension.policy.PolicyFunctionsExtension

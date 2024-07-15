@@ -6,6 +6,7 @@ import { createAsset, createContractDefinition, getAssets, uploadFile, getPolici
 import { FileInfo, Policy, Asset, CatalogItem } from "@/data/interface/file";
 import PolicyDropdown from './PolicyDropdown';
 import PolicyModal from './policyModal';
+import { toast } from 'react-toastify';
 
 const MAX_FILE_SIZE_MB = 10;
 
@@ -21,6 +22,8 @@ const UploadPage: React.FC = () => {
     const [policies, setPolicies] = useState<Policy[]>([]);
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
+    const [loadingAssets, setLoadingAssets] = useState<boolean>(false);
 
     useEffect(() => {
         fetchAssets();
@@ -47,12 +50,16 @@ const UploadPage: React.FC = () => {
 
     const fetchAssets = async () => {
         try {
+            setLoadingAssets(true);
             const assets = updateLinksForLocalhost(await getAssets());
             setFiles(assets);
             const ownContractDefinitions = await getContractDefinitions();
             setContractDefinitions(ownContractDefinitions);
         } catch (error) {
             console.error('Error fetching assets:', error);
+            toast.error("There was an error fetching the assets");
+        } finally {
+            setLoadingAssets(false);
         }
     };
 
@@ -61,14 +68,17 @@ const UploadPage: React.FC = () => {
             await deleteContractDefinition("contract-" + asset.id)
             try {
                 await deleteAsset(asset.id);
-                await fetchAssets();
                 await deleteFile(asset.id);
+                toast.success("Asset has been deleted from connector and database");
             } catch (err) {
                 console.error("Asset could not be deleted: ", err);
-                await fetchAssets();
+                toast.info("Asset could not be deleted because it is referenced by a contract agreement. However asset is no longer being offered.")
             }
         } catch (err) {
             console.error("Contract could not be deleted: ", err);
+            toast.error("Contract could not be deleted.");
+        } finally {
+            await fetchAssets();
         }
     }
 
@@ -95,6 +105,7 @@ const UploadPage: React.FC = () => {
             setPolicies(fetchedPolicies);
         } catch (error) {
             console.error('Error fetching policies:', error);
+            toast.error("There was an error fetching the policies");
         }
     };
 
@@ -156,6 +167,7 @@ const UploadPage: React.FC = () => {
             } catch (error) {
                 console.error('Error uploading file:', error);
                 setErrorMessage('Error uploading file.');
+                toast.error("There was an error uploading the file.");
             }
         } else {
             setErrorMessage('Please fill in all fields and select a file.');
@@ -180,10 +192,11 @@ const UploadPage: React.FC = () => {
         <div className="p-6">
             <div className="flex justify-end mb-4 gap-2">
                 <button
-                    onClick={fetchAssets}
+                    onClick={() => {toast.dismiss(); fetchAssets();}}
                     className="px-4 py-2 bg-neonBlue rounded flex items-center"
+                    disabled={loadingAssets}
                 >
-                    <ArrowPathIcon className="w-5 h-5" />
+                    <ArrowPathIcon className={`w-5 h-5 ${loadingAssets ? "spinning" : ""}`} />
                 </button>
                 <button onClick={() => {setShowModal(true); fetchPolicies();}} className="px-4 py-2 bg-neonGreen rounded">
                     Upload File
@@ -192,7 +205,7 @@ const UploadPage: React.FC = () => {
                     Create Policy
                 </button>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto  overflow-y-clip">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                     <tr>

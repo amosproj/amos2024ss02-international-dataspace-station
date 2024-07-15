@@ -1,13 +1,16 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { fetchCatalogItems } from '@/actions/api';
 import participants from '@/data/participants.json';
 import { CatalogItem } from "@/data/interface/file";
+import { toast } from 'react-toastify';
 
 const DownloadPage: React.FC = () => {
     const [connector, setConnector] = useState<string>('');
     const [catalogItems, setCatalogItems] = useState<CatalogItem[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [loadingItems, setLoadingItems] = useState<boolean>(false);
 
 
     useEffect(() => {
@@ -22,12 +25,18 @@ const DownloadPage: React.FC = () => {
 
     const fetchItems = async () => {
         try {
+            setLoadingItems(true);
+            setErrorMessage("");
+            toast.dismiss();
             const fetchedCatalog = await fetchCatalogItems(connector);
             // Filter assets by connector if needed
             setCatalogItems(fetchedCatalog);
         } catch (error) {
             console.error('Error fetching assets:', error);
             setErrorMessage('Error fetching assets.');
+            toast.error("There was an error fetching the assets of " + participants.find(p => p.id === connector)?.displayName)
+        } finally {
+            setLoadingItems(false);
         }
     };
 
@@ -59,18 +68,19 @@ const DownloadPage: React.FC = () => {
                             </option>
                         ))}
                     </select>
-                    {/*<button*/}
-                    {/*    onClick={fetchAssets}*/}
-                    {/*    className="px-4 py-2 bg-green-500 text-white rounded flex items-center"*/}
-                    {/*>*/}
-                    {/*    Fetch*/}
-                    {/*</button>*/}
+                    <button
+                        onClick={fetchItems}
+                        className="px-4 py-2 bg-neonBlue rounded flex items-center"
+                        disabled={loadingItems}
+                    >
+                        <ArrowPathIcon className={`w-5 h-5 ${loadingItems ? "spinning" : ""}`} />
+                    </button>
                 </div>
             </div>
             {connector && (
                 <>
-                    <h2 className="text-lg font-medium text-gray-700 mb-4">Files for {connector}</h2>
-                    <div className="overflow-x-auto">
+                    <h2 className="text-lg font-medium text-gray-700 mb-4">Files for <b>{participants.find(p => p.id === connector)?.displayName}</b></h2>
+                    <div className="overflow-x-auto overflow-y-clip">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                             <tr>
