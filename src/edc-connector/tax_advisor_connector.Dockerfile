@@ -12,5 +12,12 @@ RUN gradle connector:build
 
 ENV EDC_FS_CONFIG=resources/configuration/tax_advisor-configuration.properties
 
+ARG EDC_DSP_CALLBACK_ADDRESS=http://taxadvisor:19194/protocol
+ARG EDC_DATAPLANE_API_PUBLIC_BASEURL=http://taxadvisor:19291/public
+ARG EDC_DATAPLANE_TOKEN_VALIDATION_ENDPOINT=http://taxadvisor:19192/control/token
+ENV EDC_DSP_CALLBACK_ADDRESS=${EDC_DSP_CALLBACK_ADDRESS}
+ENV EDC_DATAPLANE_API_PUBLIC_BASEURL=${EDC_DATAPLANE_API_PUBLIC_BASEURL}
+ENV EDC_DATAPLANE_TOKEN_VALIDATION_ENDPOINT=${EDC_DATAPLANE_TOKEN_VALIDATION_ENDPOINT}
+
 CMD ["java", "-jar", "connector/build/libs/connector.jar"]
 
