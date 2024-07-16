@@ -421,7 +421,6 @@ function generateNegotiateContract(contractOfferId: string, assetId: string, cou
         }
     };
 
-    console.log(negotiateContract);
     return negotiateContract;
 };
 
@@ -506,7 +505,6 @@ export async function startTransfer(contractId: string, assetId: string, counter
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
-        console.log("Result data transfer: ", data);
         return data;
     } catch (err) {
         console.error("Error starting transfer: ", err);
@@ -527,7 +525,6 @@ export async function checkTransferStatus(transferId: string) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
-        console.log("checkTransferStatus", data);
         return data;
     } catch (err) {
         console.error("Error checking transfer status: ", err);
@@ -548,7 +545,6 @@ export async function getEndpointDataReference(transferId: string) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
-        console.log("getEndpointDataReference: ", data);
         return data;
     } catch (err) {
         console.error("Error getting endpoint data reference: ", err);

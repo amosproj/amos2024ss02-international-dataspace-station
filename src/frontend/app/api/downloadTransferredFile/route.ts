@@ -12,13 +12,10 @@ export const GET = auth(async function GET(req) {
         const url = searchParams.get('url');
         const authorization = searchParams.get('authorization');
         const fileName = searchParams.get("filename");
-        console.log(url, authorization);
 
         if (!url || !authorization) {
             return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
         }
-        console.log('url:', url);
-        console.log('authorization:', authorization);
 
         const { data, contentType, contentDisposition } = await getTransferredFile(authorization, url);
 

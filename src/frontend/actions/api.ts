@@ -416,7 +416,6 @@ export async function getContractAgreementInfo(agreementId: string) {
       throw new Error(data.error);
     }
 
-    console.log("")
 
     return data;
   } catch (err) {

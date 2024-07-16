@@ -14,13 +14,13 @@ export const POST = auth(async function POST(req) {
     // Check status until it reaches STARTED
     let status;
     do {
-        await new Promise(resolve => setTimeout(resolve, 5000)); // wait for 5 seconds
+        await new Promise(resolve => setTimeout(resolve, 2000)); // wait for 2 seconds
         status = await checkTransferStatus(transferProcess["@id"]);
+        if (status.state === "TERMINATED") throw new Error("Transfer got terminated");
     } while (status.state !== "STARTED");
 
     // Fetch the endpoint data reference
     const edr = await getEndpointDataReference(transferProcess["@id"]);
-    console.log("edr: ", edr);
 
     //const url = edr.endpoint.replace(counterPartyName, 'localhost');
 
