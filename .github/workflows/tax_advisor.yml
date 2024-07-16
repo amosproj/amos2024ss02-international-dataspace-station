@@ -59,6 +59,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
+          build-args: |
+            EDC_DSP_CALLBACK_ADDRESS=https://taxadvisor.amos.cloudness.dev:443/protocol
+            EDC_DATAPLANE_API_PUBLIC_BASEURL=https://taxadvisor.amos.cloudness.dev:443/public
+            EDC_DATAPLANE_TOKEN_VALIDATION_ENDPOINT=https://taxadvisor.amos.cloudness.dev:443/control/token
       # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see "[AUTOTITLE](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds)." 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
