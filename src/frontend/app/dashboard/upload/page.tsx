@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { ArrowPathIcon, TrashIcon, CloudArrowDownIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
-import { createAsset, createContractDefinition, getAssets, uploadFile, getPolicies, fetchCatalogItems, deleteAsset, deleteContractDefinition, deleteFile, getContractDefinitions } from '@/actions/api';
+import { createAsset, createContractDefinition, getAssets, uploadFile, getPolicies, fetchCatalogItems, deleteAsset, deleteContractDefinition, deleteFile, getContractDefinitions, getNegotiatedContractsAsProvider, ContractAgreement } from '@/actions/api';
 import { FileInfo, Policy, Asset, CatalogItem } from "@/data/interface/file";
 import PolicyDropdown from './PolicyDropdown';
 import PolicyModal from './policyModal';
@@ -22,6 +22,8 @@ const UploadPage: React.FC = () => {
     const [policies, setPolicies] = useState<Policy[]>([]);
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
     const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+    const [hoveredAgreementCount, setHoveredAgreementCount] = useState<string | null>(null);
+    const [contractAgreements, setContractAgreements] = useState<ContractAgreement[]>([]);
 
     const [loadingAssets, setLoadingAssets] = useState<boolean>(false);
 
@@ -35,6 +37,13 @@ const UploadPage: React.FC = () => {
     }
     const handleMouseLeave = () => {
         setHoveredItem(null);
+    }
+
+    const handleMouseEnterAgreement = (fileId: string) => {
+        setHoveredAgreementCount(fileId);
+    }
+    const handleMouseLeaveAgreement = () => {
+        setHoveredAgreementCount(null);
     }
 
     const getPolicyInfo = (policyId: string) => {
@@ -55,6 +64,7 @@ const UploadPage: React.FC = () => {
             setFiles(assets);
             const ownContractDefinitions = await getContractDefinitions();
             setContractDefinitions(ownContractDefinitions);
+            await fetchContractAgreements();
         } catch (error) {
             console.error('Error fetching assets:', error);
             toast.error("There was an error fetching the assets");
@@ -62,6 +72,32 @@ const UploadPage: React.FC = () => {
             setLoadingAssets(false);
         }
     };
+
+    const fetchContractAgreements = async () => {
+        try {
+            setContractAgreements(await getNegotiatedContractsAsProvider());
+        } catch (error) {
+            console.error("Error fetching negotiated contracts: ", error);
+            toast.error("There was an error fetching the contract agreements");
+        }
+
+    }
+
+    const countContracts = (assetId: string) => {
+        let count = 0
+        for (const agreement of contractAgreements) {
+            if (agreement.assetId === assetId) count++;
+        }
+        return count;
+    }
+
+    const getAgreementConsumerIds = (assetId: string) => {
+        const consumerIdSet = new Set<string>();
+        for (const agreement of contractAgreements) {
+            if (agreement.assetId === assetId) consumerIdSet.add(agreement.consumerId);
+        }
+        return Array.from(consumerIdSet);
+    }
 
     const deleteCallback = async (asset: Asset) => {
         try {
@@ -209,7 +245,7 @@ const UploadPage: React.FC = () => {
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                     <tr>
-                        {['Title', 'Name', 'Size', 'Date', 'Author', 'Content Type', 'Offered', 'Actions'].map((label) => (
+                        {['Title', 'Name', 'Size', 'Date', 'Author', 'Content Type', 'Negotiated', 'Offered', 'Actions'].map((label) => (
                             <th key={label} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                 {label}
                             </th>
@@ -227,6 +263,18 @@ const UploadPage: React.FC = () => {
                             <td className="px-6 py-4 text-sm text-gray-500">{file.date}</td>
                             <td className="px-6 py-4 text-sm text-gray-500">{file.author}</td>
                             <td className="px-6 py-4 text-sm text-gray-500">{file.contenttype}</td>
+                            <td className={`px-6 py-4 text-sm text-gray-500 relative text-center ${countContracts(file.id) !== 0 ? "font-bold" : ""}`} onMouseEnter={() => handleMouseEnterAgreement(file.id)} onMouseLeave={() => handleMouseLeaveAgreement()}>
+                                {countContracts(file.id)}
+
+                                { (hoveredAgreementCount === file.id && countContracts(file.id) !== 0) && (
+                                    <div className="absolute left-0 mt-2 text-left">
+                                        <div className="fixed mt-2 -translate-x-1/2 w-64 p-2 bg-white border border-gray-300 rounded shadow-lg z-10 ml-12">
+                                            <div className="text-xs text-gray-300 font-bold">AGREED WITH</div>
+                                            <div className="font-bold text-black text-lg">{getAgreementConsumerIds(file.id).join(", ")}</div>
+                                        </div>
+                                    </div>
+                                )}
+                            </td>
                             <td className="px-6 py-4 text-sm text-gray-500 relative">
                                 {isOffered(file.id) ? (
                                     

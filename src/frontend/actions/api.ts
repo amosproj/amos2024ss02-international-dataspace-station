@@ -347,7 +347,7 @@ export async function negotiateContract(item: CatalogItem) {
   }
 }
 
-interface ContractAgreement {
+export interface ContractAgreement {
   providerId: string;
   [key: string]: any;
 }
@@ -364,6 +364,25 @@ export async function getNegotiatedContracts(counterpartyname: string) {
     const data: ContractAgreement[] = await response.json();
 
     return data.filter(item => item.providerId === counterpartyname);
+
+  } catch (err) {
+    console.error('Error getting contract agreement info: ', err);
+    throw new Error('Failed to get contract agreement info');
+  }
+}
+
+export async function getNegotiatedContractsAsProvider() {
+   try {
+    const response = await fetch("/api/getNegotiatedContracts", {
+      method: "GET"
+  });
+    if (!response.ok) {
+      throw new Error(`API call failed with status ${response.status}`);
+    }
+
+    const data: ContractAgreement[] = await response.json();
+
+    return data.filter(item => item.providerId === process.env.NEXT_PUBLIC_CONNECTOR_NAME);
 
   } catch (err) {
     console.error('Error getting contract agreement info: ', err);
