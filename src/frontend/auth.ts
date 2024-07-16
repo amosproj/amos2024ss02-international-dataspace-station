@@ -25,8 +25,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!user) {
           throw new Error("Authentication failed")
         }
-        console.log("USER:")
-        console.log(user)
 
         return user
       },

@@ -4,7 +4,7 @@ format.version = "1.1"
 [versions]
 assertj = "3.25.3"
 awaitility = "4.2.1"
-edc = "0.7.0"
+edc = "0.7.1"
 jakarta-json = "2.0.1"
 junit-pioneer = "2.2.0"
 jupiter = "5.10.2"
@@ -26,10 +26,11 @@ edc-configuration-filesystem = { module = "org.eclipse.edc:configuration-filesys
 edc-connector-core = { module = "org.eclipse.edc:connector-core", version.ref = "edc" }
 edc-control-plane-api-client = { module = "org.eclipse.edc:control-plane-api-client", version.ref = "edc" }
 edc-control-plane-api = { module = "org.eclipse.edc:control-plane-api", version.ref = "edc" }
+edc-control-api-configuration = { module = "org.eclipse.edc:control-api-configuration", version.ref = "edc" }
 edc-control-plane-core = { module = "org.eclipse.edc:control-plane-core", version.ref = "edc" }
 edc-control-plane-spi = { module = "org.eclipse.edc:control-plane-spi", version.ref = "edc" }
 edc-data-plane-control-api = { module = "org.eclipse.edc:data-plane-control-api", version.ref = "edc" }
-edc-data-plane-public-api = { module = "org.eclipse.edc:data-plane-public-api", version.ref = "edc" }
+edc-data-plane-public-api = { module = "org.eclipse.edc:data-plane-public-api-v2", version.ref = "edc" }
 edc-data-plane-aws-s3 = { module = "org.eclipse.edc:data-plane-aws-s3", version.ref = "edc" }
 edc-data-plane-azure-storage = { module = "org.eclipse.edc:data-plane-azure-storage", version.ref = "edc" }
 edc-data-plane-client = { module = "org.eclipse.edc:data-plane-client", version.ref = "edc" }

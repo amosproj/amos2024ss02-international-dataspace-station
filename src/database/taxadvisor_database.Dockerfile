@@ -6,7 +6,7 @@ EXPOSE 8080
 
 ENV CONNECTOR_NAME=taxadvisor
 
-RUN ./gradlew build
+RUN gradle build
 
 CMD ["java", "-jar", "build/libs/filestorage-database.jar"]
 

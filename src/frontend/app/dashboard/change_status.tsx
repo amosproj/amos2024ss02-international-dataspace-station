@@ -16,7 +16,7 @@ export default function ChangeStatusButton({ connectorName, connectorStatus, cal
     const iconMapping: { [key: string]: React.ElementType } = {
         PauseCircleIcon: PauseCircleIcon,
         PlayCircleIcon: PlayCircleIcon
-    };
+    }; 
 
     const changeStatus = async () => {
         if (!connectorName) return;

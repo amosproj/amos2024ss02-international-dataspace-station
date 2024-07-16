@@ -16,11 +16,9 @@ async function checkConnectorStatus(connectorName: string | null): Promise<boole
         console.log("Trying to fetch connector status from URL " + url);
         var result = await fetch(url, {cache: "no-store", signal});
         var data = await result.json();
-        console.log("Got a new result.");
-        console.log(data);
         return data.response === "Running!";
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return false;
     }
 }

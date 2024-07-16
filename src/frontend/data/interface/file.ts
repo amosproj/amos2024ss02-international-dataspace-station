@@ -46,3 +46,14 @@ export interface Policy {
     description: string;
     id: string;
 }
+
+export interface EnrichedContractAgreement {
+    id: string,
+    fileName: string,
+    fileSize: string,
+    title: string,
+    date: string,
+    author: string,
+    contenttype: string
+    assetId: string
+}

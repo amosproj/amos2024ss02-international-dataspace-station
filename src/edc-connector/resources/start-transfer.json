@@ -5,9 +5,12 @@
   "@type": "TransferRequestDto",
   "connectorId": "company",
   "counterPartyAddress": "http://localhost:19194/protocol",
-  "contractId": "ef9d5aa1-44d8-4b27-8bb4-bb225c73788a",
-  "assetId": "0010",
+  "contractId": "0ef3fd8a-1e3f-4fcd-8a49-5dbab51f27d7",
+  "assetId": "1G4jOi3K2W",
   "protocol": "dataspace-protocol-http",
+  "transferType": "HttpProxy-PULL"
+}
+  /*
   "dataDestination": {
     "type": "HttpData",
     "properties": {
@@ -15,4 +18,6 @@
       "method": "POST"
     }
   }
-}
+  */
+
+

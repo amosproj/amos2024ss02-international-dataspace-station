@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { startTransfer } from '../connector-functions';
+import { startTransfer, checkTransferStatus, getEndpointDataReference } from '../connector-functions';
 import { auth } from "@/auth"
 
 export const POST = auth(async function POST(req) {
@@ -9,8 +9,24 @@ export const POST = auth(async function POST(req) {
       }
     const body = await req.json();
     const { contractId, assetId, counterPartyName } = body;
-    const result = await startTransfer(contractId, assetId, counterPartyName);
-    return NextResponse.json(result);
+    const transferProcess = await startTransfer(contractId, assetId, counterPartyName);
+
+    // Check status until it reaches STARTED
+    let status;
+    do {
+        await new Promise(resolve => setTimeout(resolve, 5000)); // wait for 5 seconds
+        status = await checkTransferStatus(transferProcess["@id"]);
+    } while (status.state !== "STARTED");
+
+    // Fetch the endpoint data reference
+    const edr = await getEndpointDataReference(transferProcess["@id"]);
+    console.log("edr: ", edr);
+
+    //const url = edr.endpoint.replace(counterPartyName, 'localhost');
+
+    //console.log(url);
+    return NextResponse.json({url: edr.endpoint, authorization: edr.authorization });
+
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

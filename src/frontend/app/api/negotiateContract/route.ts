@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { negotiateContract } from '../connector-functions';
 import { auth } from "@/auth"
 

@@ -102,7 +102,7 @@ function generateFetchCatalog(counterPartyName: string | null) {
 
 export async function fetchCatalog(counterPartyName: string | null) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/catalog/request", {
+        const result = await fetch(connectorManagementUrl + "v3/catalog/request", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -125,7 +125,7 @@ export async function fetchCatalog(counterPartyName: string | null) {
 
 export async function getPolicies() {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/policydefinitions/request", {
+        const result = await fetch(connectorManagementUrl + "v3/policydefinitions/request", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -169,7 +169,7 @@ export async function getAssets() {
 
 export async function getContractDefinitions() {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/contractdefinitions/request", {
+        const result = await fetch(connectorManagementUrl + "v3/contractdefinitions/request", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -186,6 +186,28 @@ export async function getContractDefinitions() {
     } catch (err) {
         console.error("Error getting policies: ", err);
         throw new Error("Failed to get policies");
+    }
+};
+
+export async function getNegotiatedContracts() {
+    try {
+        const result = await fetch(connectorManagementUrl + "v3/contractagreements/request", {
+            method: 'POST',
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
+            },
+            body: JSON.stringify(queryRequestJson),
+        });
+        if (!result.ok) {
+            throw new Error(`HTTP Error! Status: ${result.status}`);
+        }
+        const data = await result.json();
+        return data;
+    } catch (err) {
+        console.error("Error getting contractagreements: ", err);
+        throw new Error("Failed to get contractagreements");
     }
 };
 
@@ -255,7 +277,7 @@ function generateCreatePolicy(name: string, description: string) {
 
 export async function createPolicy(name: string, description: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/policydefinitions", {
+        const result = await fetch(connectorManagementUrl + "v3/policydefinitions", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -297,7 +319,7 @@ function generateCreateContractDefinition(contractId: string, policyId: string, 
 
 export async function createContractDefinition(contractId: string, policyId: string, assetId: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/contractdefinitions", {
+        const result = await fetch(connectorManagementUrl + "v3/contractdefinitions", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -338,7 +360,7 @@ function generateGetDataset(assetId: string, counterPartyName: string) {
 
 export async function getDataset(assetId: string, counterPartyName: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/catalog/dataset/request", {
+        const result = await fetch(connectorManagementUrl + "v3/catalog/dataset/request", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -386,7 +408,7 @@ function generateNegotiateContract(contractOfferId: string, assetId: string, cou
 
 export async function negotiateContract(contractOfferId: string, assetId: string, counterPartyName: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/contractnegotiations", {
+        const result = await fetch(connectorManagementUrl + "v3/contractnegotiations", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -406,6 +428,27 @@ export async function negotiateContract(contractOfferId: string, assetId: string
     }
 };
 
+export async function getContractNegotiationStatus(negotiationId: string) {
+    try {
+        const result = await fetch(connectorManagementUrl + "v3/contractnegotiations/" + negotiationId, {
+            method: 'GET',
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': authenticationPassword
+            }
+        });
+        if (!result.ok) {
+            throw new Error(`HTTP Error! Status: ${result.status}`);
+        }
+        const data = await result.json();
+        return data;
+    } catch (err) {
+        console.error("Error getting contract negotiation status: ", err);
+        throw new Error("Failed to get contract negotiation status");
+    }
+}
+
 function generateStartTransfer(contractId: string, assetId: string, counterPartyName: string) {
     var counterPartyAddress: string = "";
     if (process.env.RUNNING_ENV == "local") {
@@ -424,16 +467,14 @@ function generateStartTransfer(contractId: string, assetId: string, counterParty
         "contractId": contractId,
         "assetId": assetId,
         "protocol": "dataspace-protocol-http",
-        "dataDestination": {
-            "type": "HttpProxy"
-        }
+        "transferType": "HttpData-PULL"
     };
     return startTransfer;
 };
 
 export async function startTransfer(contractId: string, assetId: string, counterPartyName: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/transferprocesses", {
+        const result = await fetch(connectorManagementUrl + "v3/transferprocesses", {
             method: 'POST',
             cache: 'no-cache',
             headers: {
@@ -446,6 +487,7 @@ export async function startTransfer(contractId: string, assetId: string, counter
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
+        console.log("Result data transfer: ", data);
         return data;
     } catch (err) {
         console.error("Error starting transfer: ", err);
@@ -466,6 +508,7 @@ export async function checkTransferStatus(transferId: string) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
+        console.log("checkTransferStatus", data);
         return data;
     } catch (err) {
         console.error("Error checking transfer status: ", err);
@@ -475,7 +518,7 @@ export async function checkTransferStatus(transferId: string) {
 
 export async function getEndpointDataReference(transferId: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v1/edrs/" + transferId + "/dataaddress", {
+        const result = await fetch(connectorManagementUrl + "v3/edrs/" + transferId + "/dataaddress", {
             method: 'GET',
             cache: 'no-cache',
             headers: {
@@ -486,6 +529,7 @@ export async function getEndpointDataReference(transferId: string) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
+        console.log("getEndpointDataReference: ", data);
         return data;
     } catch (err) {
         console.error("Error getting endpoint data reference: ", err);
@@ -522,7 +566,7 @@ export async function getData(authorizationKey: string, counterPartyName: string
 
 export async function deleteContractDefinition(contractId: string) {
     try {
-        const result = await fetch(connectorManagementUrl + "v2/contractdefinitions/" + contractId, {
+        const result = await fetch(connectorManagementUrl + "v3/contractdefinitions/" + contractId, {
             method: 'DELETE',
             cache: 'no-cache',
             headers: {
@@ -565,5 +609,36 @@ export async function deleteAsset(assetId: string) {
     } catch (err) {
         console.error("Error deleting contract definition: ", err);
         throw new Error("Failed to delete contract definition");
+    }
+}
+
+export async function getTransferredFile(authorizationKey: string, url: string) {
+    try {
+        const result = await fetch(url, {
+            method: 'GET',
+            cache: 'no-cache',
+            headers: {
+                'Authorization': authorizationKey,
+            },
+        });
+
+        if (!result.ok) {
+            throw new Error(`HTTP Error! Status: ${result.status}`);
+        }
+
+        const contentType = result.headers.get('content-type');
+        let data;
+
+        if (contentType && contentType.includes('application/json')) {
+            data = await result.json();
+        } else {
+            const arrayBuffer = await result.arrayBuffer();
+            data = Buffer.from(arrayBuffer);
+        }
+
+        return { data, contentType, contentDisposition: result.headers.get('content-disposition') };
+    } catch (err) {
+        console.error("Error getting data: ", err);
+        throw new Error("Failed to get data");
     }
 }
