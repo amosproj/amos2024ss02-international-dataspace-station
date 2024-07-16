@@ -33,11 +33,13 @@ export default function NavLinks() {
     <>
       {links.map((link) => {
         const LinkIcon = link.icon;
+        const isActive = pathname === link.href;
+
         return (
           <Link
             key={link.name}
             href={link.href}
-            className="flex h-[48px] grow items-center text-black justify-center gap-2 rounded-md bg-white p-3 text-sm font-medium hover:bg-neonBlue focus:bg-neonBlue shadow-xl md:flex-none md:justify-start md:p-2 md:px-3"
+            className={`flex h-[48px] grow items-center text-black justify-center gap-2 rounded-md p-3 text-sm font-medium shadow-xl md:flex-none md:justify-start md:p-2 md:px-3 ${isActive ? 'bg-neonBlue text-white' : 'bg-white hover:bg-neonBlue focus:bg-neonBlue'}`}
           >
             <LinkIcon className="w-6" />
             <p className="hidden md:block">{link.name}</p>
