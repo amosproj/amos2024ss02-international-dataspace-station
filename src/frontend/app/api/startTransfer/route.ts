@@ -22,9 +22,10 @@ export const POST = auth(async function POST(req) {
     const edr = await getEndpointDataReference(transferProcess["@id"]);
     console.log("edr: ", edr);
 
-    const url = edr.endpoint.replace(counterPartyName, 'localhost');
-    console.log(url);
-    return NextResponse.json({ url, authorization: edr.authorization });
+    //const url = edr.endpoint.replace(counterPartyName, 'localhost');
+
+    //console.log(url);
+    return NextResponse.json({url: edr.endpoint, authorization: edr.authorization });
 
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

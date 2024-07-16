@@ -536,4 +536,41 @@ export async function getData(authorizationKey: string, counterPartyName: string
         console.error("Error getting data: ", err);
         throw new Error("Failed to get data");
     }
-};
+}
+
+export async function getTransferredFile(authorizationKey: string, counterPartyName: string) {
+    var counterPartyAddress: string = "";
+    if (process.env.RUNNING_ENV == "local") {
+        counterPartyAddress = "http://" + counterPartyName + ":19291" + "/public";
+    } else {
+        counterPartyAddress = "https://" + counterPartyName + "." + process.env.CLOUD_DOMAIN + ":443/public";
+    }
+    try {
+        const result = await fetch(counterPartyAddress, {
+            method: 'GET',
+            cache: 'no-cache',
+            headers: {
+                'Authorization': authorizationKey,
+            },
+        });
+
+        if (!result.ok) {
+            throw new Error(`HTTP Error! Status: ${result.status}`);
+        }
+
+        const contentType = result.headers.get('content-type');
+        let data;
+
+        if (contentType && contentType.includes('application/json')) {
+            data = await result.json();
+        } else {
+            const arrayBuffer = await result.arrayBuffer();
+            data = Buffer.from(arrayBuffer);
+        }
+
+        return { data, contentType, contentDisposition: result.headers.get('content-disposition') };
+    } catch (err) {
+        console.error("Error getting data: ", err);
+        throw new Error("Failed to get data");
+    }
+}

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getTransferredFile } from '../connector-functions';
 import { auth } from '@/auth';
 
 export const GET = auth(async function GET(req) {
@@ -10,32 +11,19 @@ export const GET = auth(async function GET(req) {
         const { searchParams } = new URL(req.url);
         const url = searchParams.get('url');
         const authorization = searchParams.get('authorization');
+        console.log(url, authorization);
 
         if (!url || !authorization) {
             return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
         }
         console.log('url:', url);
         console.log('authorization:', authorization);
+        const test = 'company';
+        const { data, contentType, contentDisposition } = await getTransferredFile(authorization, test);
 
-        const fetchResponse = await fetch(url, {
-            headers: {
-                Authorization: authorization,
-            },
-        });
-        console.log("fetchResponse: ", fetchResponse);
-        if (!fetchResponse.ok) {
-            throw new Error(`Failed to fetch file: ${fetchResponse.statusText}`);
-        }
-
-        const blob = await fetchResponse.blob();
-        const arrayBuffer = await blob.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-
-        const contentDisposition = fetchResponse.headers.get('content-disposition');
-        const contentType = fetchResponse.headers.get('content-type');
         const fileName = contentDisposition ? contentDisposition.split('filename=')[1].replace(/"/g, '') : 'file';
 
-        const response = new NextResponse(buffer, {
+        const response = new NextResponse(data, {
             headers: {
                 'Content-Type': contentType || 'application/octet-stream',
                 'Content-Disposition': `attachment; filename="${fileName}"`,

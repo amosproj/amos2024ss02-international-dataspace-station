@@ -66,19 +66,13 @@ const DownloadPage: React.FC = () => {
     const handleDownload = async (agreementId: string, assetId: string, counterPartyname: string) => {
         try {
             const {url, authorization} = await startTransfer(agreementId, assetId, counterPartyname);
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `${authorization}`
-                }
-            });
+            const response = await downloadTransferredFile(url, authorization);
 
-            if (!response.ok) {
-                throw new Error(`Failed to download file: ${response.statusText}`);
+            if (!response) {
+                throw new Error(`Failed to download file: ${response}`);
             }
 
-            const blob = await response.blob();
-            const downloadUrl = URL.createObjectURL(blob);
+            const downloadUrl = URL.createObjectURL(response);
             const link = document.createElement('a');
             link.href = downloadUrl;
             link.download = url.split('/').pop() || 'download';
