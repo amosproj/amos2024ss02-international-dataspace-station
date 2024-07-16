@@ -257,7 +257,7 @@ const UploadPage: React.FC = () => {
                         const policy = getPolicyFromContract("contract-" + file.id);
                         return (
                         <tr key={file.id}>
-                            <td className="px-6 py-4 text-sm text-gray-900 break-words">{file.title}</td>
+                            <td className="px-6 py-4 text-sm text-gray-900 break-words font-bold">{file.title}</td>
                             <td className="px-6 py-4 text-sm font-medium text-gray-500 break-words">{file.name}</td>
                             <td className="px-6 py-4 text-sm text-gray-500">{file.size}</td>
                             <td className="px-6 py-4 text-sm text-gray-500">{file.date}</td>
