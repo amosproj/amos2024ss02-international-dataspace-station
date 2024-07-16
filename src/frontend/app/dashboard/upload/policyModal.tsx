@@ -45,7 +45,7 @@ const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose }) => {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-black">
-            <div className="bg-white p-6 rounded">
+            <div className="bg-white p-6 rounded w-96">
                 <form onSubmit={handleCreate} className="flex gap-4 flex-col">
                     <div>
                         <label htmlFor="name" className="block mb-2 text-sm font-medium">Policy Name</label>
@@ -77,7 +77,6 @@ const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose }) => {
                             value={role}
                             onChange={(e) => setRole(e.target.value)}
                             className="border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            required
                         >
                             {roleOptions.map(option => (
                                 <option key={option.value} value={option.value}>
