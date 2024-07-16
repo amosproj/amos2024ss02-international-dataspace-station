@@ -372,4 +372,23 @@ export async function uploadContractAgreementInfo(item: CatalogItem, agreementId
   }
 }
 
+export async function downloadTransferredFile(url: string, authorization: string) {
+  try {
+    const response = await fetch(`/api/downloadTransferredFile?url=${(url)}&authorization=${authorization}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to download file: ${response.statusText}`);
+    }
+
+    const blob = await response.blob();
+    return blob;
+  } catch (err) {
+    console.error('Error downloading file:', err);
+    throw new Error('Error downloading file');
+  }
+}
 

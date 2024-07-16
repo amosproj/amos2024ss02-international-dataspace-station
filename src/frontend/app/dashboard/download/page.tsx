@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { fetchCatalogItems, getContractAgreementId, negotiateContract, startTransfer} from '@/actions/api';
+import { fetchCatalogItems, getContractAgreementId, negotiateContract, startTransfer, downloadTransferredFile} from '@/actions/api';
 import participants from '@/data/participants.json';
 import { CatalogItem } from "@/data/interface/file";
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
@@ -70,32 +70,23 @@ const DownloadPage: React.FC = () => {
         const { url, authorization } = downloadInfo;
 
         try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `${authorization}`
-                }
-            });
+            console.log(url, authorization);
+            const blob = await downloadTransferredFile(url, authorization);
 
-            if (!response.ok) {
-                throw new Error(`Failed to download file: ${response.statusText}`);
-            }
-
-            const blob = await response.blob();
-            const downloadUrl = URL.createObjectURL(blob);
+            const blobUrl = URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.href = downloadUrl;
+            link.href = blobUrl;
             link.download = url.split('/').pop() || 'download';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            URL.revokeObjectURL(downloadUrl);
+            URL.revokeObjectURL(blobUrl);
         } catch (error) {
             console.error('Error downloading file:', error);
             setErrorMessage('Error downloading file.');
         }
     };
-    
+
     const handleTabSelect = (index: number) => {
         setActiveTabIndex(index); // Update active tab index
     };
