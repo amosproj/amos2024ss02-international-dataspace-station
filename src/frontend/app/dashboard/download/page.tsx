@@ -1,15 +1,18 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { fetchCatalogItems, getContractAgreementId, getEnrichedContractAgreements, negotiateContract, startTransfer, uploadContractAgreementInfo} from '@/actions/api';
 import participants from '@/data/participants.json';
 import { CatalogItem, EnrichedContractAgreement } from "@/data/interface/file";
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css'; 
+import 'react-tabs/style/react-tabs.css';
+import { toast } from 'react-toastify';
 
 const DownloadPage: React.FC = () => {
     const [connector, setConnector] = useState<string>('');
     const [catalogItems, setCatalogItems] = useState<CatalogItem[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [loadingItems, setLoadingItems] = useState<boolean>(false);
     const [errorMessageNegotiated, setErrorMessageNegotiated] = useState<string>("");
     const [negotiatingId, setNegotiatingId] = useState<string>("");
     const [negotiatedContracts, setNegotiatedContracts] = useState<EnrichedContractAgreement[]>([]);
@@ -29,12 +32,18 @@ const DownloadPage: React.FC = () => {
         setErrorMessage("");
         setErrorMessageNegotiated("");
         try {
+            setLoadingItems(true);
+            setErrorMessage("");
+            toast.dismiss();
             const fetchedCatalog = await fetchCatalogItems(connector);
             setCatalogItems(fetchedCatalog);
         } catch (error) {
             console.error('Error fetching assets:', error);
             setErrorMessage('Error fetching assets.');
-        }
+            toast.error("There was an error fetching the assets of " + participants.find(p => p.id === connector)?.displayName)
+        } finally {
+            setLoadingItems(false);
+        } 
         try {
             const negotiatedContracts = await getEnrichedContractAgreements(connector);
             setNegotiatedContracts(negotiatedContracts);
@@ -69,7 +78,6 @@ const DownloadPage: React.FC = () => {
             setDownloadingFiles(prevFiles => [...prevFiles, agreementId]);
             const {url, authorization} = await startTransfer(agreementId, assetId, counterPartyname);
             const downloadUrl = `/api/downloadTransferredFile?url=${(url)}&authorization=${authorization}&filename=${fileName}`;
-
 
             const link = document.createElement('a');
             link.href = downloadUrl;
@@ -110,10 +118,10 @@ const DownloadPage: React.FC = () => {
                     </select>
                     <button
                         onClick={fetchItems}
-                        className="px-4 py-2 bg-neonGreen text-white rounded flex items-center"
-                        disabled={!connector || negotiatingId !== ""}
+                        className="px-4 py-2 bg-neonBlue rounded flex items-center"
+                        disabled={loadingItems || !connector || negotiatingId !== ""}
                     >
-                        Refresh
+                        <ArrowPathIcon className={`w-5 h-5 ${(loadingItems || negotiatingId !== "") ? "spinning" : ""}`} />
                     </button>
                 </div>
             </div>

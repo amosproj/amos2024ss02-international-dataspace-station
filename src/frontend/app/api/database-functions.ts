@@ -50,6 +50,24 @@ export async function downloadFile(fileId: string) {
     return response;
 }
 
+export async function deleteFile(fileId: string) {
+    try {
+        const result = await fetch(databaseUrl + "/files/delete/" + fileId, {
+            method: 'GET',
+            headers: {
+                'X-API-Key': authenticationPassword
+            }
+        });
+        if (!result.ok) {
+            throw new Error("HTTP Error! Status: ${result.status}");
+        }
+        return true;
+    } catch (err) {
+        console.error("Error uploading file: ", err);
+        throw new Error("Failed to upload file");
+    }
+}
+
 export async function uploadContractAgreementInfo(agreementId: string, fileName: string, fileSize: string, title: string, date: string, author: string, contenttype: string) {
     try {
         const response = await fetch(databaseUrl + "/contracts/store", {

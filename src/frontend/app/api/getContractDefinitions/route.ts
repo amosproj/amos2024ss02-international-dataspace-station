@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createPolicy } from '../connector-functions';
+import { getAssets, getContractDefinitions } from '../connector-functions';
 import { auth } from "@/auth"
 
-export const POST = auth(async function POST(req) {
+export const GET = auth(async function GET(req) {
   try {
       if (!req.auth) {
           return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
       }
-    const body = await req.json();
-    const { name, description } = body;
-    const result = await createPolicy(name, description);
-    return NextResponse.json(result);
+    const data = await getContractDefinitions();
+
+    return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

@@ -12,7 +12,9 @@ function getConnectorStatusUrl(connectorName: string | null) {
 async function checkConnectorStatus(connectorName: string | null): Promise<boolean> {
     const url = getConnectorStatusUrl(connectorName);
     try {
-        var result = await fetch(url, {cache: "no-store"});
+        const signal = AbortSignal.timeout(2500);
+        console.log("Trying to fetch connector status from URL " + url);
+        var result = await fetch(url, {cache: "no-store", signal});
         var data = await result.json();
         return data.response === "Running!";
     } catch (err) {
