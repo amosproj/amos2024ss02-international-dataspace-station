@@ -611,7 +611,6 @@ export async function deleteAsset(assetId: string) {
         throw new Error("Failed to delete contract definition");
     }
 }
-}
 
 export async function getTransferredFile(authorizationKey: string, url: string) {
     try {
