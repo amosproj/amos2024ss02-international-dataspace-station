@@ -152,7 +152,7 @@ const DownloadPage: React.FC = () => {
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {catalogItems.map((item) => (
                                         <tr key={item.id}>
-                                            <td className="px-6 py-4 text-sm text-gray-900 break-words">{item.title}</td>
+                                            <td className="px-6 py-4 text-sm text-gray-900 break-words font-bold">{item.title}</td>
                                             <td className="px-6 py-4 text-sm font-medium text-gray-500 break-words">{item.name}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.size}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.date}</td>
@@ -188,7 +188,7 @@ const DownloadPage: React.FC = () => {
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {negotiatedContracts.map((item) => (
                                         <tr key={item.id}>
-                                            <td className="px-6 py-4 text-sm text-gray-900 break-words">{item.title}</td>
+                                            <td className="px-6 py-4 text-sm text-gray-900 break-words font-bold">{item.title}</td>
                                             <td className="px-6 py-4 text-sm font-medium text-gray-500 break-words">{item.fileName}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.fileSize}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.date}</td>
