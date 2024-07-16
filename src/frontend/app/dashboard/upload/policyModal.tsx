@@ -10,26 +10,42 @@ interface PolicyModalProps {
 const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose }) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
+    const [role, setRole] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
     const handleCreate = async (e: FormEvent) => {
         e.preventDefault();
         try {
             setErrorMessage("");
-            await createPolicy(name, description);
-            onClose();
+            await createPolicy(name, description, role);
+            handleClose();
         } catch(err) {
             setErrorMessage("There was a problem creating the policy.");
         }
+    }
+
+    const handleClose = () => {
+        setRole("");
+        setDescription("");
+        setName("");
+        setErrorMessage("");
+        onClose();
     }
 
     if(!isOpen) {
         return null;
     }
 
+    const roleOptions = [
+        { label: "Everyone", value: "" },
+        { label: "Bank", value: "bank" },
+        { label: "Company", value: "company" },
+        { label: "Tax Advisor", value: "taxadvisor" }
+    ].filter(option => option.value !== process.env.NEXT_PUBLIC_CONNECTOR_NAME);
+
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 text-black">
-            <div className="bg-white p-6 rounded">
+            <div className="bg-white p-6 rounded w-96">
                 <form onSubmit={handleCreate} className="flex gap-4 flex-col">
                     <div>
                         <label htmlFor="name" className="block mb-2 text-sm font-medium">Policy Name</label>
@@ -53,11 +69,27 @@ const PolicyModal: React.FC<PolicyModalProps> = ({ isOpen, onClose }) => {
                             className="border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         />
                     </div>
+                    <div>
+                        <label htmlFor="role" className="block mb-2 text-sm font-medium">Which role has access rights?</label>
+                        <select
+                            name="role"
+                            id="role"
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
+                            className="border border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        >
+                            {roleOptions.map(option => (
+                                <option key={option.value} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
                     {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
                     <div className="flex justify-end">
-                        <button onClick={() => onClose()} className="px-4 py-2 bg-gray-500 text-white rounded mr-2">
+                        <button onClick={() => handleClose()} className="px-4 py-2 bg-gray-500 text-white rounded mr-2">
                             Cancel
                         </button>
                         <button type="submit" className="px-4 py-2 bg-green-500 text-white rounded">

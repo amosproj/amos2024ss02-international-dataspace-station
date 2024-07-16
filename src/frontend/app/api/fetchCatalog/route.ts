@@ -24,18 +24,33 @@ export const POST = auth(async function POST(req) {
                       ? result["dcat:dataset"]
                       : [result["dcat:dataset"]];
 
-    const formattedResult = datasets.map((item: any) => ({
-      date: item.date || "Unknown Date",
-      name: item.name || "Unnamed Asset",
-      title: item.description || "No description",
-      author: item.author || "Unknown Author",
-      id: item.id,
-      contenttype: item.contenttype || "Unknown",
-      size: item.size || "-",
-      contractIds: item["odrl:hasPolicy"]?.["@id"] || null
-    }));
+    const formattedResult = datasets.map((item: any) => {
+      var permission = JSON.parse(JSON.stringify(item["odrl:hasPolicy"]?.["odrl:permission"] || []).replaceAll("odrl:", "").replaceAll("edc:", ""));
+      if (JSON.stringify(permission) != "[]") {
+        permission = [{
+              action: permission.action["@id"],
+              constraint: {
+                  leftOperand: permission.constraint.leftOperand["@id"],
+                  operator: permission.constraint.operator["@id"],
+                  rightOperand: permission.constraint.rightOperand
+              }
+          }];
+      }
+      return {
+        date: item.date || "Unknown Date",
+        name: item.name || "Unnamed Asset",
+        title: item.description || "No description",
+        author: item.author || "Unknown Author",
+        id: item.id,
+        contenttype: item.contenttype || "Unknown",
+        size: item.size || "-",
+        contractIds: item["odrl:hasPolicy"]?.["@id"] || null,
+        permission: permission
+    }});
 
-    return NextResponse.json(formattedResult);
+    var results = JSON.parse(JSON.stringify(formattedResult).replaceAll("odrl:", "").replaceAll("edc:", ""));
+
+    return NextResponse.json(results);
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

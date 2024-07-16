@@ -254,7 +254,23 @@ export async function registerDataplaneProvider(dataplaneId: string) {
     }
 };
 
-function generateCreatePolicy(name: string, description: string) {
+function generateCreatePolicy(name: string, description: string, role: string) {
+    var permission: any[] = [];
+    if (role) {
+        permission = [
+            {
+                "action": "use",
+                "constraint": {
+                    "@type": "AtomicConstraint",
+                    "leftOperand": "role",
+                    "operator": {
+                        "@id": "odrl:eq"
+                    },
+                    "rightOperand": role
+                }
+            }
+        ];
+    }
     const createPolicy = {
         "@context": {
             "@vocab": "https://w3id.org/edc/v0.0.1/ns/",
@@ -267,7 +283,7 @@ function generateCreatePolicy(name: string, description: string) {
         "policy": {
             "@context": "http://www.w3.org/ns/odrl.jsonld",
             "@type": "Set",
-            "permission": [],
+            "permission": permission,
             "prohibition": [],
             "obligation": []
         }
@@ -275,7 +291,7 @@ function generateCreatePolicy(name: string, description: string) {
     return createPolicy;
 };
 
-export async function createPolicy(name: string, description: string) {
+export async function createPolicy(name: string, description: string, role: string) {
     try {
         const result = await fetch(connectorManagementUrl + "v3/policydefinitions", {
             method: 'POST',
@@ -284,7 +300,7 @@ export async function createPolicy(name: string, description: string) {
                 'Content-Type': 'application/json',
                 'X-API-Key': authenticationPassword
             },
-            body: JSON.stringify(generateCreatePolicy(name, description)),
+            body: JSON.stringify(generateCreatePolicy(name, description, role)),
         });
         if (!result.ok) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
@@ -380,7 +396,7 @@ export async function getDataset(assetId: string, counterPartyName: string) {
     }
 }
 
-function generateNegotiateContract(contractOfferId: string, assetId: string, counterPartyName: string) {
+function generateNegotiateContract(contractOfferId: string, assetId: string, counterPartyName: string, permission: any) {
     var counterPartyAddress: string = "";
     if (process.env.RUNNING_ENV == "local") {
         counterPartyAddress = "http://" + counterPartyName + ":19194" + "/protocol";
@@ -399,14 +415,16 @@ function generateNegotiateContract(contractOfferId: string, assetId: string, cou
             "@context": "http://www.w3.org/ns/odrl.jsonld",
             "@id": contractOfferId,
             "@type": "Offer",
+            "permission": permission,
             "assigner": counterPartyName,
             "target": assetId
         }
     };
+
     return negotiateContract;
 };
 
-export async function negotiateContract(contractOfferId: string, assetId: string, counterPartyName: string) {
+export async function negotiateContract(contractOfferId: string, assetId: string, counterPartyName: string, permission: any) {
     try {
         const result = await fetch(connectorManagementUrl + "v3/contractnegotiations", {
             method: 'POST',
@@ -415,7 +433,7 @@ export async function negotiateContract(contractOfferId: string, assetId: string
                 'Content-Type': 'application/json',
                 'X-API-Key': authenticationPassword
             },
-            body: JSON.stringify(generateNegotiateContract(contractOfferId, assetId, counterPartyName)),
+            body: JSON.stringify(generateNegotiateContract(contractOfferId, assetId, counterPartyName, permission)),
         });
         if (!result.ok) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
@@ -487,7 +505,6 @@ export async function startTransfer(contractId: string, assetId: string, counter
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
-        console.log("Result data transfer: ", data);
         return data;
     } catch (err) {
         console.error("Error starting transfer: ", err);
@@ -508,7 +525,6 @@ export async function checkTransferStatus(transferId: string) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
-        console.log("checkTransferStatus", data);
         return data;
     } catch (err) {
         console.error("Error checking transfer status: ", err);
@@ -529,7 +545,6 @@ export async function getEndpointDataReference(transferId: string) {
             throw new Error(`HTTP Error! Status: ${result.status}`);
         }
         const data = await result.json();
-        console.log("getEndpointDataReference: ", data);
         return data;
     } catch (err) {
         console.error("Error getting endpoint data reference: ", err);

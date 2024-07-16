@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getContractNegotiationStatus } from '../connector-functions';
 import { auth } from "@/auth";
 
-const WAIT_INTERVAL = 5000;
+const WAIT_INTERVAL = 2000;
 
 export const GET = auth(async function GET(req) {
     try {
@@ -21,6 +21,7 @@ export const GET = auth(async function GET(req) {
         while (negotiationStatus.state !== 'FINALIZED') {
             await new Promise(resolve => setTimeout(resolve, WAIT_INTERVAL));
             negotiationStatus = await getContractNegotiationStatus(negotiationId);
+            if (negotiationStatus.state === "TERMINATED") throw new Error("Contract agreement has been terminated");
         }
         const agreementId = negotiationStatus.contractAgreementId;
         if (!agreementId) {

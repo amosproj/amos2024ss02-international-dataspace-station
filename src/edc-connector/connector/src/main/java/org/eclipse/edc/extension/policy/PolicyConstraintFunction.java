@@ -35,7 +35,7 @@ public class PolicyConstraintFunction implements AtomicConstraintFunction<Permis
     
     @Override
     public boolean evaluate(Operator operator, Object rightValue, Permission rule, PolicyContext context) {
-        var role = context.getContextData(ParticipantAgent.class).getClaims().get("role");
+        var role = context.getContextData(ParticipantAgent.class).getClaims().get("client_id");
         
         monitor.info(format("Evaluating constraint: role %s %s", operator, rightValue.toString()));
         
