@@ -81,7 +81,7 @@ export async function fetchCatalogItems(counterPartyName: string | null = null):
       throw new Error(data.error);
     }
 
-    return data.map((item: any) => ({
+    const catalogItems = data.map((item: any) => ({
       date: item.date,
       name: item.name,
       author: item.author,
@@ -89,8 +89,11 @@ export async function fetchCatalogItems(counterPartyName: string | null = null):
       id: item.id,
       contenttype: item.contenttype,
       size: item.size,
-      contractIds: Array.isArray(item.contractIds) ? item.contractIds : [item.contractIds]
+      contractIds: Array.isArray(item.contractIds) ? item.contractIds : [item.contractIds],
+      permission: Array.isArray(item.permission) ? item.permission : [item.permission]
     }));
+
+    return catalogItems;
   } catch (error) {
     console.error('Error occurred while fetching catalog data:', error);
     throw error;
@@ -209,7 +212,7 @@ export async function createAsset(file: FileInfo): Promise<boolean> {
   }
 }
 
-export async function createPolicy(name: string, description: string): Promise<boolean> {
+export async function createPolicy(name: string, description: string, role: string): Promise<boolean> {
   try {
     const response = await fetch('/api/createPolicy', {
       method: 'POST',
@@ -218,7 +221,8 @@ export async function createPolicy(name: string, description: string): Promise<b
       },
       body: JSON.stringify({
         name: name,
-        description: description
+        description: description,
+        role: role
       })
     });
 
@@ -329,7 +333,8 @@ export async function negotiateContract(item: CatalogItem) {
       body: JSON.stringify({
           contractOfferId: item.contractIds[0], 
           assetId: item.id,
-          counterPartyName: item.author
+          counterPartyName: item.author,
+          permission: item.permission
       })
     });
 

@@ -39,6 +39,7 @@ export interface CatalogItem {
     contenttype: string;
     size: string;
     contractIds: string[];
+    permission: any[];
 }
 
 export interface Policy {
