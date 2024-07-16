@@ -375,9 +375,9 @@ export async function uploadContractAgreementInfo(item: CatalogItem, agreementId
 }
 
 
-export async function downloadTransferredFile(url: string, authorization: string) {
+export async function downloadTransferredFile(counterPartyname: string, authorization: string) {
   try {
-    const response = await fetch(`/api/downloadTransferredFile?url=${(url)}&authorization=${authorization}`, {
+    const response = await fetch(`/api/downloadTransferredFile?counterPartyname=${(counterPartyname)}&authorization=${authorization}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

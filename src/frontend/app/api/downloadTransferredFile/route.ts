@@ -9,17 +9,21 @@ export const GET = auth(async function GET(req) {
         }
 
         const { searchParams } = new URL(req.url);
-        const url = searchParams.get('url');
+        const counterPartyname = searchParams.get('counterPartyname');
         const authorization = searchParams.get('authorization');
-        console.log(url, authorization);
+        console.log(counterPartyname, authorization);
 
-        if (!url || !authorization) {
+        if (!counterPartyname || !authorization) {
             return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
         }
-        console.log('url:', url);
+        console.log('counterPartyname:', counterPartyname);
         console.log('authorization:', authorization);
-        const test = 'company';
-        const { data, contentType, contentDisposition } = await getTransferredFile(authorization, test);
+
+        const { data, contentType, contentDisposition } = await getTransferredFile(authorization, counterPartyname);
+
+        console.log("data: ", data);
+        console.log("content type: ", contentType);
+        console.log("contentDisposition", contentDisposition);
 
         const fileName = contentDisposition ? contentDisposition.split('filename=')[1].replace(/"/g, '') : 'file';
 
