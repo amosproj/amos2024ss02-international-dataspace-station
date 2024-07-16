@@ -138,7 +138,7 @@ const DownloadPage: React.FC = () => {
                         </Tab>
                     </TabList>
                     <TabPanel>
-                        <div className="overflow-x-auto">
+                        <div className="overflow-x-auto overflow-y-clip">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
@@ -174,7 +174,7 @@ const DownloadPage: React.FC = () => {
                     </TabPanel>
 
                     <TabPanel>
-                        <div className="overflow-x-auto">
+                        <div className="overflow-x-auto overflow-y-clip">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
