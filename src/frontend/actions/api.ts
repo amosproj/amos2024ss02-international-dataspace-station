@@ -485,7 +485,7 @@ export async function deleteContractDefinition(contractId: string) {
 
 export async function deleteFile(fileId: string) {
   try {
-    const response = await fetch('/api/deleteContractDefinition?fileId=' + fileId, {
+    const response = await fetch('/api/deleteFile?fileId=' + fileId, {
       method: 'GET'
     });
 
