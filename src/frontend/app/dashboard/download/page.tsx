@@ -1,8 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { fetchCatalogItems, getContractAgreementId, negotiateContract, startTransfer, downloadTransferredFile} from '@/actions/api';
+import { fetchCatalogItems, getContractAgreementId, getEnrichedContractAgreements, getNegotiatedContracts, negotiateContract, startTransfer, uploadContractAgreementInfo, downloadTransferredFile} from '@/actions/api';
 import participants from '@/data/participants.json';
-import { CatalogItem } from "@/data/interface/file";
+import { CatalogItem, EnrichedContractAgreement } from "@/data/interface/file";
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css'; 
 
@@ -10,23 +10,23 @@ const DownloadPage: React.FC = () => {
     const [connector, setConnector] = useState<string>('');
     const [catalogItems, setCatalogItems] = useState<CatalogItem[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
-    const [downloadUrl, setDownloadUrl] = useState<{ [key: string]: { url: string, authorization: string } }>({});
-    const [transferredItems, setTransferredItems] = useState<string[]>([]);
+    const [errorMessageNegotiated, setErrorMessageNegotiated] = useState<string>("");
+    const [negotiatingId, setNegotiatingId] = useState<string>("");
+    const [negotiatedContracts, setNegotiatedContracts] = useState<EnrichedContractAgreement[]>([]);
     const [activeTabIndex, setActiveTabIndex] = useState(0);
 
+
     useEffect(() => {
-        setErrorMessage("");
         setCatalogItems([]);
+        setNegotiatedContracts([]);
         if (connector) {
             fetchItems();
-        } else {
-            setCatalogItems([]);
         }
     }, [connector]);
 
     const fetchItems = async () => {
         setErrorMessage("");
+        setErrorMessageNegotiated("");
         try {
             const fetchedCatalog = await fetchCatalogItems(connector);
             setCatalogItems(fetchedCatalog);
@@ -34,53 +34,58 @@ const DownloadPage: React.FC = () => {
             console.error('Error fetching assets:', error);
             setErrorMessage('Error fetching assets.');
         }
+        try {
+            const negotiatedContracts = await getEnrichedContractAgreements(connector);
+            setNegotiatedContracts(negotiatedContracts);
+        } catch (error) {
+            console.error("Error fetching negotiated contracts");
+            setErrorMessageNegotiated("Error fetching contract agreements.");
+        }
     };
 
     const handleNegotiateClick = async (item: CatalogItem) => {
-        setLoading(true);
-        //setErrorMessage(null);
+        setNegotiatingId(item.id);
         try {
             const negotiationId = await negotiateContract(item);
             // Get agreement ID
             const agreementId = await getContractAgreementId(negotiationId);
-            // Start transfer
-            const { url, authorization } = await startTransfer(agreementId, item.id, item.author);
 
-            if (url && authorization) {
-                setDownloadUrl((prev) => ({ ...prev, [item.id]: { url, authorization } }));
-                setTransferredItems((prev) => [...prev, item.id]);
-            }
-    
-            // TODO: check if transfer was successfull
-            console.log('Transfer started successfully:');
+            await uploadContractAgreementInfo(item, agreementId);
+
+            fetchItems();
 
         } catch (err) {
             setErrorMessage(err.message);
-            console.error('An error occurred:', err);
+            console.error('Error negotiating contract', err);
         } finally {
-            setLoading(false);
+            setNegotiatingId("");
         }
 
     };
 
-    const handleDownload = async (itemId: string) => {
-        const downloadInfo = downloadUrl[itemId];
-        if (!downloadInfo) return;
-
-        const { url, authorization } = downloadInfo;
-
+    const handleDownload = async (agreementId: string, assetId: string, counterPartyname: string) => {
         try {
-            console.log(url, authorization);
-            const blob = await downloadTransferredFile(url, authorization);
+            const {url, authorization} = await startTransfer(agreementId, assetId, counterPartyname);
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `${authorization}`
+                }
+            });
 
-            const blobUrl = URL.createObjectURL(blob);
+            if (!response.ok) {
+                throw new Error(`Failed to download file: ${response.statusText}`);
+            }
+
+            const blob = await response.blob();
+            const downloadUrl = URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.href = blobUrl;
+            link.href = downloadUrl;
             link.download = url.split('/').pop() || 'download';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            URL.revokeObjectURL(blobUrl);
+            URL.revokeObjectURL(downloadUrl);
         } catch (error) {
             console.error('Error downloading file:', error);
             setErrorMessage('Error downloading file.');
@@ -113,21 +118,22 @@ const DownloadPage: React.FC = () => {
                     <button
                         onClick={fetchItems}
                         className="px-4 py-2 bg-neonGreen text-white rounded flex items-center"
-                        disabled={!connector || loading}
+                        disabled={!connector || negotiatingId !== ""}
                     >
-                        {loading ? 'Loading...' : 'Refresh'}
+                        Refresh
                     </button>
                 </div>
             </div>
             {connector && (
                 <>
+
                 <Tabs defaultIndex={0} onSelect={handleTabSelect}>
                     <TabList className="flex border-b border-gray-200">
                         <Tab className={`px-4 py-2 cursor-pointer ${activeTabIndex === 0 ? 'text-black border-b-2 border-blue-600' : 'text-gray-500'}`}>
-                            All Files
+                            Catalog Offers
                         </Tab>
                         <Tab className={`px-4 py-2 cursor-pointer ${activeTabIndex === 1 ? 'text-black border-b-2 border-blue-600' : 'text-gray-500'}`}>
-                            Transferred Files
+                            Negotiated Contracts
                         </Tab>
                     </TabList>
                     <TabPanel>
@@ -152,25 +158,18 @@ const DownloadPage: React.FC = () => {
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.author}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.contenttype}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">
-                                                {downloadUrl[item.id] ? (
-                                                    <button onClick={() => handleDownload(item.id)}
-                                                        className="flex items-center px-4 py-2 bg-neonGreen text-white rounded"
-                                                        disabled={loading}>
-                                                        {loading ? 'Processing...' : 'DOWNLOAD'}
-                                                    </button>
-                                                ) : (
-                                                    <button onClick={() => handleNegotiateClick(item)}
-                                                        className={`flex items-center px-4 py-2 bg-neonGreen text-white rounded ${transferredItems.includes(item.id) ? 'bg-gray-300 cursor-not-allowed' : ''}`}
-                                                        disabled={loading || transferredItems.includes(item.id)}>
-                                                        {loading ? 'Processing...' : 'NEGOTIATE'}
-                                                    </button>
-                                                )}
+                                                <button onClick={() => handleNegotiateClick(item)}
+                                                    className={`flex items-center px-4 py-2 text-white rounded ${negotiatedContracts.some(contract => contract.assetId === item.id) ? 'bg-gray-300 cursor-not-allowed' : 'bg-neonGreen'} ${negotiatingId === item.id ? "cursor-wait" : ""}`}
+                                                    disabled={negotiatingId === item.id || negotiatedContracts.some(contract => contract.assetId === item.id)}>
+                                                    {negotiatedContracts.some(contract => contract.assetId === item.id) ? "NEGOTIATED" : 'NEGOTIATE'}
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </div>
+                        {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
                     </TabPanel>
 
                     <TabPanel>
@@ -186,19 +185,19 @@ const DownloadPage: React.FC = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
-                                    {catalogItems.filter(item => transferredItems.includes(item.id)).map((item) => (
+                                    {negotiatedContracts.map((item) => (
                                         <tr key={item.id}>
-                                            <td className="px-6 py-4 text-sm font-medium text-gray-900 break-words">{item.name}</td>
-                                            <td className="px-6 py-4 text-sm text-gray-500">{item.size}</td>
+                                            <td className="px-6 py-4 text-sm font-medium text-gray-900 break-words">{item.fileName}</td>
+                                            <td className="px-6 py-4 text-sm text-gray-500">{item.fileSize}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.title}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.date}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.author}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.contenttype}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">
-                                                <button onClick={() => handleDownload(item.id)}
-                                                    className="flex items-center px-4 py-2 bg-neonGreen text-white rounded"
-                                                    disabled={loading}>
-                                                    {loading ? 'Processing...' : 'DOWNLOAD'}
+                                                <button onClick={() => handleDownload(item.id, item.assetId, connector)}
+                                                    className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded"
+                                                >
+                                                    DOWNLOAD
                                                 </button>
                                             </td>
                                         </tr>
@@ -206,56 +205,14 @@ const DownloadPage: React.FC = () => {
                                 </tbody>
                             </table>
                         </div>
+                        {errorMessageNegotiated && <p className="text-red-500 mt-4">{errorMessageNegotiated}</p>}
                     </TabPanel>
                 </Tabs>
                 </>
             )}
-            {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
+            
         </div>
     );
 };
 
 export default DownloadPage;
-/*
- <h2 className="text-lg font-medium text-gray-700 mb-4">Files for {connector}</h2>
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50">
-                            <tr>
-                                {['Name', 'Size', 'Title', 'Date', 'Author', 'Content Type', 'Actions'].map((label) => (
-                                    <th key={label} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                                        {label}
-                                    </th>
-                                ))}
-                            </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                            {catalogItems.map((item) => (
-                                <tr key={item.id}>
-                                    <td className="px-6 py-4 text-sm font-medium text-gray-900 break-words">{item.name}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{item.size}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{item.title}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{item.date}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{item.author}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{item.contenttype}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">
-                                    {downloadUrl[item.id] ? (
-                                            <button onClick={() => handleDownload(item.id)}
-                                                className="flex items-center px-4 py-2 bg-neonGreen text-white rounded"
-                                                disabled={loading}>
-                                                {loading ? 'Processing...' : 'DOWNLOAD'}
-                                            </button>
-                                        ) : (
-                                            <button onClick={() => handleNegotiateClick(item)}
-                                                className="flex items-center px-4 py-2 bg-neonGreen text-white rounded"
-                                                disabled={loading}>
-                                                {loading ? 'Processing...' : 'NEGOTIATE'}
-                                            </button>
-                                        )}
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    </div>
-*/
