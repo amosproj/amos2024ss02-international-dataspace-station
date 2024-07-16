@@ -142,7 +142,7 @@ const DownloadPage: React.FC = () => {
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        {['Name', 'Size', 'Title', 'Date', 'Author', 'Content Type', 'Actions'].map((label) => (
+                                        {['Title', 'Name', 'Size', 'Date', 'Author', 'Content Type', 'Actions'].map((label) => (
                                             <th key={label} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                                 {label}
                                             </th>
@@ -178,7 +178,7 @@ const DownloadPage: React.FC = () => {
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        {['Name', 'Size', 'Title', 'Date', 'Author', 'Content Type', 'Actions'].map((label) => (
+                                        {['Title', 'Name', 'Size', 'Date', 'Author', 'Content Type', 'Actions'].map((label) => (
                                             <th key={label} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                                                 {label}
                                             </th>
