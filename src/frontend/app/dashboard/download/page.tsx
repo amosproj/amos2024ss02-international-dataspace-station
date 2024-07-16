@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { fetchCatalogItems, getContractAgreementId, getEnrichedContractAgreements, getNegotiatedContracts, negotiateContract, startTransfer, uploadContractAgreementInfo, downloadTransferredFile} from '@/actions/api';
+import { fetchCatalogItems, getContractAgreementId, getEnrichedContractAgreements, negotiateContract, startTransfer, uploadContractAgreementInfo} from '@/actions/api';
 import participants from '@/data/participants.json';
 import { CatalogItem, EnrichedContractAgreement } from "@/data/interface/file";
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
@@ -14,6 +14,7 @@ const DownloadPage: React.FC = () => {
     const [negotiatingId, setNegotiatingId] = useState<string>("");
     const [negotiatedContracts, setNegotiatedContracts] = useState<EnrichedContractAgreement[]>([]);
     const [activeTabIndex, setActiveTabIndex] = useState(0);
+    const [downloadingFiles, setDownloadingFiles] = useState<string[]>([]);
 
 
     useEffect(() => {
@@ -63,26 +64,24 @@ const DownloadPage: React.FC = () => {
 
     };
 
-    const handleDownload = async (agreementId: string, assetId: string, counterPartyname: string) => {
+    const handleDownload = async (agreementId: string, assetId: string, counterPartyname: string, fileName: string) => {
         try {
+            setDownloadingFiles(prevFiles => [...prevFiles, agreementId]);
             const {url, authorization} = await startTransfer(agreementId, assetId, counterPartyname);
-            const response = await downloadTransferredFile(counterPartyname, authorization);
+            const downloadUrl = `/api/downloadTransferredFile?url=${(url)}&authorization=${authorization}&filename=${fileName}`;
 
-            if (!response) {
-                throw new Error(`Failed to download file: ${response}`);
-            }
 
-            const downloadUrl = URL.createObjectURL(response);
             const link = document.createElement('a');
             link.href = downloadUrl;
             link.download = url.split('/').pop() || 'download';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            URL.revokeObjectURL(downloadUrl);
         } catch (error) {
             console.error('Error downloading file:', error);
             setErrorMessage('Error downloading file.');
+        } finally {
+            setDownloadingFiles(prevFiles => prevFiles.filter(file => file !== agreementId));
         }
     };
 
@@ -153,8 +152,8 @@ const DownloadPage: React.FC = () => {
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.contenttype}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">
                                                 <button onClick={() => handleNegotiateClick(item)}
-                                                    className={`flex items-center px-4 py-2 text-white rounded ${negotiatedContracts.some(contract => contract.assetId === item.id) ? 'bg-gray-300 cursor-not-allowed' : 'bg-neonGreen'} ${negotiatingId === item.id ? "cursor-wait" : ""}`}
-                                                    disabled={negotiatingId === item.id || negotiatedContracts.some(contract => contract.assetId === item.id)}>
+                                                    className={`flex items-center px-4 py-2 text-white rounded ${negotiatedContracts.some(contract => contract.assetId === item.id) ? 'bg-gray-300' : 'bg-neonGreen'} ${negotiatingId === item.id ? "cursor-wait" : ""}`}
+                                                    disabled={negotiatingId !== "" || negotiatedContracts.some(contract => contract.assetId === item.id)}>
                                                     {negotiatedContracts.some(contract => contract.assetId === item.id) ? "NEGOTIATED" : 'NEGOTIATE'}
                                                 </button>
                                             </td>
@@ -188,8 +187,9 @@ const DownloadPage: React.FC = () => {
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.author}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">{item.contenttype}</td>
                                             <td className="px-6 py-4 text-sm text-gray-500">
-                                                <button onClick={() => handleDownload(item.id, item.assetId, connector)}
-                                                    className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded"
+                                                <button onClick={() => handleDownload(item.id, item.assetId, connector, item.fileName)}
+                                                    disabled={downloadingFiles.some(file => file === item.id)}
+                                                    className={`flex items-center px-4 py-2 bg-indigo-600 text-white rounded ${downloadingFiles.some(file => file === item.id) ? "cursor-wait" : ""}`}
                                                 >
                                                     DOWNLOAD
                                                 </button>

@@ -9,23 +9,18 @@ export const GET = auth(async function GET(req) {
         }
 
         const { searchParams } = new URL(req.url);
-        const counterPartyname = searchParams.get('counterPartyname');
+        const url = searchParams.get('url');
         const authorization = searchParams.get('authorization');
-        console.log(counterPartyname, authorization);
+        const fileName = searchParams.get("filename");
+        console.log(url, authorization);
 
-        if (!counterPartyname || !authorization) {
+        if (!url || !authorization) {
             return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
         }
-        console.log('counterPartyname:', counterPartyname);
+        console.log('url:', url);
         console.log('authorization:', authorization);
 
-        const { data, contentType, contentDisposition } = await getTransferredFile(authorization, counterPartyname);
-
-        console.log("data: ", data);
-        console.log("content type: ", contentType);
-        console.log("contentDisposition", contentDisposition);
-
-        const fileName = contentDisposition ? contentDisposition.split('filename=')[1].replace(/"/g, '') : 'file';
+        const { data, contentType, contentDisposition } = await getTransferredFile(authorization, url);
 
         const response = new NextResponse(data, {
             headers: {
@@ -33,7 +28,6 @@ export const GET = auth(async function GET(req) {
                 'Content-Disposition': `attachment; filename="${fileName}"`,
             },
         });
-        console.log("response", response);
 
         return response;
     } catch (error) {

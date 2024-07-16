@@ -374,27 +374,6 @@ export async function uploadContractAgreementInfo(item: CatalogItem, agreementId
   }
 }
 
-
-export async function downloadTransferredFile(counterPartyname: string, authorization: string) {
-  try {
-    const response = await fetch(`/api/downloadTransferredFile?counterPartyname=${(counterPartyname)}&authorization=${authorization}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-    if (!response.ok) {
-        throw new Error(`Failed to download file: ${response.statusText}`);
-    }
-
-    const blob = await response.blob();
-    return blob;
-  } catch (err) {
-    console.error('Error downloading file:', err);
-    throw new Error('Error downloading file');
-  }
-}
-
 export async function getEnrichedContractAgreements(counterpartyname: string): Promise<EnrichedContractAgreement[]> {
   try {
     const negotiatedContracts = await getNegotiatedContracts(counterpartyname);

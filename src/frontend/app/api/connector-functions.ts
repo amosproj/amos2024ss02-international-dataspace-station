@@ -538,15 +538,9 @@ export async function getData(authorizationKey: string, counterPartyName: string
     }
 }
 
-export async function getTransferredFile(authorizationKey: string, counterPartyName: string) {
-    var counterPartyAddress: string = "";
-    if (process.env.RUNNING_ENV == "local") {
-        counterPartyAddress = "http://" + counterPartyName + ":19291" + "/public";
-    } else {
-        counterPartyAddress = "https://" + counterPartyName + "." + process.env.CLOUD_DOMAIN + ":443/public";
-    }
+export async function getTransferredFile(authorizationKey: string, url: string) {
     try {
-        const result = await fetch(counterPartyAddress, {
+        const result = await fetch(url, {
             method: 'GET',
             cache: 'no-cache',
             headers: {
