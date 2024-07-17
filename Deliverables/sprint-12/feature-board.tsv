@@ -1,0 +1,72 @@
+Title	URL	Assignees	Status
+Error connector is not running in cloud status	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/71	daku-de	Feature Archive
+Bugfix: download button from baseURL	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/97	daku-de	Feature Archive
+Display real data in the receive section on the dashboard	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/70	skanatova	Feature Archive
+Create a new section in the dashboard upload files	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/74	daku-de, skanatova	Feature Archive
+Establish communication between connector and database	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/73	daku-de	Feature Archive
+Enable the backend to be started through the frontend	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/77	EkaterinaIvanishcheva, xenia1w	Feature Archive
+Add a button for the connector status checking	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/76	daku-de	Feature Archive
+Connector status checking 2.0 Docker	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/55	EkaterinaIvanishcheva	Feature Archive
+Transfer a text file between two connectors - frontend	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/60	daku-de, skanatova	Feature Archive
+Link a role-exclusive login page to each port	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/61	xenia1w	Feature Archive
+Create JSON files for all scenarios (to exchange the data between all three roles)	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/45	daku-de	Feature Archive
+Fix cloud UI accessibility	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/37	daku-de	Feature Archive
+Check the feasibility of establishing a connection with object storage	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/58	EkaterinaIvanishcheva	Feature Archive
+Establish a cloud connection between 2 connectors	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/7	daku-de	Feature Archive
+Create a web frontend for tax and company	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/51	xenia1w	Feature Archive
+Create a web frontend for Bank Connector	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/49	skanatova, xenia1w	Feature Archive
+Update the dockerfile to accommodate three separate web frontend	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/52	EkaterinaIvanishcheva, xenia1w	Feature Archive
+Upload a file in the UI frontend	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/29	skanatova	Feature Archive
+Fix the bug with the button CLI	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/47	EkaterinaIvanishcheva	Feature Archive
+Create design documentation	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/36	skanatova	Feature Archive
+Fix bug with connector status checking (by making it dynamic according to loggedin user's role)	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/46	esracosgun	Feature Archive
+Create user documentation	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/35	xenia1w	Feature Archive
+Create build documentation	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/38	EkaterinaIvanishcheva	Feature Archive
+Refactor and delete unused branch	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/44	xenia1w	Feature Archive
+Response not showing the response text	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/32	EkaterinaIvanishcheva	Feature Archive
+Create / Update the Dockerfile	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/41	EkaterinaIvanishcheva	Feature Archive
+Create a button in the frontend which runs the CLI automatically	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/30	esracosgun	Feature Archive
+Create UI frontend of the connector page	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/26	skanatova	Feature Archive
+Create a UI design for connector	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/13	skanatova	Feature Archive
+Test connector configurations	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/40	xenia1w	Feature Archive
+Opening at least 3 ports for each connector	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/33	xenia1w	Feature Archive
+Create UI design for a login page	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/23	skanatova	Feature Archive
+Create build process video	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/24	EkaterinaIvanishcheva	Feature Archive
+Establish a frontend framework	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/25	EkaterinaIvanishcheva, xenia1w	Feature Archive
+Create documentation for the localhost connection process	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/10	EkaterinaIvanishcheva	Feature Archive
+Create docker image output of the connector	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/8	daku-de, esracosgun, xenia1w	Feature Archive
+Transfer data between two connectors on localhost	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/11	daku-de, esracosgun, xenia1w	Feature Archive
+Create two connector instances for the main branch	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/12	daku-de, esracosgun, xenia1w	Feature Archive
+Establish a localhost connection between 2 connectors	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/9	daku-de	Feature Archive
+Run EDC Connector Samples	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/5	daku-de, EkaterinaIvanishcheva, esracosgun, xenia1w	Feature Archive
+Design a Team Logo and T-Shirt	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/1	timoKroecker	Feature Archive
+Create metadata broker	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/20		Product Backlog
+Add catalog to metadata broker	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/21		Product Backlog
+Add CRUD operations for the catalog	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/22		Product Backlog
+Gain understanding of Gaia-X Framework	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/3	esracosgun, skanatova, xenia1w	Product Backlog
+Create identity hub	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/15	daku-de, esracosgun	Product Backlog
+Provide authentication	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/16		Product Backlog
+Testing auxiliary communication between roles/connectors	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/54	daku-de	Product Backlog
+Add CRUD operations for user database	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/19		
+Provide authorization	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/17		
+Make UI designs responsive			
+Bug: CORS problem when sending preflight requests from browser			
+Bugfix: select other roles when sending data	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/89	daku-de, esracosgun	Awaiting Review
+Transfer a text file between 2 connectors in cloud	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/69	daku-de	Awaiting Review
+Bump EDC version from 0.6.0 to 0.7.0+	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/93	daku-de	Awaiting Review
+Seed connector with some initial data (a policy and a dataplane)	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/96	daku-de	Awaiting Review
+Add functionality to negotiate contracts and receive files from other connectors	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/91	daku-de	Awaiting Review
+Create functionality to delete uploaded files from backend and link to frontend	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/94	daku-de	Awaiting Review
+Create a personal database for each connector and adjust backend and deployment pipeline	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/90	daku-de	Awaiting Review
+Finalize the Dockerfile to the latest version	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/84	daku-de	Awaiting Review
+Add token-based authentication to frontend, connector and database for each connector	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/95	daku-de	Awaiting Review
+Prepare demo day presentation samples	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/98	EkaterinaIvanishcheva	Awaiting Review
+Add new page to create Policies in frontend	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/92	daku-de	Awaiting Review
+Transfer a text file between two connectors - backend	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/53	daku-de, esracosgun	Awaiting Review
+Delete duplicate Dockerfiles and adjust docker-compose and github workflows	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/102	daku-de	Awaiting Review
+Finalize build documentation	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/87	EkaterinaIvanishcheva	Awaiting Review
+Finalize design documentation	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/86	xenia1w	Awaiting Review
+Finalize user documentation	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/85	xenia1w	Awaiting Review
+Create a demo day video	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/66	EkaterinaIvanishcheva	Awaiting Review
+Research how to add a new user to the dataplane	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/72	EkaterinaIvanishcheva	Awaiting Review
+Seamless communication between frontend and backend for uploading the files	https://github.com/amosproj/amos2024ss02-international-dataspace-station/issues/68	daku-de, esracosgun	Awaiting Review
